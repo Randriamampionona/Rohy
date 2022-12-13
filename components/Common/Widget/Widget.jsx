@@ -13,7 +13,7 @@ const Widget = ({ slug, title, desc, category, textBtn }) => {
 					{title}
 				</h1>
 				<p className="text-whiteColor/70">
-					{desc.length > 100 ? `${desc.substring(0, 97)}...` : desc}
+					{desc?.length > 100 ? `${desc?.substring(0, 97)}...` : desc}
 				</p>
 			</div>
 
