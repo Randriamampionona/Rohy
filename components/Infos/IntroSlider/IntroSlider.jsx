@@ -10,7 +10,7 @@ const IntroSlider = () => {
 		<main className="">
 			<Swiper
 				slidesPerView={1}
-				modules={[Pagination, Autoplay, EffectCoverflow]}
+				modules={[ Autoplay, EffectCoverflow]}
 				pagination={{ clickable: true }}
 				loop={true}
 				autoplay={{
