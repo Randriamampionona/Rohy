@@ -1,26 +1,58 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	*,
+	*::after,
+	*::before {
+		@apply m-0 p-0 box-border;
+	}
+
+	body {
+		@apply bg-darkColor text-whiteColor;
+	}
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer components {
+	.primaryBtn {
+		@apply flex items-center justify-center gap-x-2 bg-primaryColor px-4 h-11 rounded hover:bg-primaryColor/95;
+	}
+
+	.outlineBtn {
+		@apply flex items-center justify-center gap-x-3 border border-primaryColor hover:bg-primaryColor h-11 rounded;
+	}
 }
 
-* {
-  box-sizing: border-box;
+:root {
+	--swiper-theme-color: var(--primaryColor) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+::-webkit-scrollbar {
+	background: hsl(240, 2%, 10%);
+	width: 0.75rem;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(131, 2, 56, 0.527);
+	border-radius: 5px;
+	box-shadow: inset 0px 0px 3px var(--darkColor);
+	border: 2.5px solid hsl(240, 2%, 10%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	border-radius: 5px;
+	box-shadow: inset 0px 0px 3px var(--darkColor);
+	border: 2.5px solid hsl(240, 2%, 10%);
+	background: hsla(335, 100%, 35%, 0.712);
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+@media screen and (max-width: 768px) {
+	::-webkit-scrollbar {
+		display: none;
+	}
 }
