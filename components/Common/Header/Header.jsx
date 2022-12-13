@@ -5,7 +5,7 @@ import { RiMenuFill } from "react-icons/ri";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthContext } from "../../../store/context/AuthContext";
-// import Avatar from "react-avatar";
+import Avatar from "react-avatar";
 
 const Header = ({ navLinks }) => {
 	const { currentUser, signoutFunc } = AuthContext();
@@ -56,7 +56,6 @@ const Header = ({ navLinks }) => {
 								name={currentUser?.email}
 								round={true}
 								size={42}
-								src={Logo}
 								email={currentUser?.email}
 							/>
 						)}
