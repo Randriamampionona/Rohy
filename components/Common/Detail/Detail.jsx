@@ -5,7 +5,7 @@ const Detail = ({ title, desc }) => {
 		<div className="z-10 absolute inset-0 hidden place-items-center bg-black/70 group-hover:grid">
 			<div className="flex flex-col items-center justify-center last:gap-y-1 text-center max-w-[70%]">
 				<h1 className="text-3xl font-bold">{title}</h1>
-				<p className="text-whiteColor/70">{`${desc.substring(
+				<p className="text-whiteColor/70">{`${desc?.substring(
 					0,
 					130
 				)}...`}</p>
