@@ -1,4 +1,4 @@
-import Image from "next/legacy/image";
+import Image from "next/image";
 import authImg from "../../../public/assets/auth.jpg";
 import { useState } from "react";
 import {
@@ -52,7 +52,6 @@ const AuthForm = ({ page, socialMedia }) => {
 					alt="rohy auth page"
 					layout="fill"
 					objectFit="cover"
-					placeholder="blur"
 					className="brightness-[0.25]"
 				/>
 				<div className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center max-w-[22rem] w-full">
@@ -61,7 +60,6 @@ const AuthForm = ({ page, socialMedia }) => {
 						alt="rohy"
 						width={95}
 						height={75}
-						placeholder="blur"
 						style={{ objectFit: "cover" }}
 						className="mb-4"
 					/>

@@ -1,5 +1,5 @@
 import { Widget } from "../../Common";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import img from "../../../public/assets/auth.jpg";
 
 const Category = (props) => {
