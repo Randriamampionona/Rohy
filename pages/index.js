@@ -23,7 +23,7 @@ export const getStaticProps = async () => {
 	try {
 		const fetch = await axios.get(
 			// "https://api.themoviedb.org/3/movie/popular?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1"
-			"http://localhost:3000/api/hello"
+			`${process.env.NEXT_PUBLIC_BASE_ENDPOINT}/api/hello`
 		);
 		const result = fetch.data;
 
