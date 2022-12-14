@@ -22,6 +22,8 @@ const Intro = () => {
 		};
 	}, []);
 
+	console.log(introImg);
+
 	return (
 		<div
 			className={`relative flex items-end w-full h-[calc(100vh-10rem)] bg-no-repeat bg-cover bg-darkColor bottomOverlay after:h-[18rem] after:to-darkColor`}
