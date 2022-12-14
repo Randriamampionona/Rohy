@@ -5,24 +5,21 @@ const Intro = () => {
 	const [introImg, setIntroImg] = useState(null);
 
 	useEffect(() => {
-		return async () => {
-			const URL = `https://api.themoviedb.org/3/movie/upcoming?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=${Math.floor(
-				Math.random() * 22
-			)}`;
+		const getImage = async () => {
+			const URL =
+				"https://api.themoviedb.org/3/movie/upcoming?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
 			const fetch = await axios.get(URL);
-			const data = fetch.data;
-			setIntroImg(
-				data.results[Math.floor(Math.random() * 22)]?.poster_path
-					? `url(https://image.tmdb.org/t/p/original${
-							data.results[Math.floor(Math.random() * 22)]
-								?.poster_path
-					  })`
-					: "url('/assets/intro2.jfif')"
-			);
-		};
-	}, []);
+			const data = fetch?.data;
+			const img =
+				data?.results[Math.floor(Math.random() * data?.results?.length)]
+					?.poster_path;
+			const patch = `url(https://image.tmdb.org/t/p/original${img})`;
 
-	console.log(introImg);
+			setIntroImg(patch || "url('/assets/intro2.jfif')");
+		};
+
+		!introImg && getImage();
+	}, [introImg]);
 
 	return (
 		<div
