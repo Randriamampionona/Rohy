@@ -1,16 +1,23 @@
-import axios from "axios";
 import { Category, Intro, Suggestion } from "../components/Home";
+import admin from "../lib/firebaseAdmin.config";
+import nookies from "nookies";
 
-const HomePage = ({ suggestionData, categoryData }) => {
+const HomePage = ({ moviesData }) => {
+	const { suggestion, ...rest } = moviesData;
+
 	return (
 		<section className="w-full">
 			<Intro />
 
 			<main className="w-full py-16 px-4 md:px-6 lg:px-8 xl:px-12 space-y-20">
-				<Suggestion suggestionData={suggestionData} />
+				<Suggestion suggestionData={suggestion} />
 
-				{categoryData?.map((category) => (
-					<Category key={category.slug} {...category} />
+				{Object.entries(rest).map((res) => (
+					<Category
+						key={res[0]}
+						categoryDetails={res[1].details}
+						moviesList={res[1].movies}
+					/>
 				))}
 			</main>
 		</section>
@@ -19,50 +26,89 @@ const HomePage = ({ suggestionData, categoryData }) => {
 
 export default HomePage;
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async (ctx) => {
 	try {
-		const fetch = await axios.get(
-			// "https://api.themoviedb.org/3/movie/popular?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1"
-			`${process.env.NEXT_PUBLIC_BASE_ENDPOINT}/api/hello`
-		);
-		const result = fetch.data;
+		const cookies = nookies.get(ctx);
+		const token = await admin.auth().verifyIdToken(cookies.token);
 
-		return {
-			props: {
-				suggestionData: result.result,
-				categoryData: [
-					{
-						slug: "/cinema",
-						category: "cinema",
-						title: "Le meilleur du cinema recent, c'est ici!",
-						desc: "Tout le cinéma franais et international diffusé juste après la sortie en salle. Bref, que du cinéma super frais.",
-						textBtn: "tout le cinema",
-						data: [],
+		// the user is authenticated!
+		if (token) {
+			// FETCH STUFF HERE!! 🚀
+			// offline fetch
+			// const URL1 = "http://localhost:3000/api/movies";
+			// const URL2 = "http://localhost:3000/api/movies";
+			// const URL3 = "http://localhost:3000/api/movies";
+			// const URL4 = "http://localhost:3000/api/movies";
+
+			// online fetch
+			const URL1 =
+				"https://api.themoviedb.org/3/movie/upcoming?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
+			const URL2 =
+				"https://api.themoviedb.org/3/movie/now_playing?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
+			const URL3 =
+				"https://api.themoviedb.org/3/movie/popular?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=2";
+			const URL4 =
+				"https://api.themoviedb.org/3/movie/top_rated?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
+
+			const promise1 = fetch(URL1).then((res) => res.json());
+			const promise2 = fetch(URL2).then((res) => res.json());
+			const promise3 = fetch(URL3).then((res) => res.json());
+			const promise4 = fetch(URL4).then((res) => res.json());
+
+			const [suggestion, nowPlaying, popular, topRated] =
+				await Promise.all([promise1, promise2, promise3, promise4]);
+
+			return {
+				props: {
+					moviesData: {
+						suggestion:
+							suggestion.results[
+								Math.floor(
+									Math.random() * suggestion.results.length
+								)
+							],
+						nowPlaying: {
+							details: {
+								category: "Now playing",
+								heading:
+									"Lorem ipsum dolor sit amet consectetur adipisicing.",
+								desc: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit ex minus corporis a doloribus cum quis adipisci, illum iure accusamus! Cupiditate!",
+							},
+							movies: nowPlaying.results,
+						},
+						popular: {
+							details: {
+								category: "Popular",
+								heading:
+									"Lorem ipsum dolor sit amet consectetur adipisicing.",
+								desc: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit ex minus corporis a doloribus cum quis adipisci, illum iure accusamus! Cupiditate!",
+							},
+							movies: popular.results,
+						},
+						topRated: {
+							details: {
+								category: "Top rated",
+								heading:
+									"Lorem ipsum dolor sit amet consectetur adipisicing.",
+								desc: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit ex minus corporis a doloribus cum quis adipisci, illum iure accusamus! Cupiditate!",
+							},
+							movies: topRated.results,
+						},
 					},
-					{
-						slug: "/sport",
-						category: "sport",
-						title: "Trouver un live ne devrait pas être un sport...",
-						desc: "Les plus grandes compétions de football européennes et africaines, les 5 prestigieux championnats de football européens, et aussi la NBA, le Top 14, les Grand Prix de Formule 1",
-						textBtn: "tout le sport",
-						data: [],
-					},
-					{
-						slug: "/series",
-						category: "series",
-						title: "Cherry sur le cake: toutes les meilleures series",
-						desc: "Toutes les dernières séries internationales, mais surtout les meilleures, sont avec ROHY.",
-						textBtn: "toutes les series",
-						data: [],
-					},
-				],
-			},
-		};
-	} catch (error) {
-		return {
-			props: {
-				suggestionData: [],
-			},
-		};
+				},
+			};
+		}
+	} catch (err) {
+		// either the `token` cookie didn't exist
+		// or token verification failed
+		// either way: redirect to the login page
+		ctx.res.writeHead(302, { Location: "/authorization/signin" });
+		ctx.res.end();
+
+		// `as never` prevents inference issues
+		// with InferGetServerSidePropsType.
+		// The props returned here don't matter because we've
+		// already redirected the user.
+		return { props: {} };
 	}
 };

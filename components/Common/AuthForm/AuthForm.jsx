@@ -73,11 +73,8 @@ const AuthForm = ({ page, socialMedia }) => {
 
 					<div className="flex items-center justify-center gap-x-4 mt-4">
 						{socialMedia?.map((r) => (
-							<Link
-								key={r.link}
-								href={r.link}
-								className="grid place-items-center text-xl text-whiteColor bg-darkColor w-8 h-8 rounded shadow shadow-black hover:bg-primaryColor">
-								<span>
+							<Link key={r.link} href={r.link}>
+								<span className="grid place-items-center text-xl text-whiteColor bg-darkColor w-8 h-8 rounded shadow shadow-black hover:bg-primaryColor">
 									<r.Icon />
 								</span>
 							</Link>

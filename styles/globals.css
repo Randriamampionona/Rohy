@@ -22,6 +22,10 @@
 	.outlineBtn {
 		@apply flex items-center justify-center gap-x-3 border border-primaryColor hover:bg-primaryColor h-11 rounded;
 	}
+
+	.bottomOverlay {
+		@apply after:z-[1] after:absolute after:bottom-0 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#060609];
+	}
 }
 
 :root {

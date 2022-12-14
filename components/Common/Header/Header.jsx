@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/future/image";
 import Logo from "../../../public/assets/logo-with-rose-color.webp";
 import { FaUserCircle } from "react-icons/fa";
 import { RiMenuFill } from "react-icons/ri";
@@ -6,10 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthContext } from "../../../store/context/AuthContext";
 import Avatar from "react-avatar";
+import DropdownMenu from "./DropdownMenu";
+import { useState } from "react";
 
 const Header = ({ navLinks }) => {
 	const { currentUser, signoutFunc } = AuthContext();
 	const { push } = useRouter();
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	return (
 		<header className="z-50 sticky top-0 flex items-center justify-between w-full h-16 px-4 bg-darkColor shadow shadow-darkColor md:px-6 lg:px-10">
@@ -40,16 +43,25 @@ const Header = ({ navLinks }) => {
 			</ul>
 
 			{/* user interaction */}
-			<div className="flex items-center gap-x-4">
+			<div className="relative flex items-center gap-x-4">
+				{currentUser && menuOpen && (
+					<DropdownMenu
+						menus={navLinks.dropdownMenus}
+						setMenuOpen={setMenuOpen}
+					/>
+				)}
+
 				{currentUser ? (
-					<div>
-						{currentUser?.photoUrl && currentUser.displayName ? (
+					<div
+						className="w-auto"
+						onClick={() => setMenuOpen(!menuOpen)}>
+						{currentUser?.photoUrl ? (
 							<Image
 								src={currentUser?.photoUrl}
 								alt={currentUser?.displayName}
 								width={42}
 								height={42}
-								onClick={() => signoutFunc()}
+								className="cursor-pointer hover:opacity-90"
 							/>
 						) : (
 							<Avatar
@@ -57,6 +69,7 @@ const Header = ({ navLinks }) => {
 								round={true}
 								size={42}
 								email={currentUser?.email}
+								className="cursor-pointer hover:opacity-90"
 							/>
 						)}
 					</div>
@@ -118,6 +131,21 @@ Header.defaultProps = {
 			{
 				slug: "/docs",
 				textLink: "Docs",
+			},
+		],
+
+		dropdownMenus: [
+			{
+				slug: "/account",
+				textLink: "Account",
+			},
+			{
+				slug: "/settings",
+				textLink: "Settings",
+			},
+			{
+				slug: "/helps",
+				textLink: "Helps",
 			},
 		],
 	},

@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
+import nookies from "nookies";
 
 const initState = {
 	currentUser: null,
@@ -53,7 +54,18 @@ export const AuthProvider = ({ children }) => {
 		}));
 
 		try {
-			await createUserWithEmailAndPassword(auth, email, password);
+			const result = await createUserWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+
+			const token = await result.user.getIdToken({ forceRefresh: true });
+
+			nookies.set(undefined, "token", token, {
+				path: "/",
+				maxAge: 60 * 60 * 60 * 3,
+			});
 
 			replace("/");
 		} catch (error) {
@@ -79,10 +91,15 @@ export const AuthProvider = ({ children }) => {
 				password
 			);
 
-			if (result) {
-				toastNotify("success", `So long ${result.user?.displayName}`);
-				replace("/");
-			}
+			const token = await result.user.getIdToken({ forceRefresh: true });
+
+			nookies.set(undefined, "token", token, {
+				path: "/",
+				maxAge: 60 * 60 * 60 * 3,
+			});
+
+			toastNotify("success", `So long ${result.user?.displayName}`);
+			replace("/");
 		} catch (error) {
 			toastNotify("error", error.message);
 		} finally {
@@ -101,6 +118,7 @@ export const AuthProvider = ({ children }) => {
 
 		try {
 			await signOut(auth);
+			nookies.destroy(null, "token");
 			toastNotify("success", "See you soon");
 			replace("/infos");
 		} catch (error) {
@@ -125,10 +143,15 @@ export const AuthProvider = ({ children }) => {
 				provider === "google" ? googleProvider : githubProvider
 			);
 
-			if (result) {
-				toastNotify("success", `So long ${result.user?.displayName}`);
-				replace("/");
-			}
+			const token = await result.user.getIdToken({ forceRefresh: true });
+
+			nookies.set(undefined, "token", token, {
+				path: "/",
+				maxAge: 60 * 60 * 60 * 3,
+			});
+
+			toastNotify("success", `So long ${result.user?.displayName}`);
+			replace("/");
 		} catch (error) {
 			toastNotify("error", error.message);
 		} finally {
