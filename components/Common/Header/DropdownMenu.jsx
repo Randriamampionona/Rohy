@@ -19,7 +19,7 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 					<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden cursor-default hover:opacity-90">
 						<Image
 							src={currentUser?.photoURL}
-							alt={currentUser?.username}
+							alt={currentUser?.displayName}
 							layout="fill"
 							objectFit="cover"
 							width={44}
@@ -28,8 +28,8 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 						/>
 					</div>
 					<div className="leading-none">
-						<h1 className="text-xl font-medium">
-							{currentUser?.displayName}
+						<h1 className="text-lg font-medium">
+							{currentUser?.displayName?.substring(8)}
 						</h1>
 						<Link href={"/account"}>
 							<a className="text-sm text-gray-500 hover:text-primaryColor">

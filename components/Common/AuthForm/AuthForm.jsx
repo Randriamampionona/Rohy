@@ -15,6 +15,7 @@ import { ImSpinner2 } from "react-icons/im";
 import logo from "../../../public/assets/logo-with-rose-color.webp";
 import { AuthContext } from "../../../store/context/AuthContext";
 import Link from "next/link";
+import toastNotify from "../../../utils/toastNotify";
 
 const initState = {
 	username: "",
@@ -37,6 +38,12 @@ const AuthForm = ({ page, socialMedia }) => {
 	const submitHandler = async (e) => {
 		e.preventDefault();
 		if (page === "signup") {
+			if (inputValue.username.length > 8) {
+				return toastNotify(
+					"error",
+					"Username can't longer than 4 caracteres"
+				);
+			}
 			await signupFunc(
 				inputValue.username,
 				inputValue.email,
