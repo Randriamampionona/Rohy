@@ -9,7 +9,7 @@ import {
 	FaTwitter,
 	FaWhatsapp,
 } from "react-icons/fa";
-import { FiMail, FiLock } from "react-icons/fi";
+import { FiUser, FiMail, FiLock } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { ImSpinner2 } from "react-icons/im";
 import logo from "../../../public/assets/logo-with-rose-color.webp";
@@ -17,6 +17,7 @@ import { AuthContext } from "../../../store/context/AuthContext";
 import Link from "next/link";
 
 const initState = {
+	username: "",
 	email: "",
 	password: "",
 };
@@ -36,7 +37,11 @@ const AuthForm = ({ page, socialMedia }) => {
 	const submitHandler = async (e) => {
 		e.preventDefault();
 		if (page === "signup") {
-			await signupFunc(inputValue.email, inputValue.password);
+			await signupFunc(
+				inputValue.username,
+				inputValue.email,
+				inputValue.password
+			);
 		} else {
 			await signinFunc(inputValue.email, inputValue.password);
 		}
@@ -111,6 +116,27 @@ const AuthForm = ({ page, socialMedia }) => {
 					<form
 						className="flex flex-col w-full"
 						onSubmit={submitHandler}>
+						{/* username */}
+						{page === "signup" && (
+							<div className="flex items-center justify-between px-3 h-11 rounded-sm bg-whiteColor border border-gray-300 mb-3 focus-within:border focus-within:border-primaryColor">
+								<span className="text-darkColor/50">
+									<FiUser />
+								</span>
+								<input
+									required
+									autoFocus
+									autoComplete="off"
+									type="text"
+									name="username"
+									placeholder="Username"
+									value={inputValue.username}
+									onChange={changeHandler}
+									className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent"
+								/>
+							</div>
+						)}
+
+						{/* email */}
 						<div className="flex items-center justify-between px-3 h-11 rounded-sm bg-whiteColor border border-gray-300 mb-3 focus-within:border focus-within:border-primaryColor">
 							<span className="text-darkColor/50">
 								<FiMail />
@@ -128,6 +154,7 @@ const AuthForm = ({ page, socialMedia }) => {
 							/>
 						</div>
 
+						{/* password */}
 						<div className="flex items-center justify-between px-3 h-11 rounded-sm bg-whiteColor border border-gray-300 mb-1 focus-within:border focus-within:border-primaryColor">
 							<span className="text-darkColor/50">
 								<FiLock />

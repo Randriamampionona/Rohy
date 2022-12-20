@@ -8,6 +8,7 @@ import {
 	GithubAuthProvider,
 	signOut,
 	onAuthStateChanged,
+	updateProfile,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 	);
 
 	// auth functions
-	const signupFunc = async (email, password) => {
+	const signupFunc = async (username, email, password) => {
 		setAuthLoading((prev) => ({
 			...prev,
 			signup: true,
@@ -59,6 +60,10 @@ export const AuthProvider = ({ children }) => {
 				email,
 				password
 			);
+
+			await updateProfile(result?.user, {
+				displayName: username,
+			});
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
