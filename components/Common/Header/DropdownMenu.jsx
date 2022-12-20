@@ -15,7 +15,7 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 	return (
 		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md">
 			<ul className="flex flex-col w-full">
-				<div className="flex items-center justify-between gap-x-3 px-4 py-3">
+				<div className="flex items-center justify-start gap-x-3 px-4 py-3">
 					<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden cursor-default hover:opacity-90">
 						<Image
 							src={currentUser?.photoURL}
@@ -29,7 +29,7 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 					</div>
 					<div className="leading-none">
 						<h1 className="text-xl font-medium">
-							{currentUser?.username}
+							{currentUser?.displayName}
 						</h1>
 						<p className="text-sm text-gray-500">View profile</p>
 					</div>
