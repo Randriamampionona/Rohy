@@ -41,7 +41,7 @@ const AuthForm = ({ page, socialMedia }) => {
 			if (inputValue.username.length > 8) {
 				return toastNotify(
 					"error",
-					"Username can't longer than 4 caracteres"
+					"Username can't be longer than 4 caracteres"
 				);
 			}
 			await signupFunc(
