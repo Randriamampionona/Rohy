@@ -31,7 +31,11 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 						<h1 className="text-xl font-medium">
 							{currentUser?.displayName}
 						</h1>
-						<p className="text-sm text-gray-500">View profile</p>
+						<Link>
+							<a className="text-sm text-gray-500 hover:text-primaryColor">
+								View profile
+							</a>
+						</Link>
 					</div>
 				</div>
 
