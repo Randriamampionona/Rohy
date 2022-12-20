@@ -117,6 +117,7 @@ const AuthForm = ({ page, socialMedia }) => {
 							</span>
 							<input
 								required
+								autoFocus
 								autoComplete="off"
 								type="email"
 								name="email"
@@ -149,25 +150,25 @@ const AuthForm = ({ page, socialMedia }) => {
 									? "Already have an account?"
 									: "Don' have an account?"}{" "}
 								{page === "signup" ? (
-									<Link
-										href="/authorization/signin"
-										className="text-primaryColor underline">
-										sign in
+									<Link href="/authorization/signin">
+										<a className="text-primaryColor underline">
+											sign in
+										</a>
 									</Link>
 								) : (
-									<Link
-										href="/authorization/signup"
-										className="text-primaryColor underline">
-										sign up
+									<Link href="/authorization/signup">
+										<a className="text-primaryColor underline">
+											sign up
+										</a>
 									</Link>
 								)}
 							</p>
 
 							{page === "signin" && (
-								<Link
-									href="/authorization/reset-password"
-									className="text-primaryColor underline">
-									Forget password
+								<Link href="/authorization/reset-password">
+									<a className="text-primaryColor underline">
+										Forget password
+									</a>
 								</Link>
 							)}
 						</div>

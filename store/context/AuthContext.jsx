@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
 			nookies.set(undefined, "token", token, {
 				path: "/",
-				maxAge: 60 * 60 * 60 * 3,
+				maxAge: 60 * 60 * 60 * 24,
 			});
 
 			replace("/");
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
 
 			nookies.set(undefined, "token", token, {
 				path: "/",
-				maxAge: 60 * 60 * 60 * 3,
+				maxAge: 60 * 60 * 60 * 24,
 			});
 
 			toastNotify("success", `So long ${result.user?.displayName}`);
@@ -147,7 +147,7 @@ export const AuthProvider = ({ children }) => {
 
 			nookies.set(undefined, "token", token, {
 				path: "/",
-				maxAge: 60 * 60 * 60 * 3,
+				maxAge: 60 * 60 * 60 * 24,
 			});
 
 			toastNotify("success", `So long ${result.user?.displayName}`);

@@ -26,6 +26,10 @@
 	.bottomOverlay {
 		@apply after:z-[1] after:absolute after:bottom-0 after:w-full after:bg-gradient-to-b after:from-transparent after:to-[#060609];
 	}
+
+	.pageSection {
+		@apply w-full py-8 px-4 md:px-6 lg:px-8 xl:px-10;
+	}
 }
 
 :root {

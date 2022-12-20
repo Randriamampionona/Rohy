@@ -10,7 +10,7 @@ import DropdownMenu from "./DropdownMenu";
 import { useState } from "react";
 
 const Header = ({ navLinks }) => {
-	const { currentUser, signoutFunc } = AuthContext();
+	const { currentUser } = AuthContext();
 	const { push } = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 
@@ -113,24 +113,20 @@ Header.defaultProps = {
 
 		withAuthLinks: [
 			{
-				slug: "/creation",
-				textLink: "Nos Créations",
+				slug: "/live",
+				textLink: "Live",
 			},
 			{
-				slug: "/cinema",
-				textLink: "Cinéma",
+				slug: "/tv-program",
+				textLink: "TV program",
 			},
 			{
-				slug: "/series",
-				textLink: "Séries",
+				slug: "/channels",
+				textLink: "Channels & Apps",
 			},
 			{
-				slug: "/sport",
-				textLink: "Sport",
-			},
-			{
-				slug: "/docs",
-				textLink: "Docs",
+				slug: "/my-videos",
+				textLink: "My videos",
 			},
 		],
 

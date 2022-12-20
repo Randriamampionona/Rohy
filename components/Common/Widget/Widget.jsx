@@ -1,4 +1,8 @@
+import { useRouter } from "next/router";
+
 const Widget = ({ heading, desc, category }) => {
+	const { push } = useRouter();
+
 	return (
 		<aside className="w-full h-full flex flex-col items-start justify-between gap-y-4 px-6 py-8 bg-lightDarkColor">
 			<div className="flex flex-col gap-y-2">
@@ -13,7 +17,9 @@ const Widget = ({ heading, desc, category }) => {
 				</p>
 			</div>
 
-			<button className="primaryBtn uppercase">
+			<button
+				className="primaryBtn uppercase"
+				onClick={() => push("/movies")}>
 				<span>Show more</span>
 			</button>
 		</aside>
