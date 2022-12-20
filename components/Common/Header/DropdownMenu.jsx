@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FaSignOutAlt } from "react-icons/fa";
 import { AuthContext } from "../../../store/context/AuthContext";
 import { ImSpinner2 } from "react-icons/im";
-import Image from "next/image";
+import Image from "next/future/image";
 
 const DropdownMenu = ({ menus, setMenuOpen }) => {
 	const { signoutFunc, authLoading, currentUser } = AuthContext();
@@ -13,31 +13,33 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 	};
 
 	return (
-		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md">
+		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md transition-all">
 			<ul className="flex flex-col w-full">
-				<div className="flex items-center justify-start gap-x-3 px-4 py-3">
-					<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden cursor-default hover:opacity-90">
-						<Image
-							src={currentUser?.photoURL}
-							alt={currentUser?.displayName}
-							layout="fill"
-							objectFit="cover"
-							width={44}
-							height={44}
-							className="rounded-full hover:contrast-75"
-						/>
+				{currentUser && (
+					<div className="flex items-center justify-start gap-x-3 px-4 py-3">
+						<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden hover:opacity-90">
+							<Image
+								src={currentUser?.photoURL}
+								alt={currentUser?.photoURL}
+								layout="fill"
+								objectFit="cover"
+								width={44}
+								height={44}
+								className="rounded-full hover:contrast-75"
+							/>
+						</div>
+						<div className="leading-none">
+							<h1 className="text-lg font-medium">
+								{currentUser?.displayName?.substring(8)}
+							</h1>
+							<Link href={"/account"}>
+								<a className="text-sm text-gray-500 hover:text-primaryColor">
+									View profile
+								</a>
+							</Link>
+						</div>
 					</div>
-					<div className="leading-none">
-						<h1 className="text-lg font-medium">
-							{currentUser?.displayName?.substring(8)}
-						</h1>
-						<Link href={"/account"}>
-							<a className="text-sm text-gray-500 hover:text-primaryColor">
-								View profile
-							</a>
-						</Link>
-					</div>
-				</div>
+				)}
 
 				{menus?.map((menu) => (
 					<Link key={menu.slug} href={`${menu.slug}`}>

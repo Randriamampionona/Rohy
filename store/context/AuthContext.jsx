@@ -63,6 +63,8 @@ export const AuthProvider = ({ children }) => {
 
 			await updateProfile(result?.user, {
 				displayName: username,
+				photoURL:
+					"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTwcoElKz2FeycqmGkscb3XtTQw653-uVmgOsg4a6l0w&s",
 			});
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
