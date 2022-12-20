@@ -16,13 +16,15 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md">
 			<ul className="flex flex-col w-full">
 				<div className="flex items-center justify-between gap-x-3 px-4 py-3">
-					<div className="w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden cursor-default hover:opacity-90">
+					<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden cursor-default hover:opacity-90">
 						<Image
 							src={currentUser?.photoURL}
 							alt={currentUser?.username}
 							layout="fill"
 							objectFit="cover"
-							className="rounded-full"
+							width={44}
+							height={44}
+							className="rounded-full hover:contrast-75"
 						/>
 					</div>
 					<div className="leading-none">
