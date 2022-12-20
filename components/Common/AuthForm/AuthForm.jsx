@@ -131,7 +131,7 @@ const AuthForm = ({ page, socialMedia }) => {
 									placeholder="Username"
 									value={inputValue.username}
 									onChange={changeHandler}
-									className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent"
+									className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent text-darkColor"
 								/>
 							</div>
 						)}
@@ -150,7 +150,7 @@ const AuthForm = ({ page, socialMedia }) => {
 								placeholder="Email address"
 								value={inputValue.email}
 								onChange={changeHandler}
-								className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent"
+								className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent text-darkColor"
 							/>
 						</div>
 
@@ -167,7 +167,7 @@ const AuthForm = ({ page, socialMedia }) => {
 								placeholder="Password"
 								value={inputValue.password}
 								onChange={changeHandler}
-								className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent"
+								className="flex-grow w-full border-0 outline-0 px-2 h-full bg-transparent text-darkColor"
 							/>
 						</div>
 

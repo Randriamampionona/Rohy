@@ -12,8 +12,6 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 		await signoutFunc();
 	};
 
-	console.log(currentUser);
-
 	return (
 		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md">
 			<ul className="flex flex-col w-full">
@@ -30,10 +28,10 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 						/>
 					</div>
 					<div className="leading-none">
-						{/* <h1 className="text-xl font-medium">
+						<h1 className="text-xl font-medium">
 							{currentUser?.displayName}
-						</h1> */}
-						<Link>
+						</h1>
+						<Link href={"/account"}>
 							<a className="text-sm text-gray-500 hover:text-primaryColor">
 								View profile
 							</a>
