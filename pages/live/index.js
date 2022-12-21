@@ -26,7 +26,8 @@ export const getServerSideProps = async (ctx) => {
 		const p = ctx.query.p;
 		const key = ctx.query.key;
 
-		const fetch = await axios.get("http://localhost:3000/api/movies");
+		// const fetch = await axios.get("http://localhost:3000/api/movies");
+		const fetch = await axios.get("https://rohy.vercel.app/api/movies");
 		const data = fetch.data?.results;
 
 		return {
