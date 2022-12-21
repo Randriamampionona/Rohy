@@ -10,7 +10,7 @@ const WatchPage = ({ error, videoDetails }) => {
 
 	return (
 		<section className="relative w-screen">
-			<div className="flex items-center justify-between w-screen px-4 py-3 bg-darkColor">
+			<div className="flex items-center justify-between w-screen h-12 px-4 bg-darkColor">
 				<button
 					className="bg-lightDarkColor rounded-full text-base text-whiteColor/50 hover:text-whiteColor p-2"
 					onClick={back}>
@@ -23,7 +23,7 @@ const WatchPage = ({ error, videoDetails }) => {
 				</h1>
 			</div>
 
-			<main className="w-full h-full">
+			<main className="w-full h-[calc(100vh-3rem)]">
 				<ReactPlayer
 					playing={true}
 					muted={true}
