@@ -11,7 +11,7 @@ import { useState } from "react";
 
 const Header = ({ navLinks }) => {
 	const { currentUser } = AuthContext();
-	const { push } = useRouter();
+	const { push, pathname } = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	return (
@@ -35,7 +35,11 @@ const Header = ({ navLinks }) => {
 					(link) => (
 						<li
 							key={link.slug}
-							className="relative text-center font-medium after:w-0 after:transition-[width] hover:after:absolute hover:after:-bottom-1 hover:after:left-0 hover:after:w-1/2 hover:after:h-[2px] hover:after:bg-primaryColor hover:text-primaryColor">
+							className={`relative text-center font-medium after:w-0 after:transition-[width] hover:after:absolute hover:after:-bottom-1 hover:after:left-0 hover:after:w-1/2 hover:after:h-[2px] hover:after:bg-primaryColor hover:text-primaryColor ${
+								pathname === link.key
+									? "after:absolute after:-bottom-1 after:left-0 after:w-1/2 after:h-[2px] after:bg-primaryColor text-primaryColor"
+									: ""
+							}`}>
 							<Link href={link.slug}>{link.textLink}</Link>
 						</li>
 					)
@@ -44,7 +48,7 @@ const Header = ({ navLinks }) => {
 
 			{/* user interaction */}
 			<div className="relative flex items-center gap-x-4">
-				{currentUser && menuOpen && (
+				{menuOpen && (
 					<DropdownMenu
 						menus={navLinks.dropdownMenus}
 						setMenuOpen={setMenuOpen}
@@ -114,18 +118,22 @@ Header.defaultProps = {
 		withAuthLinks: [
 			{
 				slug: "/live?p=all-channels&key=548148691",
+				key: "/live",
 				textLink: "Live",
 			},
 			{
 				slug: "/tv-program",
+				key: "/tv-program",
 				textLink: "TV program",
 			},
 			{
 				slug: "/channels",
+				key: "/channels",
 				textLink: "Channels & Apps",
 			},
 			{
 				slug: "/my-videos",
+				key: "/my-videos",
 				textLink: "My videos",
 			},
 		],

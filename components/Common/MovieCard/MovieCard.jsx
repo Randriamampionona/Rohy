@@ -8,12 +8,20 @@ const MovieCard = ({ movie, displayBottom }) => {
 			{/* videos */}
 			<div className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden">
 				<Image
-					src={movie.backdrop_path}
+					src={
+						movie?.backdrop_path
+							? `https://image.tmdb.org/t/p/original${movie?.backdrop_path}`
+							: `https://image.tmdb.org/t/p/original${movie?.poster_path}`
+					}
 					alt={movie.title}
 					layout="fill"
 					objectFit="cover"
 					placeholder="blur"
-					blurDataURL={movie.backdrop_path}
+					blurDataURL={
+						movie?.backdrop_path
+							? `https://image.tmdb.org/t/p/original${movie?.backdrop_path}`
+							: `https://image.tmdb.org/t/p/original${movie?.poster_path}`
+					}
 					className="hover:scale-110 transition-all"
 				/>
 
