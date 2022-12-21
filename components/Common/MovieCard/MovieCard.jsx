@@ -1,12 +1,21 @@
 import Image from "next/image";
 import logo from "../../../public/assets/logo-with-rose-color.webp";
 import { FaPlay } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 const MovieCard = ({ movie, displayBottom }) => {
+	const { push } = useRouter();
+
+	const navigatehandler = (videoID) => {
+		push(`/watch/${videoID}`);
+	};
+
 	return (
 		<div className="relative w-full h-auto space-y-3">
 			{/* videos */}
-			<div className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden">
+			<div
+				className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden"
+				onClick={() => navigatehandler(movie.id)}>
 				<Image
 					src={
 						movie?.backdrop_path
@@ -50,7 +59,9 @@ const MovieCard = ({ movie, displayBottom }) => {
 					</p>
 				</div>
 
-				<button className="p-2 rounded text-whiteColor text-xs border-0 outline-0 bg-lightDarkColor hover:bg-whiteColor/10">
+				<button
+					className="p-2 rounded text-whiteColor text-xs border-0 outline-0 bg-lightDarkColor hover:bg-whiteColor/10"
+					onClick={() => navigatehandler(movie.id)}>
 					<span>
 						<FaPlay />
 					</span>

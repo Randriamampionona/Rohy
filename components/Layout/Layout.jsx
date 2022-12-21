@@ -4,12 +4,14 @@ import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 
 const Layout = ({ children }) => {
-	const { pathname } = useRouter();
+	const { pathname, query } = useRouter();
 
 	return (
 		<Fragment>
 			<MetaHead />
-			{!pathname.includes("authorization") && <Header />}
+			{!pathname.includes("authorization") && !query.videoID && (
+				<Header />
+			)}
 			<Toaster position="top-right" />
 			{children}
 		</Fragment>
