@@ -15,7 +15,7 @@ const Header = ({ navLinks }) => {
 	const [menuOpen, setMenuOpen] = useState(false);
 
 	return (
-		<header className="z-50 sticky top-0 flex items-center justify-between w-full h-16 px-4 bg-darkColor shadow shadow-darkColor md:px-6 lg:px-10">
+		<header className="z-50 sticky top-0 flex items-center justify-between w-full h-16 px-4 bg-darkColor shadow shadow-darkColor border-b border-[#787ed70a] md:px-6 lg:px-10">
 			{/* logo */}
 			<Link href={"/"}>
 				<Image
@@ -113,7 +113,7 @@ Header.defaultProps = {
 
 		withAuthLinks: [
 			{
-				slug: "/live",
+				slug: "/live?p=all-channels&key=548148691",
 				textLink: "Live",
 			},
 			{

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FaSignOutAlt } from "react-icons/fa";
 import { AuthContext } from "../../../store/context/AuthContext";
 import { ImSpinner2 } from "react-icons/im";
-import Image from "next/future/image";
+import Image from "next/image";
 
 const DropdownMenu = ({ menus, setMenuOpen }) => {
 	const { signoutFunc, authLoading, currentUser } = AuthContext();
@@ -15,7 +15,7 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 	return (
 		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md transition-all">
 			<ul className="flex flex-col w-full">
-				{currentUser && (
+				{currentUser?.photoURL && currentUser?.displayName && (
 					<div className="flex items-center justify-start gap-x-3 px-4 py-3">
 						<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden hover:opacity-90">
 							<Image

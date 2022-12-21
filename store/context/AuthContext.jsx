@@ -14,6 +14,11 @@ import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
 import nookies from "nookies";
 
+const defaultInfos = {
+	photoURL:
+		"https://w7.pngwing.com/pngs/754/2/png-transparent-samsung-galaxy-a8-a8-user-login-telephone-avatar-pawn-blue-angle-sphere-thumbnail.png",
+};
+
 const initState = {
 	currentUser: null,
 	authLoading: {
@@ -61,11 +66,14 @@ export const AuthProvider = ({ children }) => {
 				password
 			);
 
-			await updateProfile(result?.user, {
-				displayName: username,
-				photoURL:
-					"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTwcoElKz2FeycqmGkscb3XtTQw653-uVmgOsg4a6l0w&s",
-			});
+			if (result) {
+				await updateProfile(result.user, {
+					displayName: username,
+					photoURL: defaultInfos.photoURL,
+				});
+
+				toastNotify("success", `Hi👋, ${username}`);
+			}
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
@@ -105,7 +113,7 @@ export const AuthProvider = ({ children }) => {
 				maxAge: 60 * 60 * 60 * 24,
 			});
 
-			toastNotify("success", `So long ${result.user?.displayName}`);
+			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
 		} catch (error) {
 			toastNotify("error", error.message);
@@ -126,7 +134,7 @@ export const AuthProvider = ({ children }) => {
 		try {
 			await signOut(auth);
 			nookies.destroy(null, "token");
-			toastNotify("success", "See you soon");
+			toastNotify("success", "See you soon 😊");
 			replace("/infos");
 		} catch (error) {
 			toastNotify("error", error.message);
@@ -157,7 +165,7 @@ export const AuthProvider = ({ children }) => {
 				maxAge: 60 * 60 * 60 * 24,
 			});
 
-			toastNotify("success", `So long ${result.user?.displayName}`);
+			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
 		} catch (error) {
 			toastNotify("error", error.message);

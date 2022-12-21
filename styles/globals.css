@@ -28,7 +28,7 @@
 	}
 
 	.pageSection {
-		@apply w-full py-8 px-4 md:px-6 lg:px-8 xl:px-10;
+		@apply w-full py-8 px-4 md:px-10 lg:px-14 xl:px-20;
 	}
 }
 
