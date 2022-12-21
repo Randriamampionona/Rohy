@@ -7,7 +7,6 @@ const Suggestion = ({ suggestionData }) => {
 		<div className="grid grid-cols-1 grid-rows-[16rem] gap-y-4 gap-x-0 w-full md:gap-y-0 md:gap-x-4 md:grid-rows-[32rem] md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			<div className="group relative w-full overflow-hidden lg:col-span-2 xl:col-span-3">
 				<Image
-					// src={suggestionData?.poster_path}
 					src={`https://image.tmdb.org/t/p/w500${suggestionData?.poster_path}`}
 					alt={suggestionData?.title}
 					layout="fill"
@@ -17,6 +16,7 @@ const Suggestion = ({ suggestionData }) => {
 				<Detail
 					title={suggestionData?.title}
 					overview={suggestionData?.overview}
+					videoID={suggestionData?.id}
 				/>
 				<div className="absolute bottom-2 px-4">
 					<Image

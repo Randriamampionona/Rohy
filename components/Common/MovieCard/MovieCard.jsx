@@ -14,7 +14,7 @@ const MovieCard = ({ movie, displayBottom }) => {
 		<div className="relative w-full h-auto space-y-3">
 			{/* videos */}
 			<div
-				className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden"
+				className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden active:scale-95"
 				onClick={() => navigatehandler(movie.id)}>
 				<Image
 					src={

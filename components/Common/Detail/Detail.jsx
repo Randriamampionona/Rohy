@@ -1,6 +1,13 @@
+import { useRouter } from "next/router";
 import { FiHeart, FiPlay, FiShare2 } from "react-icons/fi";
 
-const Detail = ({ title, overview }) => {
+const Detail = ({ title, overview, videoID }) => {
+	const { push } = useRouter();
+
+	const navigatehandler = () => {
+		push(`/watch/${videoID}`);
+	};
+
 	return (
 		<div className="z-10 absolute inset-0 hidden place-items-center bg-black/70 group-hover:grid">
 			<div className="flex flex-col items-center justify-center last:gap-y-1 text-center max-w-[70%]">
@@ -14,7 +21,9 @@ const Detail = ({ title, overview }) => {
 					<span className="grid place-items-center w-10 h-10 rounded-full border border-whiteColor hover:border-primaryColor hover:bg-primaryColor cursor-pointer">
 						<FiHeart />
 					</span>
-					<span className="grid place-items-center w-10 h-10 rounded-full border border-whiteColor hover:border-primaryColor hover:bg-primaryColor cursor-pointer">
+					<span
+						className="grid place-items-center w-10 h-10 rounded-full border border-whiteColor hover:border-primaryColor hover:bg-primaryColor cursor-pointer"
+						onClick={navigatehandler}>
 						<FiPlay />
 					</span>
 					<span className="grid place-items-center w-10 h-10 rounded-full border border-whiteColor hover:border-primaryColor hover:bg-primaryColor cursor-pointer">

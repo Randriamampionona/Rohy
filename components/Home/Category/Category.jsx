@@ -97,7 +97,9 @@ const Movie = ({ img, alt, title, videoID }) => {
 
 	return (
 		<Fragment>
-			<div className="relative w-full h-full" onClick={navigatehandler}>
+			<div
+				className="relative w-full h-full active:scale-95"
+				onClick={navigatehandler}>
 				<Image
 					src={`https://image.tmdb.org/t/p/original${img}`}
 					alt={alt}

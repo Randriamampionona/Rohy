@@ -9,8 +9,8 @@ const WatchPage = ({ error, videoDetails }) => {
 	if (error) return <h1>{error}</h1>;
 
 	return (
-		<section className="relative w-screen h-screen overflow-hidden">
-			<div className="flex items-center justify-between w-screen px-3 py-1 bg-darkColor">
+		<section className="relative w-screen">
+			<div className="flex items-center justify-between w-screen px-4 py-3 bg-darkColor">
 				<button
 					className="bg-lightDarkColor rounded-full text-base text-whiteColor/50 hover:text-whiteColor p-2"
 					onClick={back}>
@@ -23,15 +23,17 @@ const WatchPage = ({ error, videoDetails }) => {
 				</h1>
 			</div>
 
-			<ReactPlayer
-				playing={true}
-				muted={true}
-				controls={true}
-				width={"100%"}
-				height={"100%"}
-				pip={true}
-				url={`https://www.youtube.com/watch?v=${videoDetails?.key}`}
-			/>
+			<main className="w-full h-full">
+				<ReactPlayer
+					playing={true}
+					muted={true}
+					controls={true}
+					width={"100%"}
+					height={"100%"}
+					pip={true}
+					url={`https://www.youtube.com/watch?v=${videoDetails?.key}`}
+				/>
+			</main>
 		</section>
 	);
 };
