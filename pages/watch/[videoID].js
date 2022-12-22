@@ -4,9 +4,18 @@ import { RiHeartLine, RiStarLine } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 import { MetaHead, Player } from "./../../components/Common";
+import { useListHandler } from "../../hooks";
+import { ImSpinner2 } from "react-icons/im";
 
 const WatchPage = ({ error, videoDetails }) => {
+	const { addToMyListFunc, loading } = useListHandler();
 	const { back } = useRouter();
+
+	const addToMyListHandler = async (key) => {
+		if (key === "add") {
+			!loading.add && (await addToMyListFunc(videoDetails));
+		}
+	};
 
 	if (error) return <h1>{error}</h1>;
 
@@ -42,11 +51,21 @@ const WatchPage = ({ error, videoDetails }) => {
 					</div>
 
 					<div className="flex items-center space-x-2 h-full">
-						<button className="flex items-center space-x-1 rounded bg-primaryColor px-3 h-[80%] text-whiteColor text-base hover:bg-primaryColor/95">
-							<span>
-								<RiHeartLine />
-							</span>
-							<span>Add to My List</span>
+						<button
+							className="flex items-center space-x-1 rounded bg-primaryColor px-3 h-[80%] text-whiteColor text-base hover:bg-primaryColor/95"
+							onClick={(e) => addToMyListHandler("add")}>
+							{loading.add ? (
+								<span className="animate-spin">
+									<ImSpinner2 />
+								</span>
+							) : (
+								<>
+									<span>
+										<RiHeartLine />
+									</span>
+									<span>Add to My List</span>
+								</>
+							)}
 						</button>
 
 						<button className="flex items-center space-x-1 rounded bg-lightDarkColor px-3 h-[80%] text-whiteColor text-base hover:bg-primaryColor">

@@ -2,28 +2,19 @@ import Image from "next/image";
 import logo from "../../../public/assets/logo-with-rose-color.webp";
 import { FaPlay } from "react-icons/fa";
 import { useRouter } from "next/router";
-import { useAddToList } from "../../../hooks";
-import { ImSpinner2 } from "react-icons/im";
+import AddRomoveBtn from "./AddRomoveBtn";
 
 const MovieCard = ({ movie, displayBottom }) => {
-	const { addToListMyFunc, loading } = useAddToList();
 	const { push } = useRouter();
 
 	const navigatehandler = (videoID) => {
 		push(`/watch/${videoID}`);
 	};
 
-	const addToMyListHandler = async () => {
-		!loading && (await addToListMyFunc(movie));
-	};
-
 	return (
 		<div className="relative w-full h-auto space-y-3">
 			{/* videos */}
-			<div
-				className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden active:scale-95"
-				onClick={() => navigatehandler(movie.id)}
-				onDoubleClick={addToMyListHandler}>
+			<div className="group relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden">
 				<Image
 					src={
 						movie?.backdrop_path
@@ -39,7 +30,8 @@ const MovieCard = ({ movie, displayBottom }) => {
 							? `https://image.tmdb.org/t/p/original${movie?.backdrop_path}`
 							: `https://image.tmdb.org/t/p/original${movie?.poster_path}`
 					}
-					className="hover:scale-110 transition-all"
+					className="hover:scale-110 transition-all active:scale-95"
+					onClick={() => navigatehandler(movie.id)}
 				/>
 
 				{/* logo */}
@@ -55,14 +47,8 @@ const MovieCard = ({ movie, displayBottom }) => {
 					/>
 				</figure>
 
-				{/* loading */}
-				{loading && (
-					<div className="z-20 absolute inset-0 w-full h-full grid place-items-center bg-black/60">
-						<span className="animate-spin text-whiteColor">
-							<ImSpinner2 />
-						</span>
-					</div>
-				)}
+				{/* add/remove from list btn */}
+				<AddRomoveBtn movie={movie} />
 			</div>
 
 			{/* infos */}
@@ -77,7 +63,7 @@ const MovieCard = ({ movie, displayBottom }) => {
 				</div>
 
 				<button
-					className="p-2 rounded text-whiteColor text-xs border-0 outline-0 bg-lightDarkColor hover:bg-whiteColor/10"
+					className="p-2 rounded text-whiteColor text-xs border-0 outline-0 bg-lightDarkColor hover:bg-whiteColor/10 active:scale-95"
 					onClick={() => navigatehandler(movie.id)}>
 					<span>
 						<FaPlay />
