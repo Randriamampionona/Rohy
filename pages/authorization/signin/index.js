@@ -15,7 +15,7 @@ export default SigninPage;
 export const getServerSideProps = async (ctx) => {
 	try {
 		const cookies = nookies.get(ctx);
-		const token = await admin.auth().verifyIdToken(cookies);
+		const token = await admin.auth().verifyIdToken(cookies.user_token);
 
 		if (token) {
 			return {

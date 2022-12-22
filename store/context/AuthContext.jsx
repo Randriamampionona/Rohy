@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
 import nookies from "nookies";
+import { useSaveUser } from "../../hooks";
 
 const defaultInfos = {
 	photoURL:
@@ -37,6 +38,7 @@ const initState = {
 const Context = createContext(initState);
 
 export const AuthProvider = ({ children }) => {
+	const { saveUserFunc } = useSaveUser();
 	const [currentUser, setCurrentUser] = useState(null);
 	const [authLoading, setAuthLoading] = useState(initState.authLoading);
 	const googleProvider = new GoogleAuthProvider();
@@ -66,22 +68,21 @@ export const AuthProvider = ({ children }) => {
 				password
 			);
 
-			if (result) {
-				await updateProfile(result.user, {
-					displayName: username,
-					photoURL: defaultInfos.photoURL,
-				});
+			await updateProfile(result?.user, {
+				displayName: username,
+				photoURL: defaultInfos.photoURL,
+			});
 
-				toastNotify("success", `Hi👋, ${username}`);
-			}
+			await saveUserFunc(result?.user);
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
-			nookies.set(undefined, "token", token, {
+			nookies.set(undefined, "user_token", token, {
 				path: "/",
 				maxAge: 60 * 60 * 60 * 24,
 			});
 
+			toastNotify("success", `Hi👋, ${username}`);
 			replace("/");
 		} catch (error) {
 			toastNotify("error", error.message);
@@ -108,7 +109,7 @@ export const AuthProvider = ({ children }) => {
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
-			nookies.set(undefined, "token", token, {
+			nookies.set(undefined, "user_token", token, {
 				path: "/",
 				maxAge: 60 * 60 * 60 * 24,
 			});
@@ -133,7 +134,7 @@ export const AuthProvider = ({ children }) => {
 
 		try {
 			await signOut(auth);
-			nookies.destroy(null, "token");
+			nookies.destroy(null, "user_token");
 			toastNotify("success", "See you soon 😊");
 			replace("/infos");
 		} catch (error) {
@@ -158,9 +159,11 @@ export const AuthProvider = ({ children }) => {
 				provider === "google" ? googleProvider : githubProvider
 			);
 
+			await saveUserFunc(result.user);
+
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
-			nookies.set(undefined, "token", token, {
+			nookies.set(undefined, "user_token", token, {
 				path: "/",
 				maxAge: 60 * 60 * 60 * 24,
 			});

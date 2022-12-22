@@ -1,26 +1,32 @@
 import { Category, Intro, Suggestion } from "../components/Home";
 import admin from "../lib/firebaseAdmin.config";
 import nookies from "nookies";
+import { Fragment } from "react";
+import { MetaHead } from "../components/Common";
 
 const HomePage = ({ moviesData }) => {
 	const { suggestion, ...rest } = moviesData;
 
 	return (
-		<section className="w-full">
-			<Intro />
+		<Fragment>
+			<MetaHead subTitle={`Welcome back to Rohy.io`} />
 
-			<main className="w-full py-16 px-4 md:px-6 lg:px-8 xl:px-12 space-y-20">
-				<Suggestion suggestionData={suggestion} />
+			<section className="w-full">
+				<Intro />
 
-				{Object.entries(rest).map((res) => (
-					<Category
-						key={res[0]}
-						categoryDetails={res[1].details}
-						moviesList={res[1].movies}
-					/>
-				))}
-			</main>
-		</section>
+				<main className="w-full py-16 px-4 md:px-6 lg:px-8 xl:px-12 space-y-20">
+					<Suggestion suggestionData={suggestion} />
+
+					{Object.entries(rest).map((res) => (
+						<Category
+							key={res[0]}
+							categoryDetails={res[1].details}
+							moviesList={res[1].movies}
+						/>
+					))}
+				</main>
+			</section>
+		</Fragment>
 	);
 };
 
@@ -29,26 +35,17 @@ export default HomePage;
 export const getServerSideProps = async (ctx) => {
 	try {
 		const cookies = nookies.get(ctx);
-		const token = await admin.auth().verifyIdToken(cookies.token);
+		const token = await admin.auth().verifyIdToken(cookies.user_token);
 
 		// the user is authenticated!
 		if (token) {
 			// FETCH STUFF HERE!! 🚀
-			// offline fetch
-			// const URL1 = "http://localhost:3000/api/movies";
-			// const URL2 = "http://localhost:3000/api/movies";
-			// const URL3 = "http://localhost:3000/api/movies";
-			// const URL4 = "http://localhost:3000/api/movies";
 
 			// online fetch
-			const URL1 =
-				"https://api.themoviedb.org/3/movie/upcoming?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
-			const URL2 =
-				"https://api.themoviedb.org/3/movie/now_playing?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
-			const URL3 =
-				"https://api.themoviedb.org/3/movie/popular?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=2";
-			const URL4 =
-				"https://api.themoviedb.org/3/movie/top_rated?api_key=21ad01e70707b8167d893fa104cf05cb&language=en-US&page=1";
+			const URL1 = `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US&page=1`;
+			const URL2 = `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US&page=1`;
+			const URL3 = `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US&page=2`;
+			const URL4 = `https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US&page=1`;
 
 			const promise1 = fetch(URL1).then((res) => res.json());
 			const promise2 = fetch(URL2).then((res) => res.json());
@@ -105,10 +102,6 @@ export const getServerSideProps = async (ctx) => {
 		ctx.res.writeHead(302, { Location: "/authorization/signin" });
 		ctx.res.end();
 
-		// `as never` prevents inference issues
-		// with InferGetServerSidePropsType.
-		// The props returned here don't matter because we've
-		// already redirected the user.
 		return { props: {} };
 	}
 };

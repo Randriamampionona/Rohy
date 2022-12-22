@@ -2,12 +2,19 @@ import Image from "next/image";
 import logo from "../../../public/assets/logo-with-rose-color.webp";
 import { FaPlay } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { useAddToList } from "../../../hooks";
+import { ImSpinner2 } from "react-icons/im";
 
 const MovieCard = ({ movie, displayBottom }) => {
+	const { addToListMyFunc, loading } = useAddToList();
 	const { push } = useRouter();
 
 	const navigatehandler = (videoID) => {
 		push(`/watch/${videoID}`);
+	};
+
+	const addToMyListHandler = async () => {
+		!loading && (await addToListMyFunc(movie));
 	};
 
 	return (
@@ -15,7 +22,8 @@ const MovieCard = ({ movie, displayBottom }) => {
 			{/* videos */}
 			<div
 				className="relative w-full h-32 bg-lightDarkColor/30 shadow shadow-darkColor rounded overflow-hidden active:scale-95"
-				onClick={() => navigatehandler(movie.id)}>
+				onClick={() => navigatehandler(movie.id)}
+				onDoubleClick={addToMyListHandler}>
 				<Image
 					src={
 						movie?.backdrop_path
@@ -46,6 +54,15 @@ const MovieCard = ({ movie, displayBottom }) => {
 						objectFit="cover"
 					/>
 				</figure>
+
+				{/* loading */}
+				{loading && (
+					<div className="z-20 absolute inset-0 w-full h-full grid place-items-center bg-black/60">
+						<span className="animate-spin text-whiteColor">
+							<ImSpinner2 />
+						</span>
+					</div>
+				)}
 			</div>
 
 			{/* infos */}

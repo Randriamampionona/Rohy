@@ -1,21 +1,31 @@
-import { MovieCard, PageHeader } from "../../components/Common";
+import { MetaHead, MovieCard, PageHeader } from "../../components/Common";
 import axios from "axios";
+import { Fragment } from "react";
+import { useRouter } from "next/router";
 
 const LivePage = ({ moviesList }) => {
-	return (
-		<section className="pageSection">
-			<PageHeader />
+	const {
+		query: { p },
+	} = useRouter();
 
-			<main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
-				{moviesList?.map((movie) => (
-					<MovieCard
-						key={movie.id}
-						movie={movie}
-						displayBottom={"release_date"}
-					/>
-				))}
-			</main>
-		</section>
+	return (
+		<Fragment>
+			<MetaHead subTitle={`Live - ${p || ""}`} />
+
+			<section className="pageSection">
+				<PageHeader />
+
+				<main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
+					{moviesList?.map((movie) => (
+						<MovieCard
+							key={movie.id}
+							movie={movie}
+							displayBottom={"release_date"}
+						/>
+					))}
+				</main>
+			</section>
+		</Fragment>
 	);
 };
 

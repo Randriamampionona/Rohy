@@ -1,10 +1,15 @@
-import { PageHeader } from "../../components/Common";
+import { Fragment } from "react";
+import { MetaHead, PageHeader } from "../../components/Common";
 
 const MyVideosPage = () => {
 	return (
-		<section className="pageSection">
-			<PageHeader />
-		</section>
+		<Fragment>
+			<MetaHead subTitle={"My videos"} />
+
+			<section className="pageSection">
+				<PageHeader />
+			</section>
+		</Fragment>
 	);
 };
 

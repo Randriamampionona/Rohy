@@ -1,10 +1,14 @@
-import { PageHeader } from "../../components/Common";
+import { Fragment } from "react";
+import { MetaHead, PageHeader } from "../../components/Common";
 
 const ChannelsPage = () => {
 	return (
-		<section className="pageSection">
-			<PageHeader />
-		</section>
+		<Fragment>
+			<MetaHead subTitle={"Channels"} />
+			<section className="pageSection">
+				<PageHeader />
+			</section>
+		</Fragment>
 	);
 };
 
