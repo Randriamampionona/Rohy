@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useRouter } from "next/router";
 
-const PageHeader = ({ heading, navLinks }) => {
+const PageHeader = ({ heading, page, navLinks }) => {
 	const {
 		query: { p },
 	} = useRouter();
@@ -27,7 +27,7 @@ const PageHeader = ({ heading, navLinks }) => {
 										: ""
 								}`}>
 								<Link
-									href={`live?p=${link.slug.p}&key=${link.slug.key}`}>
+									href={`${page}?p=${link.slug.p}&key=${link.slug.key}`}>
 									{link.textLink}
 								</Link>
 							</li>
@@ -41,6 +41,7 @@ const PageHeader = ({ heading, navLinks }) => {
 
 PageHeader.defaultProps = {
 	heading: "Live",
+	page: "live",
 	navLinks: [
 		{
 			slug: {

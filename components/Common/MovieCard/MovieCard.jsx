@@ -4,7 +4,7 @@ import { FaPlay } from "react-icons/fa";
 import { useRouter } from "next/router";
 import AddRomoveBtn from "./AddRomoveBtn";
 
-const MovieCard = ({ movie, displayBottom }) => {
+const MovieCard = ({ movie, displayBottom, showPlayBtn = true }) => {
 	const { push } = useRouter();
 
 	const navigatehandler = (videoID) => {
@@ -62,13 +62,15 @@ const MovieCard = ({ movie, displayBottom }) => {
 					</p>
 				</div>
 
-				<button
-					className="p-2 rounded text-whiteColor text-xs border-0 outline-0 bg-lightDarkColor hover:bg-whiteColor/10 active:scale-95"
-					onClick={() => navigatehandler(movie.id)}>
-					<span>
-						<FaPlay />
-					</span>
-				</button>
+				{showPlayBtn && (
+					<button
+						className="p-2 rounded text-whiteColor text-xs border-0 outline-0 bg-lightDarkColor hover:bg-whiteColor/10 active:scale-95"
+						onClick={() => navigatehandler(movie.id)}>
+						<span>
+							<FaPlay />
+						</span>
+					</button>
+				)}
 			</div>
 		</div>
 	);

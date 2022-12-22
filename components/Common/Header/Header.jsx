@@ -132,7 +132,7 @@ Header.defaultProps = {
 				textLink: "Channels & Apps",
 			},
 			{
-				slug: "/my-videos",
+				slug: "/my-videos?p=playlist&key=35914515755",
 				key: "/my-videos",
 				textLink: "My videos",
 			},
