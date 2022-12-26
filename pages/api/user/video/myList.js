@@ -1,6 +1,6 @@
 import { db__admin } from "../../../../lib/firebaseAdmin.config";
-import isAuth from "../../../../middlewares/isAuth";
 import apiErrorHandler from "../../../../utils/apiErrorHandler";
+import isAuth from "../../_isAuth";
 
 const handler = async (req, res) => {
 	if (req.method !== "POST" && req.method !== "DELETE")

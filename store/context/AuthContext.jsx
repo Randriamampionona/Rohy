@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }) => {
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
 		} catch (error) {
-			toastNotify("error", error.message);
+			toastNotify("error", error);
 		} finally {
 			setAuthLoading((prev) => ({
 				...prev,
