@@ -52,7 +52,7 @@ const useListHandler = () => {
 		try {
 			if (!docID) return toastNotify("error", "Cannot find the video");
 
-			const URL = "/user/video/myList";
+			const URL = "/v1/user/video/myList";
 			const fetch = await axios.delete(URL, {
 				withCredentials: true,
 				headers: { doc_id: docID },
