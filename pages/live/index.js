@@ -31,7 +31,7 @@ const LivePage = ({ moviesList }) => {
 
 export default LivePage;
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = async (_ctx) => {
 	try {
 		// const p = ctx.query.p;
 		// const key = ctx.query.key;

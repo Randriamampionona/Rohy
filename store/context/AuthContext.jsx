@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 	const [authLoading, setAuthLoading] = useState(initState.authLoading);
 	const googleProvider = new GoogleAuthProvider();
 	const githubProvider = new GithubAuthProvider();
-	const { replace } = useRouter();
+	const { replace, query } = useRouter();
 
 	// listen for user state
 	useEffect(
@@ -79,13 +79,12 @@ export const AuthProvider = ({ children }) => {
 
 			nookies.set(undefined, "user_token", token, {
 				path: "/",
-				maxAge: 60 * 60 * 60 * 24,
 			});
 
 			toastNotify("success", `Hi👋, ${username}`);
 			replace("/");
 		} catch (error) {
-			toastNotify("error", error.message);
+			toastNotify("error", error);
 		} finally {
 			setAuthLoading((prev) => ({
 				...prev,
@@ -111,7 +110,6 @@ export const AuthProvider = ({ children }) => {
 
 			nookies.set(undefined, "user_token", token, {
 				path: "/",
-				maxAge: 60 * 60 * 60 * 24,
 			});
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
@@ -138,7 +136,7 @@ export const AuthProvider = ({ children }) => {
 			toastNotify("success", "See you soon 😊");
 			replace("/infos");
 		} catch (error) {
-			toastNotify("error", error.message);
+			toastNotify("error", error);
 		} finally {
 			setAuthLoading((prev) => ({
 				...prev,
@@ -165,13 +163,12 @@ export const AuthProvider = ({ children }) => {
 
 			nookies.set(undefined, "user_token", token, {
 				path: "/",
-				maxAge: 60 * 60 * 60 * 24,
 			});
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
 		} catch (error) {
-			toastNotify("error", error.message);
+			toastNotify("error", error);
 		} finally {
 			setAuthLoading((prev) => ({
 				...prev,

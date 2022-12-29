@@ -1,5 +1,5 @@
-import { db__admin } from "../../../../lib/firebaseAdmin.config";
-import apiErrorHandler from "../../../../utils/apiErrorHandler";
+import apiErrorHandler from "./../../../../../utils/apiErrorHandler";
+import { db__admin } from "../../../../../lib/firebaseAdmin.config";
 import isAuth from "../../_isAuth";
 
 const handler = async (req, res) => {

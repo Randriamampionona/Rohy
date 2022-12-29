@@ -30,7 +30,12 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 
 					<div className="grid">
 						<h1 className="text-base font-mediumleading-none">
-							{currentUser?.displayName}
+							{currentUser?.displayName.length > 8
+								? `${currentUser?.displayName?.substring(
+										0,
+										8
+								  )}...`
+								: currentUser?.displayName}
 						</h1>
 						<Link href={"/account"}>
 							<a className="text-sm text-gray-500 hover:text-primaryColor">

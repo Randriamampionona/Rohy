@@ -67,8 +67,7 @@ const AuthForm = ({ page, socialMedia }) => {
 						src={authImg}
 						alt="rohy auth page"
 						layout="fill"
-						objectFit="cover"
-						className="brightness-[0.25]"
+						className="brightness-[0.25] object-cover"
 					/>
 					<div className="z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center max-w-[22rem] w-full">
 						<Image
@@ -136,6 +135,7 @@ const AuthForm = ({ page, socialMedia }) => {
 									<input
 										required
 										autoFocus
+										max={8}
 										autoComplete="off"
 										type="text"
 										name="username"

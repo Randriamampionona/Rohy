@@ -8,11 +8,13 @@ import { AuthContext } from "../../../store/context/AuthContext";
 import Avatar from "react-avatar";
 import DropdownMenu from "./DropdownMenu";
 import { useState } from "react";
+import MobileMenu from "../MobileMenu/MobileMenu";
 
 const Header = ({ navLinks }) => {
 	const { currentUser } = AuthContext();
 	const { push, pathname } = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [open, setOpen] = useState(false);
 
 	return (
 		<header className="z-50 sticky top-0 flex items-center justify-between w-full h-16 px-4 bg-darkColor shadow shadow-darkColor border-b border-[#787ed70a] md:px-6 lg:px-10">
@@ -88,12 +90,17 @@ const Header = ({ navLinks }) => {
 					</button>
 				)}
 
-				<button className="text-3xl md:hidden">
+				<button
+					className="text-3xl md:hidden"
+					onClick={(_) => setOpen(true)}>
 					<span>
 						<RiMenuFill />
 					</span>
 				</button>
 			</div>
+
+			{/* mobile menu */}
+			{open && <MobileMenu setOpen={setOpen} />}
 		</header>
 	);
 };
