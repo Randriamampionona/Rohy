@@ -8,17 +8,18 @@ const baseURL =
 const verifyTokenHandler = async (req) => {
 	try {
 		const fetcher = await fetch(`${baseURL}/api/v1/verifyAuthToken`, {
-			headers: {
-				user_token: req.cookies.get("user_token")?.value,
-			},
 			credentials: "include",
+			headers: {
+				// user_token: req.cookies.get("user_token")?.value, if using next 13
+				user_token: req.cookies.get("user_token"), //if using next 12
+			},
 		});
 		const result = await fetcher.json();
 
 		return result;
 	} catch (error) {
-		// :back to infos page if some erro occured will verifying user token
-		return NextResponse.redirect(`${baseURL}/infos`);
+		// back to auth page if some error occured
+		return NextResponse.redirect(`${baseURL}authorization`);
 	}
 };
 
