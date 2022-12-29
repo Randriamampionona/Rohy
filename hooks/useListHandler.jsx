@@ -15,7 +15,7 @@ const useListHandler = () => {
 			if (!videoDetails)
 				return toastNotify("error", "Please provide a valide video");
 
-			const URL = "/user/video/myList";
+			const URL = "/v1/user/video/myList";
 			const fetch = await axios.post(
 				URL,
 				{ videoDetails },
