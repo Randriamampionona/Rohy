@@ -10,7 +10,7 @@ axios.defaults.baseURL =
 
 const MyApp = ({ Component, pageProps }) => {
 	return (
-		<AuthProvider>
+		<AuthProvider currentUserProps={pageProps?.currentUserProps}>
 			<Layout>
 				<Component {...pageProps} />
 			</Layout>

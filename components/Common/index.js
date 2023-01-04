@@ -7,3 +7,7 @@ export { default as PageHeader } from "./PageHeader/PageHeader";
 export { default as MovieCard } from "./MovieCard/MovieCard";
 export { default as Player } from "./Player/Player";
 export { default as MobileMenu } from "./MobileMenu/MobileMenu";
+export { default as Footer } from "./Footer/Footer";
+
+// loader
+export { default as HeaderLoader } from "./Loader/HeaderLoader";

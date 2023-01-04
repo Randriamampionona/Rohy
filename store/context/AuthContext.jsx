@@ -10,6 +10,7 @@ import {
 	onAuthStateChanged,
 	updateProfile,
 } from "firebase/auth";
+// import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
 import nookies from "nookies";
@@ -37,13 +38,14 @@ const initState = {
 
 const Context = createContext(initState);
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	const { saveUserFunc } = useSaveUser();
 	const [currentUser, setCurrentUser] = useState(null);
+	// const [currentUser, loadCurrentUser, _error] = useAuthState(auth);
 	const [authLoading, setAuthLoading] = useState(initState.authLoading);
 	const googleProvider = new GoogleAuthProvider();
 	const githubProvider = new GithubAuthProvider();
-	const { replace, query } = useRouter();
+	const { replace } = useRouter();
 
 	// listen for user state
 	useEffect(
@@ -178,7 +180,8 @@ export const AuthProvider = ({ children }) => {
 	};
 
 	const values = {
-		currentUser,
+		currentUser: currentUserProps || currentUser,
+		// loadCurrentUser,
 		authLoading,
 		signupFunc,
 		signinFunc,

@@ -2,6 +2,7 @@ import { MetaHead, MovieCard, PageHeader } from "../../components/Common";
 import axios from "axios";
 import { Fragment } from "react";
 import { useRouter } from "next/router";
+import getCurrentUserProps from "../../utils/getCurrentUserProps";
 
 const LivePage = ({ moviesList }) => {
 	const {
@@ -31,7 +32,9 @@ const LivePage = ({ moviesList }) => {
 
 export default LivePage;
 
-export const getServerSideProps = async (_ctx) => {
+export const getServerSideProps = async (ctx) => {
+	const user = await getCurrentUserProps(ctx);
+
 	try {
 		// const p = ctx.query.p;
 		// const key = ctx.query.key;
@@ -60,6 +63,7 @@ export const getServerSideProps = async (_ctx) => {
 
 		return {
 			props: {
+				...user,
 				moviesList,
 			},
 		};
@@ -67,6 +71,7 @@ export const getServerSideProps = async (_ctx) => {
 		console.log(error);
 		return {
 			props: {
+				...user,
 				error: error.message,
 			},
 		};

@@ -1,23 +1,17 @@
 import { Fragment } from "react";
-import { IntroSlider, Prices, SupportDevice } from "../../components/Infos";
+import { MetaHead } from "../../components/Common";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
-import { MetaHead } from "./../../components/Common";
 
-const HomePage = () => {
+const OffersPage = () => {
 	return (
 		<Fragment>
-			<MetaHead subTitle={"Get started with us"} />
-
-			<section>
-				<IntroSlider />
-				<SupportDevice />
-				<Prices />
-			</section>
+			<MetaHead subTitle={"Our offers"} />
+			<section className="pageSection">OffersPage</section>
 		</Fragment>
 	);
 };
 
-export default HomePage;
+export default OffersPage;
 
 export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);

@@ -1,6 +1,7 @@
 import { Category, Intro, Suggestion } from "../components/Home";
 import { Fragment } from "react";
 import { MetaHead } from "../components/Common";
+import getCurrentUserProps from "../utils/getCurrentUserProps";
 
 const HomePage = ({ moviesData }) => {
 	const { suggestion, ...rest } = moviesData;
@@ -31,6 +32,7 @@ const HomePage = ({ moviesData }) => {
 export default HomePage;
 
 export const getServerSideProps = async (ctx) => {
+	const user = await getCurrentUserProps(ctx);
 	try {
 		// online fetch
 		const URL1 = `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US&page=1`;
@@ -52,6 +54,7 @@ export const getServerSideProps = async (ctx) => {
 
 		return {
 			props: {
+				...user,
 				moviesData: {
 					suggestion:
 						suggestion.results[
@@ -90,6 +93,6 @@ export const getServerSideProps = async (ctx) => {
 			},
 		};
 	} catch (err) {
-		return { props: {} };
+		return { props: { ...user } };
 	}
 };

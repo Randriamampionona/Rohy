@@ -9,6 +9,7 @@ import { ImSpinner2 } from "react-icons/im";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../lib/firebase.config";
 import { AuthContext } from "../../store/context/AuthContext";
+import getCurrentUserProps from "../../utils/getCurrentUserProps";
 
 const WatchPage = ({ error, videoDetails }) => {
 	const { currentUser } = AuthContext();
@@ -153,6 +154,8 @@ WatchPage.defaultProps = {
 export default WatchPage;
 
 export const getServerSideProps = async (ctx) => {
+	const user = await getCurrentUserProps(ctx);
+
 	try {
 		const videoID = ctx.query.videoID;
 		const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
@@ -169,6 +172,7 @@ export const getServerSideProps = async (ctx) => {
 
 		return {
 			props: {
+				...user,
 				videoDetails: {
 					video,
 					details: {
@@ -181,6 +185,7 @@ export const getServerSideProps = async (ctx) => {
 	} catch (error) {
 		return {
 			props: {
+				...user,
 				error: error.message,
 			},
 		};

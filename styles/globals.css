@@ -30,6 +30,10 @@
 	.pageSection {
 		@apply w-full py-8 px-4 md:px-10 lg:px-14 xl:px-20;
 	}
+
+	.loaderAnimate {
+		@apply bg-gradient-to-tr from-[#292733] to-[#1c1b24] animate-pulse;
+	}
 }
 
 :root {

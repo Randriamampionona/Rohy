@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { Header, MetaHead } from "../Common";
+import { Footer, Header, MetaHead } from "../Common";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 
@@ -14,6 +14,7 @@ const Layout = ({ children }) => {
 			)}
 			<Toaster position="top-right" />
 			{children}
+			{!pathname.includes("authorization") && !query.videoID && <Footer />}
 		</Fragment>
 	);
 };

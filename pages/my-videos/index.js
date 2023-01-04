@@ -3,6 +3,7 @@ import { Fragment, useEffect, useState } from "react";
 import { MetaHead, MovieCard, PageHeader } from "../../components/Common";
 import { db } from "../../lib/firebase.config";
 import { AuthContext } from "../../store/context/AuthContext";
+import getCurrentUserProps from "../../utils/getCurrentUserProps";
 
 const MyVideosPage = ({ heading, page, navLinks }) => {
 	const { currentUser } = AuthContext();
@@ -87,3 +88,21 @@ MyVideosPage.defaultProps = {
 };
 
 export default MyVideosPage;
+
+export const getServerSideProps = async (ctx) => {
+	const user = await getCurrentUserProps(ctx);
+
+	try {
+		return {
+			props: {
+				...user,
+			},
+		};
+	} catch (error) {
+		return {
+			props: {
+				...user,
+			},
+		};
+	}
+};
