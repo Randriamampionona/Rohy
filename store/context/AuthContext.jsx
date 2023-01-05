@@ -56,7 +56,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 	// set cookies
 	const setCookiesHandler = (token) => {
-		nookies.set(undefined, "usert_token", token, {
+		nookies.set(undefined, "user_token", token, {
 			path: "/",
 			sameSite: "strict",
 		});
