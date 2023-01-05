@@ -54,6 +54,14 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		[]
 	);
 
+	// set cookies
+	const setCookiesHandler = (token) => {
+		nookies.set(undefined, "usert_token", token, {
+			path: "/",
+			sameSite: "strict",
+		});
+	};
+
 	// auth functions
 	const signupFunc = async (username, email, password) => {
 		setAuthLoading((prev) => ({
@@ -78,12 +86,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
 			// set cookies
-			nookies.set(undefined, "usert_token", token, {
-				httpOnly: true,
-				path: "/",
-				sameSite: "strict",
-				secure: true,
-			});
+			setCookiesHandler(token);
 
 			toastNotify("success", `Hi👋, ${username}`);
 			replace("/");
@@ -113,12 +116,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
 			// set cookies
-			nookies.set(undefined, "user_token", token, {
-				httpOnly: true,
-				path: "/",
-				sameSite: "strict",
-				secure: true,
-			});
+			setCookiesHandler(token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
@@ -173,12 +171,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
 			// set cookies
-			nookies.set(undefined, "user_token", token, {
-				httpOnly: true,
-				path: "/",
-				sameSite: "strict",
-				secure: true,
-			});
+			setCookiesHandler(token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
