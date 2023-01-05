@@ -13,7 +13,7 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 	};
 
 	return (
-		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md transition-all">
+		<div className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md transition-all" onMouseLeave={_ => setMenuOpen(false)}>
 			<ul className="flex flex-col w-full">
 				<div className="flex items-center justify-start gap-x-3 px-4 py-3">
 					<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden hover:opacity-90">
