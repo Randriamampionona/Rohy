@@ -10,12 +10,14 @@ import DropdownMenu from "./DropdownMenu";
 import { Suspense, useState } from "react";
 import MobileMenu from "../MobileMenu/MobileMenu";
 import HeaderLoader from "../Loader/HeaderLoader";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import motionVariants from "./motionVariants";
 
 const Header = ({ navLinks }) => {
 	const { currentUser } = AuthContext();
 	const { push, pathname } = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [showAdditionalMenu, setShowAdditionalMenu] = useState(false);
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -49,6 +51,53 @@ const Header = ({ navLinks }) => {
 							</Link>
 						</li>
 					))}
+
+					{/* additional menu */}
+					{currentUser && (
+						<div className="relative">
+							<li
+								className="group inline-flex text-whiteColor space-x-2 cursor-pointer select-none hover:text-primaryColor"
+								onClick={(_) =>
+									setShowAdditionalMenu((prev) => !prev)
+								}>
+								<span>more</span>
+								<span className="rotate-180 text-xs leading-normal">
+									▲
+								</span>
+							</li>
+
+							<AnimatePresence mode="wait">
+								{showAdditionalMenu && (
+									<motion.ul
+										onMouseLeave={(_) =>
+											setShowAdditionalMenu(false)
+										}
+										variants={motionVariants.growsIn}
+										initial="initial"
+										animate="animate"
+										exit="exit"
+										className="absolute left-0 top-10 rounded shadow-lg shadow-darkColor bg-whiteColor overflow-hidden">
+										{navLinks.noAuthLinks?.map((link) => (
+											<li
+												key={link.slug}
+												className={`font-medium px-3 py-2 whitespace-pre hover:text-primaryColor hover:bg-gray-100/50 ${
+													pathname === link.key
+														? "text-primaryColor"
+														: "text-darkColor"
+												}`}
+												onClick={(_) =>
+													setShowAdditionalMenu(false)
+												}>
+												<Link href={link.slug}>
+													<a>{link.textLink}</a>
+												</Link>
+											</li>
+										))}
+									</motion.ul>
+								)}
+							</AnimatePresence>
+						</div>
+					)}
 				</ul>
 
 				{/* user interaction */}
@@ -121,15 +170,23 @@ Header.defaultProps = {
 	navLinks: {
 		noAuthLinks: [
 			{
+				slug: "/infos",
+				key: "/infos",
+				textLink: "Infos",
+			},
+			{
 				slug: "/offers",
+				key: "/offers",
 				textLink: "Nos offres",
 			},
 			{
 				slug: "/apps",
+				key: "/apps",
 				textLink: "Applications",
 			},
 			{
 				slug: "/contact",
+				key: "/contact",
 				textLink: "Nous contacter",
 			},
 		],

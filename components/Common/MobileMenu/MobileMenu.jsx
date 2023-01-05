@@ -46,11 +46,27 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 					</span>
 				</div>
 
-				{/* navigation links */}
+				{/* navigation links (withAuthLinks) */}
+				{currentUser && (
+					<ul className="flex-grow w-full px-1 mb-2 select-none border-b border-whiteColor/10">
+						{navLinks.withAuthLinks?.map((link) => (
+							<li
+								key={link.slug}
+								className={`w-full font-medium cursor-pointer px-3 py-2 rounded-sm hover:text-primaryColor hover:bg-lightDarkColor ${
+									pathname === link.key
+										? "text-primaryColor"
+										: "text-whiteColor"
+								}`}
+								onClick={(_) => navigatehandler(link.slug)}>
+								{link.textLink}
+							</li>
+						))}
+					</ul>
+				)}
+
+				{/* navigation links (noAuthLinks) */}
 				<ul className="flex-grow w-full px-1 select-none">
-					{navLinks[
-						currentUser ? "withAuthLinks" : "noAuthLinks"
-					]?.map((link) => (
+					{navLinks.noAuthLinks?.map((link) => (
 						<li
 							key={link.slug}
 							className={`w-full font-medium cursor-pointer px-3 py-2 rounded-sm hover:text-primaryColor hover:bg-lightDarkColor ${

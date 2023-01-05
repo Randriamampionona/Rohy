@@ -10,7 +10,6 @@ import {
 	onAuthStateChanged,
 	updateProfile,
 } from "firebase/auth";
-// import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
 import nookies from "nookies";
@@ -41,7 +40,6 @@ const Context = createContext(initState);
 export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	const { saveUserFunc } = useSaveUser();
 	const [currentUser, setCurrentUser] = useState(null);
-	// const [currentUser, loadCurrentUser, _error] = useAuthState(auth);
 	const [authLoading, setAuthLoading] = useState(initState.authLoading);
 	const googleProvider = new GoogleAuthProvider();
 	const githubProvider = new GithubAuthProvider();
@@ -55,6 +53,21 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			}),
 		[]
 	);
+
+	// cookies handler
+	const cookiesHandler = {
+		set: (value) => {
+			nookies.set(undefined, "user_token", value, {
+				path: "/",
+				httpOnly: true,
+				sameSite: "strict",
+				secure: process.env.NODE_ENV === "production" ? true : false,
+			});
+		},
+		delete: () => {
+			nookies.destroy(undefined, "user_token");
+		},
+	};
 
 	// auth functions
 	const signupFunc = async (username, email, password) => {
@@ -79,9 +92,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
-			nookies.set(undefined, "user_token", token, {
-				path: "/",
-			});
+			// set cookies
+			cookiesHandler.set(token);
 
 			toastNotify("success", `Hi👋, ${username}`);
 			replace("/");
@@ -110,9 +122,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
-			nookies.set(undefined, "user_token", token, {
-				path: "/",
-			});
+			// set cookies
+			cookiesHandler.set(token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
@@ -134,7 +145,10 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 		try {
 			await signOut(auth);
-			nookies.destroy(null, "user_token");
+
+			// delete cookies
+			cookiesHandler.delete();
+
 			toastNotify("success", "See you soon 😊");
 			replace("/infos");
 		} catch (error) {
@@ -163,9 +177,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
-			nookies.set(undefined, "user_token", token, {
-				path: "/",
-			});
+			// set cookies
+			cookiesHandler.set(token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
@@ -181,7 +194,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 	const values = {
 		currentUser: currentUserProps || currentUser,
-		// loadCurrentUser,
 		authLoading,
 		signupFunc,
 		signinFunc,
