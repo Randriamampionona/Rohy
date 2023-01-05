@@ -54,21 +54,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		[]
 	);
 
-	// cookies handler
-	const cookiesHandler = {
-		set: (value) => {
-			nookies.set(undefined, "user_token", value, {
-				path: "/",
-				httpOnly: true,
-				sameSite: "strict",
-				secure: process.env.NODE_ENV === "production" ? true : false,
-			});
-		},
-		delete: () => {
-			nookies.destroy(undefined, "user_token");
-		},
-	};
-
 	// auth functions
 	const signupFunc = async (username, email, password) => {
 		setAuthLoading((prev) => ({
@@ -93,7 +78,12 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
 			// set cookies
-			cookiesHandler.set(token);
+			nookies.set(undefined, "usert_token", token, {
+				httpOnly: true,
+				path: "/",
+				sameSite: "strict",
+				secure: true,
+			});
 
 			toastNotify("success", `Hi👋, ${username}`);
 			replace("/");
@@ -123,7 +113,12 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
 			// set cookies
-			cookiesHandler.set(token);
+			nookies.set(undefined, "user_token", token, {
+				httpOnly: true,
+				path: "/",
+				sameSite: "strict",
+				secure: true,
+			});
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
@@ -147,7 +142,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await signOut(auth);
 
 			// delete cookies
-			cookiesHandler.delete();
+			nookies.destroy(undefined, "user_token");
 
 			toastNotify("success", "See you soon 😊");
 			replace("/infos");
@@ -178,7 +173,12 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: true });
 
 			// set cookies
-			cookiesHandler.set(token);
+			nookies.set(undefined, "user_token", token, {
+				httpOnly: true,
+				path: "/",
+				sameSite: "strict",
+				secure: true,
+			});
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
