@@ -83,7 +83,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			await saveUserFunc(result?.user);
 
-			const token = await result.user.getIdToken({ forceRefresh: true });
+			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
 			setCookiesHandler(token);
@@ -113,7 +113,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 				password
 			);
 
-			const token = await result.user.getIdToken({ forceRefresh: true });
+			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
 			setCookiesHandler(token);
@@ -168,7 +168,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			await saveUserFunc(result.user);
 
-			const token = await result.user.getIdToken({ forceRefresh: true });
+			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
 			setCookiesHandler(token);

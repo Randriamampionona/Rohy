@@ -14,9 +14,6 @@ const handler = async (req, res) => {
 		const token = await auth__admin.verifyIdToken(userToken);
 		if (!token) throw new Error("Invalid user token");
 
-		// Revoke all refresh tokens for a specified user
-		await auth__admin.revokeRefreshTokens(token.uid);
-
 		// if (userToken !== "123456") throw new Error("Invalid user token");
 
 		return res
