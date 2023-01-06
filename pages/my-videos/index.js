@@ -1,13 +1,18 @@
 import { collection, onSnapshot } from "firebase/firestore";
 import { Fragment, useEffect, useState } from "react";
-import { MetaHead, MovieCard, PageHeader } from "../../components/Common";
+import {
+	MetaHead,
+	MovieCard,
+	MovieCardLoader,
+	PageHeader,
+} from "../../components/Common";
 import { db } from "../../lib/firebase.config";
 import { AuthContext } from "../../store/context/AuthContext";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
 
 const MyVideosPage = ({ heading, page, navLinks }) => {
 	const { currentUser } = AuthContext();
-	const [savedVideos, setSavedVideos] = useState([]);
+	const [savedVideos, setSavedVideos] = useState(null);
 
 	// get snapshot of all saved videos
 	useEffect(() => {
@@ -24,7 +29,7 @@ const MyVideosPage = ({ heading, page, navLinks }) => {
 					...doc.data(),
 				}));
 
-				setSavedVideos(videos);
+				setSavedVideos(videos || []);
 			});
 
 			return () => unsub();
@@ -41,7 +46,11 @@ const MyVideosPage = ({ heading, page, navLinks }) => {
 				<PageHeader heading={heading} page={page} navLinks={navLinks} />
 
 				<main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-2 gap-y-6">
-					{savedVideos.length ? (
+					{!savedVideos ? (
+						Array(5)
+							.fill(undefined)
+							.map((_, i) => <MovieCardLoader key={i} />)
+					) : savedVideos?.length ? (
 						savedVideos?.map((movie) => (
 							<MovieCard
 								key={movie.docID}

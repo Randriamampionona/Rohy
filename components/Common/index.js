@@ -11,3 +11,4 @@ export { default as Footer } from "./Footer/Footer";
 
 // loader
 export { default as HeaderLoader } from "./Loader/HeaderLoader";
+export { default as MovieCardLoader } from "./Loader/MovieCardLoader";
