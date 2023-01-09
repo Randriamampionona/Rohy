@@ -24,7 +24,7 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 			onClick={() => setOpen(false)}>
 			<motion.div
 				variants={motionVariants.slidesIn}
-				className="flex flex-col w-[19rem] h-screen bg-darkColor space-y-4 overflow-y-auto"
+				className="flex flex-col w-[19rem] h-screen bg-darkColor overflow-y-auto"
 				onClick={(e) => e.stopPropagation()}>
 				{/* logo & icon */}
 				<div className="flex items-center justify-between w-full px-4 py-2 border-b border-whiteColor/10">
@@ -46,10 +46,32 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 					</span>
 				</div>
 
-				{/* navigation links (withAuthLinks) */}
-				{currentUser && (
-					<ul className="flex-grow w-full px-1 mb-2 select-none border-b border-whiteColor/10">
-						{navLinks.withAuthLinks?.map((link) => (
+				{/* navigations */}
+				<div className="h-full">
+					{/* navigation links (withAuthLinks) */}
+					{currentUser && (
+						<ul className="w-full px-1 py-3 select-none">
+							{navLinks.withAuthLinks?.map((link) => (
+								<li
+									key={link.slug}
+									className={`w-full font-medium cursor-pointer px-3 py-2 rounded-sm hover:text-primaryColor hover:bg-lightDarkColor ${
+										pathname === link.key
+											? "text-primaryColor"
+											: "text-whiteColor"
+									}`}
+									onClick={(_) => navigatehandler(link.slug)}>
+									{link.textLink}
+								</li>
+							))}
+						</ul>
+					)}
+
+					{/* spacer */}
+					<hr className="w-full border-0 border-b-[0.15px] border-whiteColor/10" />
+
+					{/* navigation links (noAuthLinks) */}
+					<ul className="w-full px-1 py-3 select-none">
+						{navLinks.noAuthLinks?.map((link) => (
 							<li
 								key={link.slug}
 								className={`w-full font-medium cursor-pointer px-3 py-2 rounded-sm hover:text-primaryColor hover:bg-lightDarkColor ${
@@ -62,23 +84,7 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 							</li>
 						))}
 					</ul>
-				)}
-
-				{/* navigation links (noAuthLinks) */}
-				<ul className="flex-grow w-full px-1 select-none">
-					{navLinks.noAuthLinks?.map((link) => (
-						<li
-							key={link.slug}
-							className={`w-full font-medium cursor-pointer px-3 py-2 rounded-sm hover:text-primaryColor hover:bg-lightDarkColor ${
-								pathname === link.key
-									? "text-primaryColor"
-									: "text-whiteColor"
-							}`}
-							onClick={(_) => navigatehandler(link.slug)}>
-							{link.textLink}
-						</li>
-					))}
-				</ul>
+				</div>
 
 				{/* copyright */}
 				<span
