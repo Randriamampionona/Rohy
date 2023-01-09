@@ -7,11 +7,13 @@ const baseURL =
 
 const verifyTokenHandler = async (req) => {
 	try {
-		const fetcher = await fetch(`${baseURL}/api/v1/verifyAuthToken`, {
+		const fetcher = await fetch(`${baseURL}/api/v1/auth/verifyAuthToken`, {
 			credentials: "include",
 			headers: {
-				// user_token: req.cookies.get("user_token")?.value, if using next 13
-				user_token: req.cookies.get("user_token"), //if using next 12
+				// process.env.NEXT_USER_COOKIES_NAME: req.cookies.get("process.env.NEXT_USER_COOKIES_NAME")?.value, if using next 13
+				[process.env.NEXT_USER_COOKIES_NAME]: req.cookies.get(
+					process.env.NEXT_USER_COOKIES_NAME
+				), //if using next 12
 			},
 		});
 		const result = await fetcher.json();

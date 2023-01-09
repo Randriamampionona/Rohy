@@ -1,13 +1,15 @@
-import { auth__admin } from "../../../lib/firebaseAdmin.config";
+import { auth__admin } from "../../../../lib/firebaseAdmin.config";
 
 const handler = async (req, res) => {
 	if (req.method !== "GET")
-		return req
+		return res
 			.status(403)
 			.json({ error: true, message: "Request method not allowed" });
 
 	try {
-		const userToken = req.cookies.user_token || req.headers["user_token"];
+		const userToken =
+			req.cookies.process.env.NEXT_USER_COOKIES_NAME ||
+			req.headers[process.env.NEXT_USER_COOKIES_NAME];
 
 		if (!userToken) throw new Error("User token missing");
 

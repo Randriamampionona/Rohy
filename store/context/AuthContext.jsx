@@ -9,12 +9,13 @@ import {
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
-	onIdTokenChanged,
+	// onIdTokenChanged,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
-import nookies from "nookies";
+// import nookies from "nookies";
 import { useSaveUser } from "../../hooks";
+import cookiesHandler from "../../utils/cookiesHandler";
 
 const defaultInfos = {
 	photoURL:
@@ -58,11 +59,17 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	// set new user token if the old one has expired
 	useEffect(() => {
 		const setNewToken = async () => {
-			const newUserToken = await auth?.currentUser.getIdToken(true);
-			nookies.set(undefined, "user_token", newUserToken, {
-				path: "/",
-				sameSite: "strict",
-			});
+			const newToken = await auth?.currentUser.getIdToken(true);
+			// nookies.set(
+			// 	undefined,
+			// 	process.env.NEXT_USER_COOKIES_NAME,
+			// 	newToken,
+			// 	{
+			// 		path: "/",
+			// 		sameSite: "strict",
+			// 	}
+			// );
+			await cookiesHandler("set", newToken);
 		};
 
 		const timiID = setInterval(
@@ -76,12 +83,12 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	}, []);
 
 	// set cookies
-	const setCookiesHandler = (token) => {
-		nookies.set(undefined, "user_token", token, {
-			path: "/",
-			sameSite: "strict",
-		});
-	};
+	// const setCookiesHandler = (token) => {
+	// 	nookies.set(undefined, "process.env.NEXT_USER_COOKIES_NAME", token, {
+	// 		path: "/",
+	// 		sameSite: "strict",
+	// 	});
+	// };
 
 	// auth functions
 	const signupFunc = async (username, email, password) => {
@@ -107,7 +114,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
-			setCookiesHandler(token);
+			// setCookiesHandler(token);
+			await cookiesHandler("set", token);
 
 			toastNotify("success", `Hi👋, ${username}`);
 			replace("/");
@@ -137,7 +145,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
-			setCookiesHandler(token);
+			// setCookiesHandler(token);
+			await cookiesHandler("set", token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");
@@ -161,7 +170,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await signOut(auth);
 
 			// delete cookies
-			nookies.destroy(undefined, "user_token");
+			// nookies.destroy(undefined, process.env.NEXT_USER_COOKIES_NAME);
+			await cookiesHandler("destroy");
 
 			toastNotify("success", "See you soon 😊");
 			replace("/infos");
@@ -192,7 +202,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
-			setCookiesHandler(token);
+			// setCookiesHandler(token);
+			await cookiesHandler("set", token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
 			replace("/");

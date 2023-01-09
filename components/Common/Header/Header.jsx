@@ -111,25 +111,15 @@ const Header = ({ navLinks }) => {
 
 					{currentUser ? (
 						<div
-							className="w-auto"
+							className="w-[42px] h-[42px] rounded-full bg-lightDarkColor"
 							onClick={() => setMenuOpen(!menuOpen)}>
-							{currentUser?.photoUrl ? (
-								<Image
-									src={currentUser?.photoUrl}
-									alt={currentUser?.displayName}
-									width={42}
-									height={42}
-									className="cursor-pointer hover:opacity-90"
-								/>
-							) : (
-								<Avatar
-									name={currentUser?.email}
-									round={true}
-									size={42}
-									email={currentUser?.email}
-									className="cursor-pointer hover:opacity-90"
-								/>
-							)}
+							<Avatar
+								name={currentUser?.email}
+								round={true}
+								size={42}
+								email={currentUser?.email}
+								className="cursor-pointer hover:opacity-90"
+							/>
 						</div>
 					) : (
 						<button

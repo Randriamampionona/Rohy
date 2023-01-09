@@ -1,10 +1,10 @@
-import { auth__admin } from "../../../lib/firebaseAdmin.config";
-import apiErrorHandler from "./../../../utils/apiErrorHandler";
+import { auth__admin } from "../../../../lib/firebaseAdmin.config";
+import apiErrorHandler from "./../../../../utils/apiErrorHandler";
 
 const isAuth = (handler) => {
 	return async (req, res) => {
 		try {
-			const userToken = req.cookies.user_token;
+			const userToken = req.cookies.process.env.NEXT_USER_COOKIES_NAME;
 
 			if (!userToken)
 				return apiErrorHandler?.(res, 401, "Missing user token");
