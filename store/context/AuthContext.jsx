@@ -9,6 +9,7 @@ import {
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
+	onIdTokenChanged,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
@@ -53,6 +54,26 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			}),
 		[]
 	);
+
+	// set new user token if the old one has expired
+	useEffect(() => {
+		const setNewToken = async () => {
+			const newUserToken = await auth?.currentUser.getIdToken(true);
+			nookies.set(undefined, "user_token", newUserToken, {
+				path: "/",
+				sameSite: "strict",
+			});
+		};
+
+		const timiID = setInterval(
+			() => auth?.currentUser && setNewToken(),
+			3300000 //55 min
+		);
+
+		return () => {
+			return clearInterval(timiID);
+		};
+	}, [auth?.currentUser]);
 
 	// set cookies
 	const setCookiesHandler = (token) => {

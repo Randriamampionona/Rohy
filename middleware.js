@@ -53,7 +53,7 @@ export const config = {
 
 		// require auth to reach those page
 		"/",
-		"/channel/:path*",
+		"/channels/:path*",
 		"/live/:path*",
 		"/my-videos/:path*",
 		"/tv-program/:path*",
