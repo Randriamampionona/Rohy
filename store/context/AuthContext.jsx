@@ -73,7 +73,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		return () => {
 			return clearInterval(timiID);
 		};
-	}, [auth?.currentUser]);
+	}, []);
 
 	// set cookies
 	const setCookiesHandler = (token) => {
