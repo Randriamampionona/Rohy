@@ -9,11 +9,9 @@ import {
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
-	// onIdTokenChanged,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
-// import nookies from "nookies";
 import { useSaveUser } from "../../hooks";
 import cookiesHandler from "../../utils/cookiesHandler";
 
@@ -37,7 +35,7 @@ const initState = {
 	signinWithProviderFunc: async (provider) => {},
 };
 
-const timer = 300000; //5min //3300000 //55 min
+const timer = 900000; //15 min
 
 const Context = createContext(initState);
 
@@ -62,15 +60,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	useEffect(() => {
 		const setNewToken = async () => {
 			const newToken = await auth?.currentUser.getIdToken(true);
-			// nookies.set(
-			// 	undefined,
-			// 	process.env.NEXT_PUBLIC_USER_COOKIES_NAME,
-			// 	newToken,
-			// 	{
-			// 		path: "/",
-			// 		sameSite: "strict",
-			// 	}
-			// );
 			await cookiesHandler("set", newToken);
 		};
 
@@ -83,14 +72,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			return clearInterval(timiID);
 		};
 	}, []);
-
-	// set cookies
-	// const setCookiesHandler = (token) => {
-	// 	nookies.set(undefined, "process.env.NEXT_PUBLIC_USER_COOKIES_NAME", token, {
-	// 		path: "/",
-	// 		sameSite: "strict",
-	// 	});
-	// };
 
 	// auth functions
 	const signupFunc = async (username, email, password) => {
@@ -116,7 +97,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
-			// setCookiesHandler(token);
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `Hi👋, ${username}`);
@@ -147,7 +127,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
-			// setCookiesHandler(token);
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
@@ -172,7 +151,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await signOut(auth);
 
 			// delete cookies
-			// nookies.destroy(undefined, process.env.NEXT_PUBLIC_USER_COOKIES_NAME);
 			await cookiesHandler("destroy");
 
 			toastNotify("success", "See you soon 😊");
@@ -204,7 +182,6 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const token = await result.user.getIdToken({ forceRefresh: false });
 
 			// set cookies
-			// setCookiesHandler(token);
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
