@@ -47,6 +47,15 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	const githubProvider = new GithubAuthProvider();
 	const { replace } = useRouter();
 
+	// provider config
+	googleProvider.setCustomParameters({
+		prompt: "select_account",
+	});
+
+	githubProvider.setCustomParameters({
+		prompt: "select_account",
+	});
+
 	// listen for user state
 	useEffect(
 		() =>
