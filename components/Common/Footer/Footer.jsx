@@ -70,7 +70,7 @@ const Footer = ({ quikLinks, socialMedia }) => {
 						sports competitions live or in replay.
 					</p>
 					<span className="text-sm text-whiteColor/50">
-						&copy; 2022. All rights reserved
+						&copy; {new Date().getFullYear()}. All rights reserved
 					</span>
 				</div>
 			</div>

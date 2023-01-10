@@ -89,7 +89,7 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 				{/* copyright */}
 				<span
 					className={`w-full mx-auto py-1 text-center text-whiteColor text-xs`}>
-					&copy; 2022. All rights reserved
+					&copy; {new Date().getFullYear()}. All rights reserved
 				</span>
 			</motion.div>
 		</motion.aside>
