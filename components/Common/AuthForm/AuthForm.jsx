@@ -331,7 +331,7 @@ export default AuthForm;
 const Copyright = ({ rule }) => {
 	return (
 		<span
-			className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-whiteColor text-xs ${rule}`}>
+			className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-center text-whiteColor text-xs ${rule}`}>
 			Copyright &copy; {new Date().getFullYear()} Rohy.io. All rights
 			reserved.
 		</span>

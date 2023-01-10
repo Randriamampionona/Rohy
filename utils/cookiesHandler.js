@@ -14,7 +14,7 @@ const cookiesHandler = async (key, value = null) => {
 
 			const result = fetch.data;
 
-			return console.log(result);
+			return result;
 		}
 
 		if (key === "destroy") {
@@ -24,7 +24,7 @@ const cookiesHandler = async (key, value = null) => {
 
 			const result = fetch.data;
 
-			return console.log(result);
+			return result;
 		}
 
 		return;
