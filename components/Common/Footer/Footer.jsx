@@ -70,7 +70,8 @@ const Footer = ({ quikLinks, socialMedia }) => {
 						sports competitions live or in replay.
 					</p>
 					<span className="text-sm text-whiteColor/50">
-						&copy; {new Date().getFullYear()}. All rights reserved
+						Copyright &copy; {new Date().getFullYear()} Rohy.io. All
+						rights reserved.
 					</span>
 				</div>
 			</div>

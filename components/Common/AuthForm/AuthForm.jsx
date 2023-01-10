@@ -332,7 +332,8 @@ const Copyright = ({ rule }) => {
 	return (
 		<span
 			className={`absolute bottom-2 left-1/2 -translate-x-1/2 text-whiteColor text-xs ${rule}`}>
-			&copy; {new Date().getFullYear()}. All rights reserved
+			Copyright &copy; {new Date().getFullYear()} Rohy.io. All rights
+			reserved.
 		</span>
 	);
 };

@@ -89,7 +89,8 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 				{/* copyright */}
 				<span
 					className={`w-full mx-auto py-1 text-center text-whiteColor text-xs`}>
-					&copy; {new Date().getFullYear()}. All rights reserved
+					Copyright &copy; {new Date().getFullYear()} Rohy.io. All
+					rights reserved.
 				</span>
 			</motion.div>
 		</motion.aside>
