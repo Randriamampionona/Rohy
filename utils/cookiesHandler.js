@@ -7,7 +7,9 @@ const cookiesHandler = async (key, value = null) => {
 		if (key === "set") {
 			const fetch = await axios.post(URL, null, {
 				withCredentials: true,
-				[process.env.NEXT_USER_COOKIES_NAME]: value,
+				headers: {
+					[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]: value,
+				},
 			});
 
 			const result = fetch.data;

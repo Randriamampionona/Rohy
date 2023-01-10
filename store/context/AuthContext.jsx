@@ -64,7 +64,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			const newToken = await auth?.currentUser.getIdToken(true);
 			// nookies.set(
 			// 	undefined,
-			// 	process.env.NEXT_USER_COOKIES_NAME,
+			// 	process.env.NEXT_PUBLIC_USER_COOKIES_NAME,
 			// 	newToken,
 			// 	{
 			// 		path: "/",
@@ -86,7 +86,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 	// set cookies
 	// const setCookiesHandler = (token) => {
-	// 	nookies.set(undefined, "process.env.NEXT_USER_COOKIES_NAME", token, {
+	// 	nookies.set(undefined, "process.env.NEXT_PUBLIC_USER_COOKIES_NAME", token, {
 	// 		path: "/",
 	// 		sameSite: "strict",
 	// 	});
@@ -172,7 +172,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await signOut(auth);
 
 			// delete cookies
-			// nookies.destroy(undefined, process.env.NEXT_USER_COOKIES_NAME);
+			// nookies.destroy(undefined, process.env.NEXT_PUBLIC_USER_COOKIES_NAME);
 			await cookiesHandler("destroy");
 
 			toastNotify("success", "See you soon 😊");

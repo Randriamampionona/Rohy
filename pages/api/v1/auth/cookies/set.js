@@ -6,7 +6,8 @@ const handler = async (req, res) => {
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
-		const userToken = req.headers[process.env.NEXT_USER_COOKIES_NAME];
+		const userToken =
+			req.headers[process.env.NEXT_PUBLIC_USER_COOKIES_NAME];
 
 		if (!userToken)
 			return apiErrorHandler(
@@ -17,7 +18,7 @@ const handler = async (req, res) => {
 
 		nookies.set(
 			{ req, res },
-			process.env.NEXT_USER_COOKIES_NAME,
+			process.env.NEXT_PUBLIC_USER_COOKIES_NAME,
 			userToken,
 			{
 				path: "/",

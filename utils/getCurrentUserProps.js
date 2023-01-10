@@ -3,10 +3,11 @@ import nookies from "nookies";
 
 const getCurrentUserProps = async ({ req, res }) => {
 	try {
-		const { [process.env.NEXT_USER_COOKIES_NAME]: userToken } = nookies.get(
-			{ req, res },
-			process.env.NEXT_USER_COOKIES_NAME
-		);
+		const { [process.env.NEXT_PUBLIC_USER_COOKIES_NAME]: userToken } =
+			nookies.get(
+				{ req, res },
+				process.env.NEXT_PUBLIC_USER_COOKIES_NAME
+			);
 
 		if (!userToken) throw new Error("User token missing");
 

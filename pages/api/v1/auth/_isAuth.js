@@ -4,7 +4,8 @@ import apiErrorHandler from "./../../../../utils/apiErrorHandler";
 const isAuth = (handler) => {
 	return async (req, res) => {
 		try {
-			const userToken = req.cookies.process.env.NEXT_USER_COOKIES_NAME;
+			const userToken =
+				req.cookies[process.env.NEXT_PUBLIC_USER_COOKIES_NAME];
 
 			if (!userToken)
 				return apiErrorHandler?.(res, 401, "Missing user token");
