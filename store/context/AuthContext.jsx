@@ -37,6 +37,8 @@ const initState = {
 	signinWithProviderFunc: async (provider) => {},
 };
 
+const timer = 300000; //5min //3300000 //55 min
+
 const Context = createContext(initState);
 
 export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
@@ -74,7 +76,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 		const timiID = setInterval(
 			() => auth?.currentUser && setNewToken(),
-			3300000 //55 min
+			timer
 		);
 
 		return () => {
