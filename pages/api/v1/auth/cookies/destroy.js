@@ -1,6 +1,6 @@
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import nookies from "nookies";
-import isAuth from "./../_isAuth";
+import isAuth from "../../_isAuth";
 
 const handler = async (req, res) => {
 	if (req.method !== "DELETE")
