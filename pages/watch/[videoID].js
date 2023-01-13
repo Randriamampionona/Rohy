@@ -157,29 +157,43 @@ export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
-		const videoID = ctx.query.videoID;
-		const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+		// check if has active plan
+		const URL = "/v1/sub/subscribe";
+		const fetch = await axios.get(URL, { withCredentials: true });
+		const result = fetch.data;
 
-		const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+		if (result.success && result.payload.active && result.payload.details) {
+			const videoID = ctx.query.videoID;
+			const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
 
-		const promise1 = await axios.get(URL1);
-		const promise2 = await axios.get(URL2);
+			const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
 
-		const [r1, r2] = await Promise.all([promise1, promise2]);
+			const promise1 = await axios.get(URL1);
+			const promise2 = await axios.get(URL2);
 
-		const details = r1.data?.results?.[0];
-		const video = r2.data;
+			const [r1, r2] = await Promise.all([promise1, promise2]);
 
-		return {
-			props: {
-				...user,
-				videoDetails: {
-					video,
-					details: {
-						...details,
-						videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
+			const details = r1.data?.results?.[0];
+			const video = r2.data;
+
+			return {
+				props: {
+					...user,
+					videoDetails: {
+						video,
+						details: {
+							...details,
+							videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
+						},
 					},
 				},
+			};
+		}
+
+		return {
+			redirect: {
+				destination: "/offers",
+				permanent: false,
 			},
 		};
 	} catch (error) {
