@@ -10,12 +10,25 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../lib/firebase.config";
 import { AuthContext } from "../../store/context/AuthContext";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
+import useGetActivePlan from "../../hooks/useGetActivePlan";
 
 const WatchPage = ({ error, videoDetails }) => {
 	const { currentUser } = AuthContext();
+	const { getActivePlanFun, loading: traitement } = useGetActivePlan();
 	const { addToMyListFunc, removeFromMyListFunc, loading } = useListHandler();
 	const [isSavedHint, setIsSavedHint] = useState(null);
-	const { back } = useRouter();
+	const [hasActivePlan, setHasActivePlan] = useState(true);
+	const { back, replace } = useRouter();
+
+	// get active plan
+	useEffect(() => {
+		const getActivePlan = async () => {
+			const { active, details } = await getActivePlanFun();
+			setHasActivePlan(active && details);
+		};
+
+		getActivePlan();
+	}, []);
 
 	// check if movie already saved
 	useEffect(() => {
@@ -50,7 +63,36 @@ const WatchPage = ({ error, videoDetails }) => {
 			return await removeFromMyListFunc(isSavedHint);
 	};
 
+	if (traitement)
+		return (
+			<section className="flex items-center justify-center w-screen h-screen">
+				<span className="animate-spin">
+					<ImSpinner2 />
+				</span>
+			</section>
+		);
+
 	if (error) return <h1>{error}</h1>;
+
+	if (!hasActivePlan)
+		return (
+			<Fragment>
+				<MetaHead subTitle={"No plan"} />
+				<section className="relative my-12">
+					<div className="flex flex-col items-center justify-center">
+						<h1 className="text-center mb-2">
+							Seems like you don&apos;t have an active plan yet!
+						</h1>
+
+						<button
+							className="primaryBtn"
+							onClick={(_) => replace("/offers")}>
+							<span>Active plan</span>
+						</button>
+					</div>
+				</section>
+			</Fragment>
+		);
 
 	return (
 		<Fragment>
@@ -157,45 +199,34 @@ export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
-		// check if has active plan
-		const URL = "/v1/sub/subscribe";
-		const fetch = await axios.get(URL, { withCredentials: true });
-		const result = fetch.data;
+		const videoID = ctx.query.videoID;
+		const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
 
-		if (result.success && result.payload.active && result.payload.details) {
-			const videoID = ctx.query.videoID;
-			const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+		const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
 
-			const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+		const promise1 = await axios.get(URL1);
+		const promise2 = await axios.get(URL2);
 
-			const promise1 = await axios.get(URL1);
-			const promise2 = await axios.get(URL2);
+		const [r1, r2] = await Promise.all([promise1, promise2]);
 
-			const [r1, r2] = await Promise.all([promise1, promise2]);
-
-			const details = r1.data?.results?.[0];
-			const video = r2.data;
-
-			return {
-				props: {
-					...user,
-					videoDetails: {
-						video,
-						details: {
-							...details,
-							videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
-						},
-					},
-				},
-			};
-		}
+		const details = r1.data?.results?.[0];
+		const video = r2.data;
 
 		return {
-			redirect: {
-				destination: "/offers",
-				permanent: false,
+			props: {
+				...user,
+				videoDetails: {
+					video,
+					details: {
+						...details,
+						videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
+					},
+				},
 			},
 		};
+
+		// res.writeHead(301, { Location: '/offers' })
+		// res.end()
 	} catch (error) {
 		return {
 			props: {
