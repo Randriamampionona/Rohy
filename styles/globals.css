@@ -24,7 +24,7 @@
 	}
 
 	.outlineBtn {
-		@apply flex items-center justify-center gap-x-3 border border-primaryColor hover:bg-primaryColor h-11 rounded;
+		@apply flex items-center justify-center gap-x-3 border border-primaryColor hover:bg-primaryColor px-4 h-11 rounded;
 	}
 
 	.bottomOverlay {

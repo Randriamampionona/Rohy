@@ -8,7 +8,7 @@ const MyDocument = () => {
 				<NextScript />
 			</Head>
 
-			<body>
+			<body className="selection:bg-primaryColor selection:text-whiteColor">
 				<Main />
 			</body>
 		</Html>

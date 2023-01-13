@@ -13,7 +13,7 @@ const handler = async (req, res) => {
 		const data = [
 			{
 				title: "Basic",
-				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis voluptates repellat enim.",
+				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam ut excepturi mollitia ea, perspiciatis voluptates officia unde odit ratione esse quod sit quasi quisquam dicta inventore iusto aut! Nobis, ipsam! Dolorem, quaerat iste. Laudantium soluta inventore provident dolorum perferendis consequatur sint, quia aperiam velit id quam vero non. Sunt aliquid, dicta, recusandae amet exercitationem ad sit illo illum corrupti animi cum vel minus reiciendis corporis magnam ullam expedita aperiam a molestiae architecto aliquam eaque assumenda voluptatem? Dolorum, obcaecati accusamus ducimus quidem quasi provident ea nisi perspiciatis maxime aliquam eaque cum est possimus tempora illo accusantium officiis sapiente natus exercitationem nam.",
 				price: {
 					regular: 15000,
 					promo: null,
@@ -25,10 +25,11 @@ const handler = async (req, res) => {
 					"Full HD",
 					"Cancel at anytime",
 				],
+				order: 1,
 			},
 			{
 				title: "Standard",
-				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis voluptates repellat enim architecto perferendis. Itaque.",
+				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam ut excepturi mollitia ea, perspiciatis voluptates officia unde odit ratione esse quod sit quasi quisquam dicta inventore iusto aut! Nobis, ipsam! Dolorem, quaerat iste. Laudantium soluta inventore provident dolorum perferendis consequatur sint, quia aperiam velit id quam vero non. Sunt aliquid, dicta, recusandae amet exercitationem ad sit illo illum corrupti animi cum vel minus reiciendis corporis magnam ullam expedita aperiam a molestiae architecto aliquam eaque assumenda voluptatem? Dolorum, obcaecati accusamus ducimus quidem quasi provident ea nisi perspiciatis maxime aliquam eaque cum est possimus tempora illo accusantium officiis sapiente natus exercitationem nam.",
 				price: {
 					regular: 19000,
 					promo: null,
@@ -41,10 +42,11 @@ const handler = async (req, res) => {
 					"Cancel at anytime",
 				],
 				popular: true,
+				order: 2,
 			},
 			{
 				title: "Premium",
-				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis voluptates repellat enim.",
+				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam ut excepturi mollitia ea, perspiciatis voluptates officia unde odit ratione esse quod sit quasi quisquam dicta inventore iusto aut! Nobis, ipsam! Dolorem, quaerat iste. Laudantium soluta inventore provident dolorum perferendis consequatur sint, quia aperiam velit id quam vero non. Sunt aliquid, dicta, recusandae amet exercitationem ad sit illo illum corrupti animi cum vel minus reiciendis corporis magnam ullam expedita aperiam a molestiae architecto aliquam eaque assumenda voluptatem? Dolorum, obcaecati accusamus ducimus quidem quasi provident ea nisi perspiciatis maxime aliquam eaque cum est possimus tempora illo accusantium officiis sapiente natus exercitationem nam.",
 				price: {
 					regular: 21000,
 					promo: null,
@@ -56,6 +58,7 @@ const handler = async (req, res) => {
 					"Full HD",
 					"Cancel at anytime",
 				],
+				order: 3,
 			},
 		];
 

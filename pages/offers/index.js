@@ -1,20 +1,13 @@
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
 import { Fragment } from "react";
 import { MetaHead } from "../../components/Common";
-import { FaCheck, FaLink } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import axios from "axios";
 import { useRouter } from "next/router";
+import priceFomator from "./../../utils/priceFormator";
 
 const OffersPage = ({ plansList }) => {
 	const { push } = useRouter();
-
-	const priceFomator = (amount) => {
-		let formatter = Intl.NumberFormat("en", {
-			notation: "standard",
-		});
-
-		return formatter.format(amount).toString().replace(",", ".");
-	};
 
 	const navigateHandler = (r) => push(`/offers/${r}`);
 
@@ -55,7 +48,12 @@ const OffersPage = ({ plansList }) => {
 									</sub>
 								</h1>
 							</div>
-							<p className="text-center mb-6">{plan.desc}</p>
+							<p className="text-center mb-6">
+								{plan.popular
+									? plan.desc.substring(0, 118)
+									: plan.desc.substring(0, 88)}
+								...
+							</p>
 
 							<ul className="mb-6 space-y-2">
 								{plan.specificity.map((sp) => (
