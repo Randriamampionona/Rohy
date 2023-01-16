@@ -3,17 +3,20 @@ import { FaArrowLeft, FaTimes } from "react-icons/fa";
 import { RiHeartLine, RiStarLine } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import { MetaHead, Player } from "./../../components/Common";
-import { useListHandler } from "../../hooks";
+import { Error, MetaHead, Player } from "./../../components/Common";
+import { useGetActivePlan, useListHandler } from "../../hooks";
 import { ImSpinner2 } from "react-icons/im";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../lib/firebase.config";
 import { AuthContext } from "../../store/context/AuthContext";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
-import useGetActivePlan from "../../hooks/useGetActivePlan";
+import ssrErrorHandler from "../../utils/ssrErrorHandler";
+import { GlobalContext } from "../../store/context/GlobalContext";
 
-const WatchPage = ({ error, videoDetails }) => {
+const WatchPage = ({ videoDetails }) => {
 	const { currentUser } = AuthContext();
+	const { error } = GlobalContext();
+
 	const { getActivePlanFun, loading: traitement } = useGetActivePlan();
 	const { addToMyListFunc, removeFromMyListFunc, loading } = useListHandler();
 	const [isSavedHint, setIsSavedHint] = useState(null);
@@ -23,8 +26,8 @@ const WatchPage = ({ error, videoDetails }) => {
 	// get active plan
 	useEffect(() => {
 		const getActivePlan = async () => {
-			const { active, details } = await getActivePlanFun();
-			setHasActivePlan(active && details);
+			const { active } = await getActivePlanFun();
+			setHasActivePlan(active);
 		};
 
 		getActivePlan();
@@ -39,10 +42,7 @@ const WatchPage = ({ error, videoDetails }) => {
 				currentUser.uid,
 				"myList"
 			);
-			const q = query(
-				collectionRef,
-				where("id", "==", videoDetails?.video.id)
-			);
+			const q = query(collectionRef, where("id", "==", videoDetails?.id));
 			const unsub = onSnapshot(q, (snapshot) => {
 				const saved = snapshot.empty;
 				setIsSavedHint(
@@ -57,8 +57,9 @@ const WatchPage = ({ error, videoDetails }) => {
 	}, [currentUser, videoDetails]);
 
 	const addToMyListHandler = async (key) => {
-		if (key === "add" && !loading.add)
-			return await addToMyListFunc(videoDetails?.video);
+		const { video, ...rest } = videoDetails;
+
+		if (key === "add" && !loading.add) return await addToMyListFunc(rest);
 		if (key === "remove" && !loading.remove)
 			return await removeFromMyListFunc(isSavedHint);
 	};
@@ -72,13 +73,13 @@ const WatchPage = ({ error, videoDetails }) => {
 			</section>
 		);
 
-	if (error) return <h1>{error}</h1>;
+	if (error) return <Error />;
 
 	if (!hasActivePlan)
 		return (
 			<Fragment>
-				<MetaHead subTitle={"No plan"} />
-				<section className="relative my-12">
+				<MetaHead subTitle={"No active plan"} />
+				<section className="relative w-screen h-screen">
 					<div className="flex flex-col items-center justify-center">
 						<h1 className="text-center mb-2">
 							Seems like you don&apos;t have an active plan yet!
@@ -96,7 +97,7 @@ const WatchPage = ({ error, videoDetails }) => {
 
 	return (
 		<Fragment>
-			<MetaHead subTitle={videoDetails?.details.name} />
+			<MetaHead subTitle={videoDetails?.title} />
 			<section className="relative w-screen">
 				<div className="flex items-center justify-between space-x-8 w-screen h-12 px-4 bg-darkColor">
 					<div className="flex items-center justify-start space-x-4">
@@ -110,16 +111,15 @@ const WatchPage = ({ error, videoDetails }) => {
 
 						<h1 className="hidden space-x-2 md:block">
 							<span className="text-whiteColor text-xl font-semibold cursor-default">
-								{videoDetails?.details.name.length > 40
-									? `${videoDetails?.details.name.substring(
+								{videoDetails?.title.length > 40
+									? `${videoDetails?.title.substring(
 											0,
 											40
 									  )}...`
-									: videoDetails?.details.name}
+									: videoDetails?.title}
 							</span>{" "}
 							<span className="text-[10px] text-primaryColor leading-none px-[5px] py-[1px] rounded-sm border border-primaryColor select-none">
-								{videoDetails?.details.original_language ===
-								"fr"
+								{videoDetails?.original_language === "fr"
 									? "VF"
 									: "VA"}
 							</span>
@@ -175,22 +175,11 @@ const WatchPage = ({ error, videoDetails }) => {
 				</div>
 
 				<main className="w-full h-[calc(100vh-3rem)]">
-					<Player videoDetails={videoDetails?.details} />
+					<Player videoDetails={videoDetails} />
 				</main>
 			</section>
 		</Fragment>
 	);
-};
-
-WatchPage.defaultProps = {
-	videoDetails: {
-		details: {
-			name: "Marvel - Thor: Ragnarol",
-			videoURL: "http://localhost:3000/assets/video.mp4",
-			original_language: "fr",
-		},
-		video: null,
-	},
 };
 
 export default WatchPage;
@@ -199,40 +188,46 @@ export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
+		// const videoID = ctx.query.videoID;
+		// const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+
+		// const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+
+		// const promise1 = await axios.get(URL1);
+		// const promise2 = await axios.get(URL2);
+
+		// const [r1, r2] = await Promise.all([promise1, promise2]);
+
+		// const details = r1.data?.results?.[0];
+		// const video = r2.data;
+
+		// return {
+		// 	props: {
+		// 		...user,
+		// 		videoDetails: {
+		// 			video,
+		// 			details: {
+		// 				...details,
+		// 				videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
+		// 			},
+		// 		},
+		// 	},
+		// };
+
 		const videoID = ctx.query.videoID;
-		const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
+		const URL = `/v1/watch/${videoID}/${videoID}`;
+		const fetch = await axios.get(URL, { withCredentials: true });
+		const result = fetch.data;
 
-		const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
-
-		const promise1 = await axios.get(URL1);
-		const promise2 = await axios.get(URL2);
-
-		const [r1, r2] = await Promise.all([promise1, promise2]);
-
-		const details = r1.data?.results?.[0];
-		const video = r2.data;
-
-		return {
-			props: {
-				...user,
-				videoDetails: {
-					video,
-					details: {
-						...details,
-						videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
-					},
+		if (result.success) {
+			return {
+				props: {
+					...user,
+					videoDetails: result.payload,
 				},
-			},
-		};
-
-		// res.writeHead(301, { Location: '/offers' })
-		// res.end()
+			};
+		}
 	} catch (error) {
-		return {
-			props: {
-				...user,
-				error: error.message,
-			},
-		};
+		return ssrErrorHandler(error, { ...user });
 	}
 };

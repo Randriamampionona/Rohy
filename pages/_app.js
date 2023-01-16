@@ -1,3 +1,4 @@
+import { GlobalProvider } from "../store/context/GlobalContext";
 import { AuthProvider } from "../store/context/AuthContext";
 import "../styles/globals.css";
 import { Layout } from "./../components/Layout";
@@ -11,15 +12,17 @@ axios.defaults.baseURL =
 
 const MyApp = ({ Component, pageProps }) => {
 	return (
-		<AuthProvider currentUserProps={pageProps?.currentUserProps}>
-			<Layout>
-				<NextNProgress
-					color="#b5004d"
-					options={{ showSpinner: false }}
-				/>
-				<Component {...pageProps} />
-			</Layout>
-		</AuthProvider>
+		<GlobalProvider errorProps={pageProps?.errorProps}>
+			<AuthProvider currentUserProps={pageProps?.currentUserProps}>
+				<Layout>
+					<NextNProgress
+						color="#b5004d"
+						options={{ showSpinner: false }}
+					/>
+					<Component {...pageProps} />
+				</Layout>
+			</AuthProvider>
+		</GlobalProvider>
 	);
 };
 

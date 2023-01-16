@@ -1,8 +1,13 @@
 import Image from "next/image";
 import device from "../../../public/assets/device.webp";
 import { FaDownload } from "react-icons/fa";
+import useGetRedirectURL from "../../../hooks/useGetRedirectURL";
+import { useRouter } from "next/router";
 
 const SupportDevice = () => {
+	const { getRedirectURLFunc } = useGetRedirectURL();
+	const { push } = useRouter();
+
 	return (
 		<main className="relative flex flex-col items-center justify-center gap-y-4 py-10 px-4">
 			<h1 className="text-center text-3xl font-bold uppercase">
@@ -31,7 +36,9 @@ const SupportDevice = () => {
 				/>
 			</div>
 
-			<button className="primaryBtn uppercase">
+			<button
+				className="primaryBtn uppercase"
+				onClick={(_) => push(getRedirectURLFunc("/"))}>
 				<span>telecharger</span>
 				<span>
 					<FaDownload />

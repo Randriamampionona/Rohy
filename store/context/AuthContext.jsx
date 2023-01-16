@@ -12,7 +12,7 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
-import { useSaveUser } from "../../hooks";
+import { useGetRedirectURL, useSaveUser } from "../../hooks";
 import cookiesHandler from "../../utils/cookiesHandler";
 
 const defaultInfos = {
@@ -41,6 +41,7 @@ const Context = createContext(initState);
 
 export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	const { saveUserFunc } = useSaveUser();
+	const { getRedirectURLFunc } = useGetRedirectURL();
 	const [currentUser, setCurrentUser] = useState(null);
 	const [authLoading, setAuthLoading] = useState(initState.authLoading);
 	const googleProvider = new GoogleAuthProvider();
@@ -109,7 +110,9 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `Hi👋, ${username}`);
-			replace("/");
+
+			// redirect
+			replace(getRedirectURLFunc("/"));
 		} catch (error) {
 			toastNotify("error", error);
 		} finally {
@@ -139,7 +142,9 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
-			replace("/");
+
+			// redirect
+			replace(getRedirectURLFunc("/"));
 		} catch (error) {
 			toastNotify("error", error);
 		} finally {
@@ -163,6 +168,8 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await cookiesHandler("destroy");
 
 			toastNotify("success", "See you soon 😊");
+
+			// redirect
 			replace("/infos");
 		} catch (error) {
 			toastNotify("error", error);
@@ -194,7 +201,9 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `So long ${result.user?.displayName} 🤗`);
-			replace("/");
+
+			// redirect
+			replace(getRedirectURLFunc("/"));
 		} catch (error) {
 			toastNotify("error", error);
 		} finally {

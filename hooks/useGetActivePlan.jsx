@@ -1,36 +1,31 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { AuthContext } from "../store/context/AuthContext";
-import toastNotify from "../utils/toastNotify";
 
 const useGetActivePlan = () => {
 	const { currentUser } = AuthContext();
 	const [loading, setLoading] = useState(false);
+	const { replace, pathname, query } = useRouter();
 
 	const getActivePlanFun = async () => {
 		setLoading(true);
 		try {
 			if (!currentUser)
-				return {
-					active: false,
-					details: null,
-				};
+				return (
+					pathname.includes("watch") &&
+					replace(`/authorization/signin?rdc=watch/${query.videoID}`)
+				);
 
-			const URL = "/v1/sub/subscribe";
+			const URL = "/v1/sub";
 			const fetch = await axios.get(URL, { withCredentials: true });
 			const result = fetch.data;
 
-			if (result.success) {
-				return result.payload;
-			}
+			if (result.success) return result.payload;
 
-			toastNotify("error", result.message);
-			return {
-				active: false,
-				details: null,
-			};
+			throw new Error(result.message);
 		} catch (error) {
-			return toastNotify("error", error.message);
+			return replace(`/offers?rdc=watch/${query.videoID}`);
 		} finally {
 			setLoading(false);
 		}

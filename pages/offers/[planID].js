@@ -156,118 +156,133 @@ const PlanPage = ({ planDetails }) => {
 							</div>
 						) : (
 							<Fragment>
-								{!activePlan.active ? (
-									<div className="w-full bg-lightDarkColor rounded-md p-4">
-										{currentUser ? (
-											<Fragment>
-												{!showPayBtn ? (
-													<div className="w-full">
-														<div className="flex items-center justify-between mb-4">
-															<span className="underline">
-																Fee:
-															</span>
-															<span>0 Ar</span>
-														</div>
-														<div className="flex items-center justify-between">
-															<span className="underline">
-																Total:
-															</span>
-															<span>
-																{priceFomator(
-																	planDetails
-																		.price
-																		.regular
-																)}{" "}
-																Ar
-															</span>
-														</div>
+								{currentUser ? (
+									<Fragment>
+										{!activePlan.active ? ( //if no active plan
+											<div className="w-full bg-lightDarkColor rounded-md p-4">
+												<Fragment>
+													{!showPayBtn ? (
+														<div className="w-full">
+															<div className="flex items-center justify-between mb-4">
+																<span className="underline">
+																	Fee:
+																</span>
+																<span>
+																	0 Ar
+																</span>
+															</div>
+															<div className="flex items-center justify-between">
+																<span className="underline">
+																	Total:
+																</span>
+																<span>
+																	{priceFomator(
+																		planDetails
+																			.price
+																			.regular
+																	)}{" "}
+																	Ar
+																</span>
+															</div>
 
-														{/* spacer */}
-														<hr className="w-full my-8 border-0 border-b-[0.15px] border-whiteColor/10" />
+															{/* spacer */}
+															<hr className="w-full my-8 border-0 border-b-[0.15px] border-whiteColor/10" />
 
-														<button
-															className="primaryBtn w-full"
-															onClick={(_) =>
-																setShowPayBtn(
-																	true
-																)
-															}>
-															<span>
-																Subscribe
-															</span>
-														</button>
-													</div>
-												) : (
-													<div className="w-full">
-														{scripLoaded ? (
-															<PayPalButton
-																amount={
-																	// planDetails.price.regular
-																	5
-																}
-																onSuccess={
-																	onSuccessHandler
-																}
-																onError={
-																	onErrorHandler
-																}
-																options={{
-																	clientId:
-																		process
-																			.env
-																			.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-																	currency:
-																		"USD",
-																}}
-															/>
-														) : (
-															<span>
-																Loading...
-															</span>
-														)}
-													</div>
-												)}
-											</Fragment>
+															<button
+																className="primaryBtn w-full"
+																onClick={(_) =>
+																	setShowPayBtn(
+																		true
+																	)
+																}>
+																<span>
+																	Subscribe
+																</span>
+															</button>
+														</div>
+													) : (
+														<div className="w-full">
+															{scripLoaded ? (
+																<PayPalButton
+																	amount={
+																		// planDetails.price.regular
+																		5
+																	}
+																	onSuccess={
+																		onSuccessHandler
+																	}
+																	onError={
+																		onErrorHandler
+																	}
+																	options={{
+																		clientId:
+																			process
+																				.env
+																				.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+																		currency:
+																			"USD",
+																	}}
+																/>
+															) : (
+																<span>
+																	Loading...
+																</span>
+															)}
+														</div>
+													)}
+												</Fragment>
+											</div>
 										) : (
-											<div className="w-full">
-												<p className="text-center mb-4">
-													Sorry, you are not
-													authenticated, please sign
-													in
-												</p>
-
-												<button
-													className="primaryBtn w-full mb-2"
-													onClick={(_) =>
-														push(
-															"/authorization/signin"
-														)
-													}>
-													<span>
-														<FaSignInAlt />
-													</span>
-													<span>Sign In</span>
-												</button>
-
-												<p className="text-center">
-													Don&apos;t have an account?
-													<Link href="/authorization/signup">
-														<a className="text-primaryColor underline">
-															sign up
+											<div className="w-full bg-lightDarkColor rounded-md p-4">
+												<p>
+													You are already subscribed
+													to a{" "}
+													<span className="uppercase">
+														{
+															activePlan.details
+																.title
+														}
+													</span>{" "}
+													plan.{" "}
+													<Link href={"/account"}>
+														<a className="underline hover:text-primaryColor">
+															My subscription
+															details
 														</a>
 													</Link>
 												</p>
 											</div>
 										)}
-									</div>
+									</Fragment>
 								) : (
-									<div className="w-full bg-lightDarkColor rounded-md p-4">
-										<p>
-											You are already subscribed to a{" "}
-											<span className="uppercase">
-												{activePlan.details.title}
-											</span>{" "}
-											plan
+									<div className="w-full">
+										<p className="text-center mb-4">
+											Sorry, you are not authenticated,
+											please sign in
+										</p>
+
+										{/* sigin btn */}
+										<button
+											className="primaryBtn w-full mb-2"
+											onClick={(_) =>
+												push(
+													`/authorization/signin?rdc=offers/${planDetails.planID}`
+												)
+											}>
+											<span>
+												<FaSignInAlt />
+											</span>
+											<span>Sign In</span>
+										</button>
+
+										<p className="text-center">
+											Don&apos;t have an account?{" "}
+											<Link
+												href={`/authorization/signup?rdc=offers/${planDetails.planID}`}>
+												<a className="text-primaryColor underline">
+													sign up
+												</a>
+											</Link>
 										</p>
 									</div>
 								)}

@@ -1,0 +1,22 @@
+{
+    "id": 566584898,
+    "category": {
+        "name": "cinema",
+        "id": 35897156
+    },
+    "adult": false,
+    "backdrop_path": "/assets/slider2.jpeg",
+    "poster_path": "/assets/slider2.jpeg",
+    "genre": {
+        "name": "action",
+        "id": 545842154
+    },
+    "original_language": "en",
+    "original_title": "Avengers - End Game",
+    "title": "Avengers - End Game",
+    "overview": "Some text go here to pretend it's an overview",
+    "release_date": "2018-10-04",
+    "video": {
+        "url": "https://www.youtube.com/watch?v=x_EEwGe-a9o"
+    }
+}

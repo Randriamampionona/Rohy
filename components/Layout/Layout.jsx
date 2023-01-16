@@ -9,12 +9,12 @@ const Layout = ({ children }) => {
 	return (
 		<Fragment>
 			<MetaHead />
-			{!pathname.includes("authorization") && !query.videoID && (
-				<Header />
-			)}
+			{!pathname.includes("authorization") &&
+				!query.videoID && <Header />}
 			<Toaster position="top-right" />
 			{children}
-			{!pathname.includes("authorization") && !query.videoID && <Footer />}
+			{!pathname.includes("authorization") &&
+				!query.videoID && <Footer />}
 		</Fragment>
 	);
 };

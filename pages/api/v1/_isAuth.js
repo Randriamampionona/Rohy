@@ -5,10 +5,17 @@ const isAuth = (handler) => {
 	return async (req, res) => {
 		try {
 			const userToken =
-				req.cookies[process.env.NEXT_PUBLIC_USER_COOKIES_NAME];
+				req.cookies[process.env.NEXT_PUBLIC_USER_COOKIES_NAME] ||
+				req.headers[process.env.NEXT_PUBLIC_USER_COOKIES_NAME];
+
+			console.log(userToken, req.query);
 
 			if (!userToken)
-				return apiErrorHandler?.(res, 401, "Missing user token");
+				return apiErrorHandler?.(
+					res,
+					401,
+					"Missing user token (_isAuth)"
+				);
 
 			// verify user token
 			const token = await auth__admin.verifyIdToken(userToken);

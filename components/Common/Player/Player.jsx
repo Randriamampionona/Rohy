@@ -12,7 +12,7 @@ const Player = ({ videoDetails }) => {
 				pip={true}
 				width={"100%"}
 				height={"100%"}
-				url={videoDetails?.videoURL}
+				url={videoDetails?.video.url}
 			/>
 		</Fragment>
 	);
