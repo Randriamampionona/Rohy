@@ -71,7 +71,7 @@ const PlanPage = ({ planDetails }) => {
 
 			if (result.success) {
 				toastNotify("success", result.message);
-				return replace("/");
+				return replace(error?.data?.rdc || "/");
 			}
 		} catch (error) {
 			return toastNotify("error", error.message);
@@ -244,7 +244,10 @@ const PlanPage = ({ planDetails }) => {
 														}
 													</span>{" "}
 													plan.{" "}
-													<Link href={"/account"}>
+													<Link
+														href={
+															"/my-subscription"
+														}>
 														<a className="underline hover:text-primaryColor">
 															My subscription
 															details

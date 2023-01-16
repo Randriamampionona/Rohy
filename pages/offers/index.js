@@ -9,7 +9,7 @@ import priceFomator from "./../../utils/priceFormator";
 const OffersPage = ({ plansList }) => {
 	const { push } = useRouter();
 
-	const navigateHandler = (r) => push(`/offers/${r}`);
+	const navigateHandler = (r) => push(`/offers/${r}?`);
 
 	return (
 		<Fragment>

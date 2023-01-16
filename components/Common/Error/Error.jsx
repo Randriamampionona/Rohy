@@ -17,7 +17,7 @@ const Error = () => {
 					<h1 className="text-2xl font-bold text-center">
 						Oooooop! Something went wrong
 					</h1>
-					<p className="text-center">({error.data.message})</p>
+					<p className="text-center">( {error.data.message} )</p>
 					<code className="text-center text-whiteColor/70 mt-4">
 						{error.status}:{" "}
 						{error.statusText?.toLowerCase().replaceAll(" ", "_")}

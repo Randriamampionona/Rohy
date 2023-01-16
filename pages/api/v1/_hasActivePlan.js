@@ -16,7 +16,7 @@ const hasActivePlan = (handler) => {
 					res,
 					402,
 					"Unsubscribed - (no active plan)",
-					"/offers"
+					`/offers`
 				);
 
 			const { subscriptionID, planID, start, end } = getActivePlan.data();
@@ -35,7 +35,7 @@ const hasActivePlan = (handler) => {
 					res,
 					402,
 					"Unsubscribed - (no active plan)",
-					"/offers"
+					`/offers`
 				);
 
 			// check for active plan
@@ -48,7 +48,7 @@ const hasActivePlan = (handler) => {
 					res,
 					402,
 					"Unsubscribed - (no active plan)",
-					"/offers"
+					`/offers`
 				);
 
 			// get plan details
@@ -66,7 +66,7 @@ const hasActivePlan = (handler) => {
 
 			return handler(req, res);
 		} catch (error) {
-			return apiErrorHandler(res, 402, "Unsubscribe", "/offers");
+			return apiErrorHandler(res, 402, "Unsubscribe", `/offers`);
 		}
 	};
 };

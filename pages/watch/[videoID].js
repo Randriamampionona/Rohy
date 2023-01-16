@@ -216,7 +216,13 @@ export const getServerSideProps = async (ctx) => {
 
 		const videoID = ctx.query.videoID;
 		const URL = `/v1/watch/${videoID}/${videoID}`;
-		const fetch = await axios.get(URL, { withCredentials: true });
+		const fetch = await axios.get(URL, {
+			withCredentials: true,
+			headers: {
+				[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]:
+					ctx.req.cookies[process.env.NEXT_PUBLIC_USER_COOKIES_NAME],
+			},
+		});
 		const result = fetch.data;
 
 		if (result.success) {
