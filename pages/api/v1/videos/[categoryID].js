@@ -9,10 +9,8 @@ const handler = async (req, res) => {
 		// get all matched category videos from DB
 		const { page } = req.headers;
 
-		if (!page) return apiErrorHandler(res, 500, "Something went wrong");
-
 		const data = {
-			page,
+			page: page || 1,
 			results: Array(15)
 				.fill(undefined)
 				.map((_) => {
