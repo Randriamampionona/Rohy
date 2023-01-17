@@ -1,5 +1,6 @@
 import apiErrorHandler from "../../../../utils/apiErrorHandler";
 import videos from "../../../../mockdata.json";
+import isAuth from "./../_isAuth";
 
 const handler = async (req, res) => {
 	if (req.method !== "GET")
@@ -25,4 +26,4 @@ const handler = async (req, res) => {
 	}
 };
 
-export default handler;
+export default isAuth(handler);
