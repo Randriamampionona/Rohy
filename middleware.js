@@ -61,6 +61,11 @@ const middleware = async (req) => {
 			`${baseURL}/authorization/signin?rdc=account`
 		);
 
+	if (URL.startsWith("/my-subscription") && !isTokenVerified)
+		return NextResponse.redirect(
+			`${baseURL}/authorization/signin?rdc=my-subscription`
+		);
+
 	if (URL.startsWith("/tv-program") && !isTokenVerified)
 		return NextResponse.redirect(
 			`${baseURL}/authorization/signin?rdc=tv-program`
@@ -82,5 +87,6 @@ export const config = {
 		"/tv-program/:path*",
 		"/watch/:path*",
 		"/account/:path*",
+		"/my-subscription/:path*",
 	],
 };

@@ -251,7 +251,7 @@ const PlanPage = ({ planDetails }) => {
 														href={
 															"/my-subscription"
 														}>
-														<a className="underline hover:text-primaryColor">
+														<a className="underline text-primaryColor">
 															My subscription
 															details
 														</a>
