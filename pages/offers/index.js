@@ -99,7 +99,7 @@ export const getServerSideProps = async (ctx) => {
 	try {
 		// get plan list from DB
 		const URL = `/v1/offer`;
-		const fetch = await axios.get(URL, { withCredentials: true });
+		const fetch = await axios.get(URL);
 		const result = fetch.data;
 
 		return {

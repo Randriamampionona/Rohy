@@ -12,6 +12,7 @@ import { AuthContext } from "../../store/context/AuthContext";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
 import ssrErrorHandler from "../../utils/ssrErrorHandler";
 import { GlobalContext } from "../../store/context/GlobalContext";
+import axiosHeadersHandler from "./../../utils/axiosHeadersHandler";
 
 const WatchPage = ({ videoDetails }) => {
 	const { currentUser } = AuthContext();
@@ -216,13 +217,7 @@ export const getServerSideProps = async (ctx) => {
 
 		const videoID = ctx.query.videoID;
 		const URL = `/v1/watch/${videoID}/${videoID}`;
-		const fetch = await axios.get(URL, {
-			withCredentials: true,
-			headers: {
-				[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]:
-					ctx.req.cookies[process.env.NEXT_PUBLIC_USER_COOKIES_NAME],
-			},
-		});
+		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
 		const result = fetch.data;
 
 		if (result.success) {

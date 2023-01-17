@@ -7,12 +7,15 @@ import priceFomator from "../../utils/priceFormator";
 import { FaCheck, FaRedoAlt, FaSignInAlt } from "react-icons/fa";
 import toastNotify from "../../utils/toastNotify";
 import { useRouter } from "next/router";
+import { GlobalContext } from "../../store/context/GlobalContext";
 import { AuthContext } from "../../store/context/AuthContext";
 import Link from "next/link";
 import useGetActivePlan from "../../hooks/useGetActivePlan";
 import { ImSpinner2 } from "react-icons/im";
+import ssrErrorHandler from "./../../utils/ssrErrorHandler";
 
 const PlanPage = ({ planDetails }) => {
+	const { error } = GlobalContext();
 	const { currentUser } = AuthContext();
 	const { getActivePlanFun, loading } = useGetActivePlan();
 	const [activePlan, setActivePlan] = useState({
@@ -40,7 +43,7 @@ const PlanPage = ({ planDetails }) => {
 		!showPayBtn && addPaypalScript();
 	}, [showPayBtn]);
 
-	// get active plan
+	// get active plan CLIENT SIDE
 	useEffect(() => {
 		const getActivePlan = async () => {
 			const { active, details } = await getActivePlanFun();
@@ -306,20 +309,17 @@ export const getServerSideProps = async (ctx) => {
 	try {
 		// get selected plan details
 		const URL = `/v1/offer/${ctx.query.planID}`;
-		const fetch = await axios.get(URL, { withCredentials: true });
+
+		const fetch = await axios.get(URL);
 		const result = fetch.data;
 
 		return {
 			props: {
 				...user,
-				planDetails: result.payload || null,
+				planDetails: result.payload,
 			},
 		};
 	} catch (error) {
-		return {
-			props: {
-				...user,
-			},
-		};
+		return ssrErrorHandler(error, { ...user });
 	}
 };

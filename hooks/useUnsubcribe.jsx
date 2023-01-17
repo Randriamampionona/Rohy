@@ -1,7 +1,10 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import toastNotify from "../utils/toastNotify";
 
 const useUnsubcribe = () => {
+	const { push } = useRouter();
+
 	const unsubcribeFun = async () => {
 		try {
 			const URL = "/v1/sub/unsubscribe";
@@ -15,6 +18,7 @@ const useUnsubcribe = () => {
 
 			if (result.success) {
 				toastNotify("success", result.message);
+				return push("/");
 			}
 
 			throw new Error(result.message);

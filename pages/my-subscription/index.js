@@ -7,7 +7,7 @@ const MySubscriptionPage = () => {
 	const { unsubcribeFun } = useUnsubcribe();
 
 	const unsubHandler = async () => {
-		if (confirm("Unsubscribed ?")) {
+		if (confirm("Do you really wanna Unsubscribe your plan?")) {
 			await unsubcribeFun();
 		}
 	};

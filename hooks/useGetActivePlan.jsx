@@ -25,7 +25,7 @@ const useGetActivePlan = () => {
 
 			throw new Error(result.message);
 		} catch (error) {
-			return replace(`/offers?rdc=watch/${query.videoID}`);
+			return replace(`/offers`);
 		} finally {
 			setLoading(false);
 		}

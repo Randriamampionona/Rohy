@@ -9,7 +9,8 @@ const getCurrentUserProps = async ({ req, res }) => {
 				process.env.NEXT_PUBLIC_USER_COOKIES_NAME
 			);
 
-		if (!userToken) throw new Error("User token missing");
+		if (!userToken)
+			throw new Error("Missing user token - (getcurrentuserprops)");
 
 		// verify user token
 		const token = await auth__admin.verifyIdToken(userToken);

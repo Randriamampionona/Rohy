@@ -75,3 +75,20 @@ const handler = async (req, res) => {
 };
 
 export default isAuth(handler);
+
+// {
+// 	title: "Basic",
+// 	desc: "desc",
+// 	price: {
+// 		regular: 15000,
+// 		promo: null,
+// 	},
+// 	specificity: [
+// 		"Full support 24/7",
+// 		"Best quality",
+// 		"Watch on TV",
+// 		"Full HD",
+// 		"Cancel at anytime",
+// 	],
+// 	order: 1,
+// }

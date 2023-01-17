@@ -35,15 +35,36 @@ const middleware = async (req) => {
 		return NextResponse.redirect(baseURL);
 
 	// redirect to auth if not signed In
-	if (
-		(URL === "/" && !isTokenVerified) ||
-		(URL.startsWith("/live") && !isTokenVerified) ||
-		(URL.startsWith("/channel") && !isTokenVerified) ||
-		(URL.startsWith("/my-videos") && !isTokenVerified) ||
-		(URL.startsWith("/watch") && !isTokenVerified) ||
-		(URL.startsWith("/tv-program") && !isTokenVerified)
-	)
+	if (URL === "/" && !isTokenVerified)
 		return NextResponse.redirect(`${baseURL}/authorization/signin`);
+
+	if (URL.startsWith("/live") && !isTokenVerified)
+		return NextResponse.redirect(
+			`${baseURL}/authorization/signin?rdc=live-QUEST-p=all-channels-AND-key=548148691`
+		);
+
+	if (URL.startsWith("/channel") && !isTokenVerified)
+		return NextResponse.redirect(
+			`${baseURL}/authorization/signin?rdc=channel`
+		);
+
+	if (URL.startsWith("/my-videos") && !isTokenVerified)
+		return NextResponse.redirect(
+			`${baseURL}/authorization/signin?rdc=my-videos?p=playlist&key=35914515755`
+		);
+
+	if (URL.startsWith("/watch") && !isTokenVerified)
+		return NextResponse.redirect(`${baseURL}/authorization/signin`);
+
+	if (URL.startsWith("/account") && !isTokenVerified)
+		return NextResponse.redirect(
+			`${baseURL}/authorization/signin?rdc=account`
+		);
+
+	if (URL.startsWith("/tv-program") && !isTokenVerified)
+		return NextResponse.redirect(
+			`${baseURL}/authorization/signin?rdc=tv-program`
+		);
 };
 
 export default middleware;
@@ -60,5 +81,6 @@ export const config = {
 		"/my-videos/:path*",
 		"/tv-program/:path*",
 		"/watch/:path*",
+		"/account/:path*",
 	],
 };
