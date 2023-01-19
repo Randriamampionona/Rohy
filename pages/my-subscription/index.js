@@ -36,7 +36,7 @@ const MySubscriptionPage = ({ mySubscriptionData }) => {
 						<div className="flex flex-col items-center justify-center w-full">
 							<p className="text-center max-w-[75%] mb-4 md:max-w-[50%] lg:max-w-[45%]">
 								Seems like you don&apos;t have any active plan
-								yet
+								yet or the current subscription was expired
 							</p>
 							<p className="text-center text-primaryColor underline">
 								<Link href={"/offers"}>
