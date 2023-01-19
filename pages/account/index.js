@@ -45,11 +45,13 @@ const AccountPage = ({ subscriptionInfos }) => {
 
 						<div className="w-full divide-y-[1px] divide-whiteColor/10">
 							{subscriptionInfos.active &&
-							subscriptionInfos.details ? (
+							subscriptionInfos.plan_details ? (
 								<Fragment>
 									<BlockUI
 										lText={"Plan"}
-										RText={subscriptionInfos.details.name}
+										RText={
+											subscriptionInfos.plan_details.name
+										}
 									/>
 									<BlockUI
 										lText={"Due date"}
