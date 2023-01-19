@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
 import { Fragment, useEffect, useState } from "react";
 import { MetaHead } from "../../components/Common";
@@ -7,26 +8,25 @@ import priceFomator from "../../utils/priceFormator";
 import { FaCheck, FaRedoAlt, FaSignInAlt } from "react-icons/fa";
 import toastNotify from "../../utils/toastNotify";
 import { useRouter } from "next/router";
-import { GlobalContext } from "../../store/context/GlobalContext";
 import { AuthContext } from "../../store/context/AuthContext";
 import Link from "next/link";
-import useGetActivePlan from "../../hooks/useGetActivePlan";
 import { ImSpinner2 } from "react-icons/im";
 import ssrErrorHandler from "./../../utils/ssrErrorHandler";
+import { useGetActivePlan, useGetRedirectURL } from "../../hooks";
 
 const PlanPage = ({ planDetails }) => {
-	const { error } = GlobalContext();
 	const { currentUser } = AuthContext();
 	const { getActivePlanFun, loading } = useGetActivePlan();
+	const { getRedirectURLFunc } = useGetRedirectURL();
+
 	const [activePlan, setActivePlan] = useState({
 		active: false,
-		details: null,
+		plan_details: null,
 	});
-
 	const [scripLoaded, setScriptLoaded] = useState(false);
 	const [showPayBtn, setShowPayBtn] = useState(false);
 	const [isError, setIsError] = useState(null);
-	const { replace, reload, push } = useRouter();
+	const { reload, push, replace } = useRouter();
 
 	// prepare paypal script
 	useEffect(() => {
@@ -45,12 +45,10 @@ const PlanPage = ({ planDetails }) => {
 
 	// get active plan CLIENT SIDE
 	useEffect(() => {
-		const getActivePlan = async () => {
-			const { active, details } = await getActivePlanFun();
-			setActivePlan({ active, details });
-		};
-
-		getActivePlan();
+		(async () => {
+			const { active, plan_details } = await getActivePlanFun();
+			setActivePlan({ active, plan_details });
+		})();
 	}, []);
 
 	const onSuccessHandler = async (details, data) => {
@@ -60,24 +58,31 @@ const PlanPage = ({ planDetails }) => {
 		);
 
 		// call subscribe api & save transaction
+		const body = {
+			details,
+			data,
+			plan: {
+				id: planDetails.planID,
+				name: planDetails.name,
+			},
+		};
+
 		try {
 			const URL = `/v1/sub/subscribe`;
-			const DATA = {
-				details,
-				data,
-				planID: planDetails.planID,
-			};
-			const fetch = await axios.post(URL, DATA, {
+			const fetch = await axios.post(URL, body, {
 				withCredentials: true,
 			});
 			const result = fetch.data;
 
 			if (result.success) {
 				toastNotify("success", result.message);
-				return replace(error?.data?.rdc || "/");
+				return replace(getRedirectURLFunc("/my-subscription"));
 			}
+
+			throw new Error(result.message);
 		} catch (error) {
-			return toastNotify("error", error.message);
+			console.log(error);
+			return toastNotify("error", error?.response.data.message);
 		}
 	};
 
@@ -86,9 +91,13 @@ const PlanPage = ({ planDetails }) => {
 		console.log(err);
 	};
 
+	const onCacelHandler = (_data) => {
+		toastNotify(null, "Subscription canceled");
+	};
+
 	return (
 		<Fragment>
-			<MetaHead subTitle={`Plan - ${planDetails.title}`} />
+			<MetaHead subTitle={`Plan - ${planDetails.name}`} />
 			{isError ? (
 				<section className="pageSection flex flex-col items-center justify-center my-9">
 					<h1 className="text-center text-2xl text-red-500 font-semibold mb-6">
@@ -113,7 +122,7 @@ const PlanPage = ({ planDetails }) => {
 					{/* details */}
 					<div className="md:col-span-3">
 						<h1 className="text-2xl font-bold uppercase mb-1">
-							{planDetails.title} plan
+							{planDetails.name} plan
 						</h1>
 						<h2 className="text-2xl text-primaryColor font-medium">
 							{priceFomator(planDetails.price.regular)}{" "}
@@ -217,6 +226,9 @@ const PlanPage = ({ planDetails }) => {
 																	onError={
 																		onErrorHandler
 																	}
+																	onCancel={
+																		onCacelHandler
+																	}
 																	options={{
 																		clientId:
 																			process
@@ -242,8 +254,9 @@ const PlanPage = ({ planDetails }) => {
 													to a{" "}
 													<span className="uppercase">
 														{
-															activePlan.details
-																.title
+															activePlan
+																.plan_details
+																.name
 														}
 													</span>{" "}
 													plan.{" "}

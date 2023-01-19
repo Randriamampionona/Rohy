@@ -1,11 +1,11 @@
-const ssrErrorHandler = (error, otherProps) => {
+const ssrErrorHandler = (error, otherProps, rdc = "/") => {
 	if (error?.response) {
 		const { status, statusText, data } = error?.response;
 
 		return {
 			props: {
 				...otherProps,
-				errorProps: { status, statusText, data },
+				errorProps: { status, statusText, rdc, data },
 			},
 		};
 	}

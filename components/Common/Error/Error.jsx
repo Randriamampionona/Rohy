@@ -5,15 +5,20 @@ import MetaHead from "../MetaHead/MetaHead";
 import { GlobalContext } from "../../../store/context/GlobalContext";
 
 const Error = () => {
-	const { error } = GlobalContext();
+	const { error, resetError } = GlobalContext();
 	const { replace } = useRouter();
+
+	const navigateHandler = () => {
+		resetError();
+		return replace(error.rdc);
+	};
 
 	return (
 		<Fragment>
 			<MetaHead subTitle={"Ooooop! Something went wrong"} />
 
 			<section className="pageSection flex items-center justify-center w-full h-screen">
-				<main className="w-72 flex flex-col items-center justify-center bg-lightDarkColor p-4 rounded border-b border-red-600 md:80 xl:w-96">
+				<main className="w-72 flex flex-col items-center justify-center bg-lightDarkColor p-4 rounded border-b-2 border-red-600 md:80 xl:w-96">
 					<h1 className="text-2xl font-bold text-center">
 						Oooooop! Something went wrong
 					</h1>
@@ -24,8 +29,8 @@ const Error = () => {
 					</code>
 
 					<button
-						className="outlineBtn mt-8"
-						onClick={(_) => replace(error.data.rdc)}>
+						className="secondaryBtn mt-8"
+						onClick={navigateHandler}>
 						<span>
 							<FaArrowLeft />
 						</span>

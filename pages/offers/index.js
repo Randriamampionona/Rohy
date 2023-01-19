@@ -7,9 +7,14 @@ import { useRouter } from "next/router";
 import priceFomator from "./../../utils/priceFormator";
 
 const OffersPage = ({ plansList }) => {
-	const { push } = useRouter();
+	const {
+		push,
+		query: { rdc },
+	} = useRouter();
 
-	const navigateHandler = (r) => push(`/offers/${r}?`);
+	const navigateHandler = (r) => {
+		rdc ? push(`/offers/${r}?rdc=${rdc}`) : push(`/offers/${r}`);
+	};
 
 	return (
 		<Fragment>
@@ -30,7 +35,7 @@ const OffersPage = ({ plansList }) => {
 							{plan.popular && <Badge />}
 							<h2
 								className={`text-center text-base text-whiteColor/80 font-semibold uppercase`}>
-								{plan.title}
+								{plan.name}
 							</h2>
 							<div className={`my-6`}>
 								<h1 className="text-center text-5xl font-bold leading-none">
@@ -71,9 +76,8 @@ const OffersPage = ({ plansList }) => {
 							<button
 								className={`primaryBtn ${
 									plan.popular && "secondaryBtn"
-								} w-full`}
-								onClick={(e) => e.stopPropagation()}>
-								<span>Apply now</span>
+								} w-full`}>
+								<span>Learn more</span>
 							</button>
 						</div>
 					))}

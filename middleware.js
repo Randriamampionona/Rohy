@@ -50,7 +50,7 @@ const middleware = async (req) => {
 
 	if (URL.startsWith("/my-videos") && !isTokenVerified)
 		return NextResponse.redirect(
-			`${baseURL}/authorization/signin?rdc=my-videos?p=playlist&key=35914515755`
+			`${baseURL}/authorization/signin?rdc=my-videos-QUEST-p=playlist-AND-key=35914515755`
 		);
 
 	if (URL.startsWith("/watch") && !isTokenVerified)

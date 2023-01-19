@@ -25,6 +25,7 @@ const useGetActivePlan = () => {
 
 			throw new Error(result.message);
 		} catch (error) {
+			console.log(error);
 			return replace(`/offers`);
 		} finally {
 			setLoading(false);

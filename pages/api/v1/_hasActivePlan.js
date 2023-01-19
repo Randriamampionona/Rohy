@@ -7,68 +7,57 @@ const hasActivePlan = (handler) => {
 		try {
 			const { uid } = req.currentUser;
 
-			// get active plan
-			const docRef__subs = db__admin.collection("subscriptions").doc(uid);
-			const getActivePlan = await docRef__subs.get();
+			// check if has plan and active
+			const subscriptionRef = db__admin
+				.collection("subscriptions")
+				.doc(uid);
 
-			if (!getActivePlan.exists)
+			const mySubscription = await subscriptionRef.get();
+
+			if (
+				!mySubscription.exists ||
+				!checkActivePlanHandler(mySubscription.data())
+			)
 				return apiErrorHandler(
 					res,
 					402,
-					"Unsubscribed - (no active plan)",
-					`/offers`
+					"Unsubscribed - (no active plan)"
 				);
 
-			const { subscriptionID, planID, start, end } = getActivePlan.data();
+			// get subscribed plan details
+			const planRef = db__admin
+				.collection("plans")
+				.doc(mySubscription.data()?.plan.id);
 
-			// get saved sub details
-			const docRef__sub = db__admin
-				.collection("users")
-				.doc(uid)
-				.collection("subscription")
-				.doc(subscriptionID);
-
-			const savedSubDetails = await docRef__sub.get();
-
-			if (!savedSubDetails.exists)
-				return apiErrorHandler(
-					res,
-					402,
-					"Unsubscribed - (no active plan)",
-					`/offers`
-				);
-
-			// check for active plan
-			const active = checkActivePlanHandler(start, end);
-			const matched =
-				savedSubDetails.data().subscriptionID === subscriptionID;
-
-			if (!active || !matched)
-				return apiErrorHandler(
-					res,
-					402,
-					"Unsubscribed - (no active plan)",
-					`/offers`
-				);
-
-			// get plan details
-			const docRef__plan = db__admin.collection("plans").doc(planID);
-			const getSubscribedPlanDetails = await docRef__plan.get();
+			const planData = await planRef.get();
 
 			req.subscriptionInfos = {
-				active,
-				isPaid: matched,
-				subscriptionID,
-				start,
-				end,
-				plan: getSubscribedPlanDetails.data(),
+				...mySubscription.data(),
+				plan_details: planData.data(),
 			};
 
+			// next
 			return handler(req, res);
 		} catch (error) {
-			return apiErrorHandler(res, 402, "Unsubscribe", `/offers`);
+			return apiErrorHandler(
+				res,
+				402,
+				"Unsubscribed - (no active plan) "
+			);
 		}
 	};
 };
 
 export default hasActivePlan;
+
+// {
+//     subscription_ID: transaction_data.orderID,
+//     active: true,
+//     canceled: false,
+//     details: transaction_details,
+//     data: transaction_data,
+//     plan: { id, name },
+//     created_date: admin.firestore.FieldValue.serverTimestamp(),
+//     start: Date.now(),
+//     end: Date.now() + 3600000, // + 1h for test
+// }

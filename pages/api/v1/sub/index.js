@@ -10,63 +10,37 @@ const handler = async (req, res) => {
 	try {
 		const { uid } = req.currentUser;
 
-		// get active plan
-		const docRef__subs = db__admin.collection("subscriptions").doc(uid);
-		const getActivePlan = await docRef__subs.get();
+		// check if has plan and active
+		const subscriptionRef = db__admin.collection("subscriptions").doc(uid);
 
-		if (!getActivePlan.exists)
+		const mySubscription = await subscriptionRef.get();
+
+		if (
+			!mySubscription.exists ||
+			!checkActivePlanHandler(mySubscription.data())
+		)
 			return res.status(200).json({
 				success: true,
 				payload: {
 					active: false,
-					details: null,
+					plan_details: null,
 				},
 			});
 
-		const { subscriptionID, planID, start, end } = getActivePlan.data();
+		// get subscribed plan details
+		const planRef = db__admin
+			.collection("plans")
+			.doc(mySubscription.data()?.plan.id);
 
-		// get saved sub details
-		const docRef__sub = db__admin
-			.collection("users")
-			.doc(uid)
-			.collection("subscription")
-			.doc(subscriptionID);
+		const planData = await planRef.get();
 
-		const savedSubDetails = await docRef__sub.get();
-
-		if (!savedSubDetails.exists)
-			return apiErrorHandler(
-				res,
-				402,
-				"You don't have an active plan",
-				"/offers"
-			);
-
-		// check for active plan
-		const active = checkActivePlanHandler(start, end);
-		const matched =
-			savedSubDetails.data().subscriptionID === subscriptionID;
-		if (!active || !matched)
-			return apiErrorHandler(
-				res,
-				402,
-				"You don't have an active plan",
-				"/offers"
-			);
-
-		// get plan details
-		const docRef__plan = db__admin.collection("plans").doc(planID);
-		const getSubscribedPlanDetails = await docRef__plan.get();
+		req.subscriptionInfos = {};
 
 		return res.status(200).json({
 			success: true,
 			payload: {
-				active,
-				isPaid: matched,
-				subscriptionID,
-				start,
-				end,
-				details: getSubscribedPlanDetails.data(), //plan
+				...mySubscription.data(),
+				plan_details: planData.data(),
 			},
 		});
 	} catch (error) {
@@ -77,7 +51,19 @@ const handler = async (req, res) => {
 export default isAuth(handler);
 
 // {
-// 	title: "Basic",
+//     subscription_ID: transaction_data.orderID,
+//     active: true,
+// 	   canceled: false,
+//     details: transaction_details,
+//     data: transaction_data,
+//     plan: { id, name },
+//     created_date: admin.firestore.FieldValue.serverTimestamp(),
+//     start: Date.now(),
+//     end: Date.now() + 3600000, // + 1h for test
+// }
+
+// {
+// 	name: "Basic",
 // 	desc: "desc",
 // 	price: {
 // 		regular: 15000,

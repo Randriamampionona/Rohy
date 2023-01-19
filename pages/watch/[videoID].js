@@ -4,7 +4,7 @@ import { RiHeartLine, RiStarLine } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { Error, MetaHead, Player } from "./../../components/Common";
-import { useGetActivePlan, useListHandler } from "../../hooks";
+import { useListHandler } from "../../hooks";
 import { ImSpinner2 } from "react-icons/im";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../lib/firebase.config";
@@ -18,21 +18,9 @@ const WatchPage = ({ videoDetails }) => {
 	const { currentUser } = AuthContext();
 	const { error } = GlobalContext();
 
-	const { getActivePlanFun, loading: traitement } = useGetActivePlan();
 	const { addToMyListFunc, removeFromMyListFunc, loading } = useListHandler();
 	const [isSavedHint, setIsSavedHint] = useState(null);
-	const [hasActivePlan, setHasActivePlan] = useState(true);
-	const { back, replace } = useRouter();
-
-	// get active plan
-	useEffect(() => {
-		const getActivePlan = async () => {
-			const { active } = await getActivePlanFun();
-			setHasActivePlan(active);
-		};
-
-		getActivePlan();
-	}, []);
+	const { back } = useRouter();
 
 	// check if movie already saved
 	useEffect(() => {
@@ -65,36 +53,7 @@ const WatchPage = ({ videoDetails }) => {
 			return await removeFromMyListFunc(isSavedHint);
 	};
 
-	if (traitement)
-		return (
-			<section className="flex items-center justify-center w-screen h-screen">
-				<span className="animate-spin">
-					<ImSpinner2 />
-				</span>
-			</section>
-		);
-
-	if (error) return <Error />;
-
-	if (!hasActivePlan)
-		return (
-			<Fragment>
-				<MetaHead subTitle={"No active plan"} />
-				<section className="relative w-screen h-screen">
-					<div className="flex flex-col items-center justify-center">
-						<h1 className="text-center mb-2">
-							Seems like you don&apos;t have an active plan yet!
-						</h1>
-
-						<button
-							className="primaryBtn"
-							onClick={(_) => replace("/offers")}>
-							<span>Active plan</span>
-						</button>
-					</div>
-				</section>
-			</Fragment>
-		);
+	if (error) return <Error />; // return error component if something went wrong
 
 	return (
 		<Fragment>
@@ -189,32 +148,6 @@ export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
-		// const videoID = ctx.query.videoID;
-		// const URL1 = `https://api.themoviedb.org/3/movie/${videoID}/videos?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
-
-		// const URL2 = `https://api.themoviedb.org/3/movie/${videoID}?api_key=${process.env.NEXT_PUBLIC_TMBD_API_KEY}&language=en-US`;
-
-		// const promise1 = await axios.get(URL1);
-		// const promise2 = await axios.get(URL2);
-
-		// const [r1, r2] = await Promise.all([promise1, promise2]);
-
-		// const details = r1.data?.results?.[0];
-		// const video = r2.data;
-
-		// return {
-		// 	props: {
-		// 		...user,
-		// 		videoDetails: {
-		// 			video,
-		// 			details: {
-		// 				...details,
-		// 				videoURL: `${process.env.NEXT_PUBLIC_WATCH_BASE_URL}/watch?v=${details?.key}`,
-		// 			},
-		// 		},
-		// 	},
-		// };
-
 		const videoID = ctx.query.videoID;
 		const URL = `/v1/watch/${videoID}/${videoID}`;
 		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
@@ -229,6 +162,10 @@ export const getServerSideProps = async (ctx) => {
 			};
 		}
 	} catch (error) {
-		return ssrErrorHandler(error, { ...user });
+		return ssrErrorHandler(
+			error,
+			{ ...user },
+			`/offers?rdc=watch/${ctx.query.videoID}`
+		);
 	}
 };

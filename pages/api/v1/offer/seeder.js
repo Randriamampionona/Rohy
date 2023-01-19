@@ -12,7 +12,7 @@ const handler = async (req, res) => {
 
 		const data = [
 			{
-				title: "Basic",
+				name: "Basic",
 				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam ut excepturi mollitia ea, perspiciatis voluptates officia unde odit ratione esse quod sit quasi quisquam dicta inventore iusto aut! Nobis, ipsam! Dolorem, quaerat iste. Laudantium soluta inventore provident dolorum perferendis consequatur sint, quia aperiam velit id quam vero non. Sunt aliquid, dicta, recusandae amet exercitationem ad sit illo illum corrupti animi cum vel minus reiciendis corporis magnam ullam expedita aperiam a molestiae architecto aliquam eaque assumenda voluptatem? Dolorum, obcaecati accusamus ducimus quidem quasi provident ea nisi perspiciatis maxime aliquam eaque cum est possimus tempora illo accusantium officiis sapiente natus exercitationem nam.",
 				price: {
 					regular: 15000,
@@ -28,7 +28,7 @@ const handler = async (req, res) => {
 				order: 1,
 			},
 			{
-				title: "Standard",
+				name: "Standard",
 				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam ut excepturi mollitia ea, perspiciatis voluptates officia unde odit ratione esse quod sit quasi quisquam dicta inventore iusto aut! Nobis, ipsam! Dolorem, quaerat iste. Laudantium soluta inventore provident dolorum perferendis consequatur sint, quia aperiam velit id quam vero non. Sunt aliquid, dicta, recusandae amet exercitationem ad sit illo illum corrupti animi cum vel minus reiciendis corporis magnam ullam expedita aperiam a molestiae architecto aliquam eaque assumenda voluptatem? Dolorum, obcaecati accusamus ducimus quidem quasi provident ea nisi perspiciatis maxime aliquam eaque cum est possimus tempora illo accusantium officiis sapiente natus exercitationem nam.",
 				price: {
 					regular: 19000,
@@ -45,7 +45,7 @@ const handler = async (req, res) => {
 				order: 2,
 			},
 			{
-				title: "Premium",
+				name: "Premium",
 				desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam ut excepturi mollitia ea, perspiciatis voluptates officia unde odit ratione esse quod sit quasi quisquam dicta inventore iusto aut! Nobis, ipsam! Dolorem, quaerat iste. Laudantium soluta inventore provident dolorum perferendis consequatur sint, quia aperiam velit id quam vero non. Sunt aliquid, dicta, recusandae amet exercitationem ad sit illo illum corrupti animi cum vel minus reiciendis corporis magnam ullam expedita aperiam a molestiae architecto aliquam eaque assumenda voluptatem? Dolorum, obcaecati accusamus ducimus quidem quasi provident ea nisi perspiciatis maxime aliquam eaque cum est possimus tempora illo accusantium officiis sapiente natus exercitationem nam.",
 				price: {
 					regular: 21000,

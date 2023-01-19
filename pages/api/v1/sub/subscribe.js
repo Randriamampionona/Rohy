@@ -1,5 +1,6 @@
 import admin, { db__admin } from "../../../../lib/firebaseAdmin.config";
 import apiErrorHandler from "../../../../utils/apiErrorHandler";
+import checkActivePlanHandler from "../../../../utils/checkActivePlanHandler";
 import isAuth from "./../_isAuth";
 
 const handler = async (req, res) => {
@@ -8,41 +9,46 @@ const handler = async (req, res) => {
 
 	try {
 		const { uid } = req.currentUser;
-		const { details, data, planID } = req.body;
+		const {
+			details: transaction_details,
+			data: transaction_data,
+			plan: { id, name },
+		} = req.body;
 
-		// set subscription
-		const docRef = db__admin.collection("subscriptions").doc(uid);
-		const subs__DATA = {
-			subscriptionID: data.orderID,
-			details,
-			data,
-			date: admin.firestore.FieldValue.serverTimestamp(),
+		const subscriptionRef = db__admin.collection("subscriptions").doc(uid);
+
+		// check if already subscribed to a plan
+		const mySubscription = await subscriptionRef.get();
+
+		if (
+			mySubscription.exists &&
+			checkActivePlanHandler(mySubscription.data())
+		)
+			return res.status(200).json({
+				success: true,
+				message: `You are already subscribed to ${mySubscription
+					.data()
+					?.plan.name.toUpperCase()} plan`,
+			});
+
+		// save transaction details & subscription details
+		const subscriptionData = {
+			subscription_ID: transaction_data.orderID,
+			active: true,
+			canceled: false,
+			details: transaction_details,
+			data: transaction_data,
+			plan: { id, name },
+			created_date: admin.firestore.FieldValue.serverTimestamp(),
 			start: Date.now(),
-			end: Date.now() + 259200000, // +3days
-			planID,
+			end: Date.now() + 3600000, // + 1h for test
 		};
 
-		await docRef.set(subs__DATA, { merge: true });
+		await subscriptionRef.set(subscriptionData);
 
-		// save subscription details
-		const docRef2 = db__admin
-			.collection("users")
-			.doc(uid)
-			.collection("subscription")
-			.doc(data.orderID);
-		const sub__DATA = {
-			subscriptionID: data.orderID,
-			date: admin.firestore.FieldValue.serverTimestamp(),
-			start: Date.now(),
-			end: Date.now() + 259200000, // +3days
-			planID,
-		};
-
-		await docRef2.create(sub__DATA);
-
-		return res.status(200).json({
+		return res.status(201).json({
 			success: true,
-			message: "Subscription done, Enjoy 🤗",
+			message: "Subscription done! Enjoy 🤗",
 		});
 	} catch (error) {
 		return apiErrorHandler(res, 500, error);

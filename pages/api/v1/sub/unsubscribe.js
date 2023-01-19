@@ -9,31 +9,21 @@ const handler = async (req, res) => {
 
 	try {
 		const { uid } = req.currentUser;
-		const { subscriptionID } = req.subscriptionInfos;
-		const unsubType = req.headers.type || "expire";
 
-		// cancel sub (canceled: true)
-		const docRef__sub = db__admin
-			.collection("users")
-			.doc(uid)
-			.collection("subscription")
-			.doc(subscriptionID);
+		// update subscription
+		const subscriptionRef = db__admin.collection("subscriptions").doc(uid);
 
-		const DATA = {
-			[unsubType === "cancel" ? "canceled" : "expired"]: true,
+		const unsubscriptionData = {
+			active: false,
+			canceled: true,
+			end: Date.now(),
 		};
 
-		await docRef__sub.update(DATA);
-
-		// delete subs
-		const docRef__subs = db__admin.collection("subscriptions").doc(uid);
-		await docRef__subs.delete();
+		await subscriptionRef.update(unsubscriptionData);
 
 		return res.status(200).json({
 			success: true,
-			message: `Subscription ${
-				unsubType === "cancel" ? "canceled" : "expired"
-			}`,
+			message: "Unsubscription done",
 		});
 	} catch (error) {
 		return apiErrorHandler(res, 500, error);
@@ -41,3 +31,15 @@ const handler = async (req, res) => {
 };
 
 export default isAuth(hasActivePlan(handler));
+
+// {
+// 	subscription_ID: transaction_data.orderID,
+// 	active: true,
+// 	canceled: false,
+// 	details: transaction_details,
+// 	data: transaction_data,
+// 	plan: { id, name },
+// 	created_date: admin.firestore.FieldValue.serverTimestamp(),
+// 	start: Date.now(),
+// 	end: Date.now() + 3600000, // + 1h for test
+// }

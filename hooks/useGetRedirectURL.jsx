@@ -5,7 +5,7 @@ const useGetRedirectURL = () => {
 		query: { rdc },
 	} = useRouter();
 
-	const getRedirectURLFunc = (defaultLink) => {
+	const getRedirectURLFunc = (defaultLink = "/") => {
 		return rdc
 			? `/${rdc.replaceAll("-QUEST-", "?").replaceAll("-AND-", "&")}`
 			: defaultLink;
