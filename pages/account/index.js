@@ -49,7 +49,7 @@ const AccountPage = ({ subscriptionInfos }) => {
 								<Fragment>
 									<BlockUI
 										lText={"Plan"}
-										RText={subscriptionInfos.details.title}
+										RText={subscriptionInfos.details.name}
 									/>
 									<BlockUI
 										lText={"Due date"}

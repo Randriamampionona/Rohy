@@ -1,8 +1,10 @@
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const Intro = () => {
 	const [introImg, setIntroImg] = useState(null);
+	const { push } = useRouter();
 
 	useEffect(() => {
 		const getImage = async () => {
@@ -34,7 +36,9 @@ const Intro = () => {
 						Regardez le meilleur des séries, des films et du sport
 						en streaming et en illimité.
 					</p>
-					<button className="primaryBtn uppercase">
+					<button
+						className="primaryBtn uppercase"
+						onClick={(_) => push("/offers")}>
 						<span>Decouvrir nos offres</span>
 					</button>
 				</div>
