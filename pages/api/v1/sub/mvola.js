@@ -85,32 +85,17 @@ const handler = async (req, res) => {
 					currency: "Ar",
 					descriptionText: "test",
 					requestDate: new Date().toISOString(),
-					debitParty: [
-						{
-							key: "msisdn",
-							value: "0343500003",
-						},
-					],
-					creditParty: [
-						{
-							key: "msisdn",
-							value: "0343500004",
-						},
-					],
-					metadata: [
-						{
-							key: "partnerName",
-							value: "TestMVola",
-						},
-						{
-							key: "fc",
-							value: "USD",
-						},
-						{
-							key: "amountFc",
-							value: "1",
-						},
-					],
+					debitParty: {
+						msisdn: "0343500003",
+					},
+					creditParty: {
+						msisdn: "0343500004",
+					},
+					metadata: {
+						partnerName: "TestMVola",
+						fc: "USD",
+						amountFc: "1",
+					},
 					requestingOrganisationTransactionReference: "ABC123",
 					originalTransactionReference: "AZERTY",
 				},
