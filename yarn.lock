@@ -1427,6 +1427,11 @@ dom7@^4.0.4:
   dependencies:
     ssr-window "^4.0.0"
 
+dotenv@^16.0.0:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
+
 duplexify@^4.0.0:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/duplexify/-/duplexify-4.1.2.tgz#18b4f8d28289132fa0b9573c898d9f903f81c7b0"
@@ -2901,6 +2906,16 @@ ms@^2.1.1:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
+
+mvola-api@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/mvola-api/-/mvola-api-1.0.3.tgz#e8cef53b6e7814c8019be903366f1f83e8ca953d"
+  integrity sha512-kKQYePJ+7hTODWQSmBHR1vMgb6Gn+HBd4I0EaJi2w91pUf3fgHkgskC4MHVdJOZFFxkzw8u4S6xO33m/tb/4fw==
+  dependencies:
+    axios "^0.27.2"
+    dotenv "^16.0.0"
+    qs "^6.10.3"
+    uuid "^8.3.2"
 
 mvola@^1.2.0:
   version "1.2.0"
