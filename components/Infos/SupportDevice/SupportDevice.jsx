@@ -31,8 +31,7 @@ const SupportDevice = () => {
 				/>
 			</div>
 
-			<button
-				className="primaryBtn uppercase">
+			<button className="primaryBtn uppercase">
 				<span>telecharger</span>
 				<span>
 					<FaDownload />

@@ -16,8 +16,6 @@
     "firebase-admin": "^11.3.0",
     "framer-motion": "^7.6.19",
     "moment": "^2.29.4",
-    "mvola": "^1.2.0",
-    "mvola-api": "^1.0.3",
     "next": "12.3",
     "nextjs-progressbar": "^0.0.16",
     "nookies": "^2.5.2",

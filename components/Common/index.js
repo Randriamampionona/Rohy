@@ -13,3 +13,6 @@ export { default as Error } from "./Error/Error";
 // loader
 export { default as HeaderLoader } from "./Loader/HeaderLoader";
 export { default as MovieCardLoader } from "./Loader/MovieCardLoader";
+
+//btns
+export { default as MvolaBtn } from "./buttons/MvolaBtn";

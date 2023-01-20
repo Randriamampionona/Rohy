@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/mvola_SDK/node_modules*
 /.pnp
 .pnp.js
 

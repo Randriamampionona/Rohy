@@ -135,7 +135,7 @@ export default AccountPage;
 
 const BlockUI = ({ lText, RText, link = null }) => {
 	return (
-		<div className="flex items-center justify-between w-full p-4 rounded-sm bg-lightDarkColor">
+		<div className="flex flex-wrap items-center justify-between w-full p-4 rounded-sm bg-lightDarkColor">
 			<p className="font-medium">{lText}</p>
 			<p
 				className={`text-end ${

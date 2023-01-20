@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
 import { Fragment, useEffect, useState } from "react";
-import { MetaHead } from "../../components/Common";
+import { MetaHead, MvolaBtn } from "../../components/Common";
 import { PayPalButton } from "react-paypal-button-v2";
 import axios from "axios";
 import priceFomator from "../../utils/priceFormator";
@@ -12,10 +12,11 @@ import { AuthContext } from "../../store/context/AuthContext";
 import Link from "next/link";
 import { ImSpinner2 } from "react-icons/im";
 import ssrErrorHandler from "./../../utils/ssrErrorHandler";
-import { useGetActivePlan, useGetRedirectURL } from "../../hooks";
+import { useGetActivePlan, useGetRedirectURL, useMvola } from "../../hooks";
 
 const PlanPage = ({ planDetails }) => {
 	const { currentUser } = AuthContext();
+	const { merchantPaymentFunc } = useMvola();
 	const { getActivePlanFun, loading } = useGetActivePlan();
 	const { getRedirectURLFunc } = useGetRedirectURL();
 
@@ -93,6 +94,10 @@ const PlanPage = ({ planDetails }) => {
 
 	const onCacelHandler = (_data) => {
 		toastNotify(null, "Subscription canceled");
+	};
+
+	const payWithMvolaHandler = async () => {
+		await merchantPaymentFunc();
 	};
 
 	return (
@@ -243,6 +248,11 @@ const PlanPage = ({ planDetails }) => {
 																	Loading...
 																</span>
 															)}
+															<MvolaBtn
+																onClick={
+																	payWithMvolaHandler
+																}
+															/>
 														</div>
 													)}
 												</Fragment>
