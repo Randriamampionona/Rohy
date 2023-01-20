@@ -1,8 +1,11 @@
 import axios from "axios";
 import apiErrorHandler from "./../../../../utils/apiErrorHandler";
+import { v4 } from "uuid";
 
 const handler = async (_req, res) => {
 	try {
+		const transactionRef = v4();
+		
 		const URL =
 			"https://devapi.mvola.mg/mvola/mm/transactions/type/merchantpay/1.0.0/";
 
