@@ -52,7 +52,7 @@ const EditPage = () => {
 					<button
 						className="primaryBtn"
 						type="submit"
-						disabled={email.trim() === currentUser.email}>
+						disabled={email.trim() !== currentUser.email}>
 						<span>
 							<BiSend />
 						</span>
