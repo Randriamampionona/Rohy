@@ -251,6 +251,7 @@ const AuthForm = ({ page, socialMedia }) => {
 						</div>
 
 						<div className="w-full flex flex-col gap-y-3">
+							{/* google */}
 							<button
 								className="outlineBtn"
 								onClick={() =>
@@ -270,6 +271,7 @@ const AuthForm = ({ page, socialMedia }) => {
 								)}
 							</button>
 
+							{/* github */}
 							<button
 								className="outlineBtn"
 								onClick={() =>
@@ -288,6 +290,26 @@ const AuthForm = ({ page, socialMedia }) => {
 									</>
 								)}
 							</button>
+
+							{/* github */}
+							{/* <button
+								className="outlineBtn"
+								onClick={() =>
+									signinWithProviderFunc("facebook")
+								}>
+								{authLoading.facebook ? (
+									<span className="animate-spin">
+										<ImSpinner2 />
+									</span>
+								) : (
+									<>
+										<span className="text-[#4267B2]">
+											<FaFacebook />
+										</span>
+										<span>Continue with Facebook</span>
+									</>
+								)}
+							</button> */}
 						</div>
 					</div>
 

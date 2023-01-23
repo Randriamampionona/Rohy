@@ -54,7 +54,7 @@ const handler = async (_req, res) => {
 				UserLanguage: "MG",
 				UserAccountIdentifier: "msisdn;0343500004",
 				partnerName: "rohy.io",
-				// "Content-Type": "application/json",
+				"Content-Type": "application/json",
 				"X-Callback-URL": "/",
 				"Cache-Control": "no-cache",
 			},

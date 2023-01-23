@@ -1,21 +1,29 @@
 import { NextResponse } from "next/server";
 
+// configs
 const baseURL =
 	process.env.NODE_ENV === "production"
 		? "https://rohy.vercel.app"
 		: "http://localhost:3000";
 
+const getFetcherConfig = (req) => {
+	return {
+		credentials: "include",
+		headers: {
+			[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]: req.cookies.get(
+				process.env.NEXT_PUBLIC_USER_COOKIES_NAME
+			),
+		},
+	};
+};
+
+// API call
 const verifyTokenHandler = async (req) => {
 	try {
-		const fetcher = await fetch(`${baseURL}/api/v1/auth/verifyAuthToken`, {
-			credentials: "include",
-			headers: {
-				// process.env.NEXT_PUBLIC_USER_COOKIES_NAME: req.cookies.get("process.env.NEXT_PUBLIC_USER_COOKIES_NAME")?.value, if using next 13
-				[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]: req.cookies.get(
-					process.env.NEXT_PUBLIC_USER_COOKIES_NAME
-				), //if using next 12
-			},
-		});
+		const fetcher = await fetch(
+			`${baseURL}/api/v1/auth/verifyAuthToken`,
+			getFetcherConfig(req)
+		);
 		const result = await fetcher.json();
 
 		return result;
@@ -25,7 +33,23 @@ const verifyTokenHandler = async (req) => {
 	}
 };
 
-const middleware = async (req) => {
+const isAdmin = async (req) => {
+	try {
+		const URL = `${baseURL}/api/v1/admin`;
+		const fetcher = await fetch(URL, getFetcherConfig(req));
+		const result = await fetcher.json();
+
+		if (result.success) return result.payload;
+
+		throw new Error(result.message);
+	} catch (error) {
+		// back to home page if some error occured
+		return NextResponse.redirect(`${baseURL}`);
+	}
+};
+
+// routes
+const client = async (req) => {
 	const URL = req.nextUrl.pathname;
 
 	const { isTokenVerified } = await verifyTokenHandler(req);
@@ -72,8 +96,31 @@ const middleware = async (req) => {
 		);
 };
 
+const admin = async (req) => {
+	const URL = req.nextUrl.pathname;
+
+	const { admin } = await isAdmin(req);
+
+	if (URL.startsWith("/admin") && !admin)
+		return NextResponse.redirect(`${baseURL}`);
+};
+
+// middleware
+const middleware = async (req) => {
+	const URL = req.nextUrl.pathname;
+
+	if (URL.startsWith("/admin")) {
+		// console.log("admin page");
+		return admin(req);
+	} else {
+		// console.log("client page");
+		return client(req);
+	}
+};
+
 export default middleware;
 
+// matcher
 export const config = {
 	matcher: [
 		// require no auth to reach auth page
@@ -88,5 +135,8 @@ export const config = {
 		"/watch/:path*",
 		"/account/:path*",
 		"/my-subscription/:path*",
+
+		// require auth and should be an ADMIN to reach admin section page
+		"/admin/:path*",
 	],
 };

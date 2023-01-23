@@ -16,8 +16,6 @@ const handler = async (req, res) => {
 		const token = await auth__admin.verifyIdToken(userToken);
 		if (!token) throw new Error("Invalid user token");
 
-		// if (userToken !== "123456") throw new Error("Invalid user token");
-
 		return res
 			.status(200)
 			.json({ success: true, userToken: token, isTokenVerified: true });

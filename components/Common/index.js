@@ -1,4 +1,8 @@
+// global components
 export { default as MetaHead } from "./MetaHead/MetaHead";
+export { default as Error } from "./Error/Error";
+
+// client components
 export { default as Header } from "./Header/Header";
 export { default as AuthForm } from "./AuthForm/AuthForm";
 export { default as Widget } from "./Widget/Widget";
@@ -8,7 +12,10 @@ export { default as MovieCard } from "./MovieCard/MovieCard";
 export { default as Player } from "./Player/Player";
 export { default as MobileMenu } from "./MobileMenu/MobileMenu";
 export { default as Footer } from "./Footer/Footer";
-export { default as Error } from "./Error/Error";
+
+// admin components
+export { default as AdminHeader } from "./Header/AdminHeader/AdminHeader";
+export { default as AdminSidebar } from "./Sidebar/AdminSidebar/AdminSidebar";
 
 // loader
 export { default as HeaderLoader } from "./Loader/HeaderLoader";

@@ -6,6 +6,8 @@ import {
 	signInWithPopup,
 	GoogleAuthProvider,
 	GithubAuthProvider,
+	FacebookAuthProvider,
+	sendPasswordResetEmail,
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
@@ -28,11 +30,13 @@ const initState = {
 		signout: false,
 		google: false,
 		github: false,
+		facebook: false,
 	},
 	signupFunc: async (email, password) => {},
 	signinFunc: async (email, password) => {},
 	signoutFunc: async () => {},
 	signinWithProviderFunc: async (provider) => {},
+	resetPasswordFunc: async (email) => {},
 };
 
 const timer = 900000; //15 min
@@ -46,6 +50,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	const [authLoading, setAuthLoading] = useState(initState.authLoading);
 	const googleProvider = new GoogleAuthProvider();
 	const githubProvider = new GithubAuthProvider();
+	const facebookProvider = new FacebookAuthProvider();
 	const { replace } = useRouter();
 
 	// provider config
@@ -54,6 +59,10 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	});
 
 	githubProvider.setCustomParameters({
+		prompt: "select_account",
+	});
+
+	facebookProvider.setCustomParameters({
 		prompt: "select_account",
 	});
 
@@ -190,7 +199,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		try {
 			const result = await signInWithPopup(
 				auth,
-				provider === "google" ? googleProvider : githubProvider
+				provider === "google" ? googleProvider : githubProvider //githubProvider
 			);
 
 			await saveUserFunc(result.user);
@@ -214,6 +223,26 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		}
 	};
 
+	const resetPasswordFunc = async (email) => {
+		try {
+			const actionCodeSettings = {
+				// After password reset, the user will be give the ability to go back
+				// to this page.
+				url: `${
+					process.env.NODE_ENV === "production"
+						? "https://rohy.vercel.app"
+						: "http://localhost:3000"
+				}/?email=${email}`,
+				handleCodeInApp: false,
+			};
+			await sendPasswordResetEmail(auth, email, actionCodeSettings);
+
+			toastNotify("success", "Password reset email sent");
+		} catch (error) {
+			toastNotify("error", error);
+		}
+	};
+
 	const values = {
 		currentUser: currentUserProps || currentUser,
 		authLoading,
@@ -221,6 +250,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		signinFunc,
 		signoutFunc,
 		signinWithProviderFunc,
+		resetPasswordFunc,
 	};
 
 	return <Context.Provider value={values}>{children}</Context.Provider>;

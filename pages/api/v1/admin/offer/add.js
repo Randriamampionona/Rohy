@@ -1,11 +1,15 @@
-import { db__admin } from "../../../../lib/firebaseAdmin.config";
-import apiErrorHandler from "../../../../utils/apiErrorHandler";
+import { db__admin } from "../../../../../lib/firebaseAdmin.config";
+import apiErrorHandler from "../../../../../utils/apiErrorHandler";
+import isAdmin from "../../_isAdmin";
+import isAuth from "../../_isAuth";
 
 const handler = async (req, res) => {
 	if (req.method !== "POST")
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
+		const adminInfos = req.adminInfos;
+
 		const collectionRef1 = db__admin.collection("plans");
 		const collectionRef2 = db__admin.collection("plans");
 		const collectionRef3 = db__admin.collection("plans");
@@ -76,4 +80,4 @@ const handler = async (req, res) => {
 	}
 };
 
-export default handler;
+export default isAuth(isAdmin(handler));
