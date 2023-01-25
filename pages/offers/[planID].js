@@ -97,7 +97,7 @@ const PlanPage = ({ planDetails }) => {
 	};
 
 	const payWithMvolaHandler = async () => {
-		await merchantPaymentFunc();
+		await merchantPaymentFunc(planDetails.planID);
 	};
 
 	return (
