@@ -1,90 +1,100 @@
 import axios from "axios";
-import { db__admin } from "../../../../lib/firebaseAdmin.config";
+import admin, { db__admin } from "../../../../lib/firebaseAdmin.config";
 import apiErrorHandler from "./../../../../utils/apiErrorHandler";
+import isAuth from "./../_isAuth";
+import checkActivePlanHandler from "./../../../../utils/checkActivePlanHandler";
 
 const handler = async (req, res) => {
 	try {
+		const { uid } = req.currentUser;
 		const { planID } = req.body;
 
-		// get price
+		// get plan infos
 		const docRef = db__admin.collection("plans").doc(planID);
 		const response = await docRef.get();
 
 		if (!response.exists)
-			return apiErrorHandler(res, 500, "Plan not found");
+			return apiErrorHandler(res, 404, "Plan not found");
 
-		const { price } = response.data();
+		const { price, name: planName } = response.data();
 
 		const amount = price.promo
 			? price.promo.toString()
 			: price.regular.toString();
 
-		// const URL =
-		// 	"https://devapi.mvola.mg/mvola/mm/transactions/type/merchantpay/1.0.0/";
+		// INITIATE TRANSACTION
+		const merchanrpay_URL =
+			"https://rohy-server.vercel.app/api/mvola/merchantpay";
 
-		// const data = {
-		// 	amount,
-		// 	currency: "Ar",
-		// 	descriptionText: "test",
-		// 	requestingOrganisationTransactionReference: "ABC123",
-		// 	originalTransactionReference: "AZERTY",
-		// 	requestDate: "2023-01-09T12:00:03.000Z",
-		// 	debitParty: [
-		// 		{
-		// 			key: "msisdn",
-		// 			value: "0343500003",
-		// 		},
-		// 	],
-		// 	creditParty: [
-		// 		{
-		// 			key: "msisdn",
-		// 			value: "0343500004",
-		// 		},
-		// 	],
-		// 	metadata: [
-		// 		{
-		// 			key: "partnerName",
-		// 			value: "test",
-		// 		},
-		// 		{
-		// 			key: "fc",
-		// 			value: "USD",
-		// 		},
-		// 		{
-		// 			key: "amountFc",
-		// 			value: "1",
-		// 		},
-		// 	],
-		// };
+		const merchanrpay_fetch = await axios.post(merchanrpay_URL, { amount });
+		const merchanrpay_result = merchanrpay_fetch.data;
 
-		// const config = {
-		// 	withCredentials: true,
-		// 	headers: {
-		// 		Authorization: `Bearer eyJ4NXQiOiJPRE5tWkRFMll6UTRNVEkxTVRZME1tSmhaR00yTUdWa1lUZGhOall5TWpnM01XTmpNalJqWWpnMll6bGpNRGRsWWpZd05ERmhZVGd6WkRoa1lUVm1OZyIsImtpZCI6Ik9ETm1aREUyWXpRNE1USTFNVFkwTW1KaFpHTTJNR1ZrWVRkaE5qWXlNamczTVdOak1qUmpZamcyWXpsak1EZGxZall3TkRGaFlUZ3paRGhrWVRWbU5nX1JTMjU2IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJ0c2lreWFuZHJpYW5qYW5pcmlhbmFAZ21haWwuY29tQGNhcmJvbi5zdXBlciIsImF1dCI6IkFQUExJQ0FUSU9OIiwiYXVkIjoiZklpSWwyUmpMSWtsbDVmbHR4MVY0dVU4cGhrYSIsIm5iZiI6MTY3NDYyNjYzMiwiYXpwIjoiZklpSWwyUmpMSWtsbDVmbHR4MVY0dVU4cGhrYSIsInNjb3BlIjoiRVhUX0lOVF9NVk9MQV9TQ09QRSIsImlzcyI6Imh0dHBzOlwvXC9hcGltLnByZXAudGVsbWEubWc6OTQ0M1wvb2F1dGgyXC90b2tlbiIsImV4cCI6MTY3NDk4NjYzMiwiaWF0IjoxNjc0NjI2NjMyLCJqdGkiOiJjZjc4MmFhMy01Yzg4LTRlM2MtYmZkNC00OGU4YTliYTZiNjYifQ.qdI92lQeo1HzN_8s1qtK_VraWufgJ4vit1dCyxvFl5kABz2GqJm8Dcqmrgi79YowANg9Fg-8Dy7JPjMDg6U6q3iFaMjcCSc35SZU3cZ_YGtWhGpgVwpKmOPNv_8QdqxMidP0Q4-LdueTZ-b-CqPYQiB0_Th_mfNfNVtC2YlwE5unlqS6_NGOeWFynnWUkFsN3W0jEsZpufj6lipb16swIHawKLKDB2jtLZ9O8U35YBh0a-VO647aIIQLxGHgqeb4xJgRTdmQdDBmTcu_99PJ_qeUTC6KcpfG_F70iS4MGsSiJzaXavLVPPZhAQoeDHmOTVOZWYYgXFPJtj0TZM-Zdg`,
-		// 		Version: "1.0",
-		// 		"X-CorrelationID": "123e4567-e89b-12d3-a456-426614174000",
-		// 		UserLanguage: "MG",
-		// 		UserAccountIdentifier: "msisdn;0343500004",
-		// 		partnerName: "rohy.io",
-		// 		"Content-Type": "application/json",
-		// 		"X-Callback-URL": "/",
-		// 		"Cache-Control": "no-cache",
-		// 	},
-		// };
+		if (!merchanrpay_result.success)
+			return apiErrorHandler(res, 412, "Cannot initiate a new payment");
 
-		const URL = "https://rohy-server.vercel.app/api/mvola/merchantpay";
+		// TRANSACTION STATUS
+		const status_URL =
+			"https://rohy-server.vercel.app/api/mvola/transaction-status";
+		const status_fetch = await axios.get(status_URL);
+		const status_result = status_fetch.data;
 
-		const fetch = await axios.post(URL, { amount });
-		const result = fetch.data;
+		if (
+			!status_result.success &&
+			status_result.payload.status !== "completed" &&
+			status_result.payload.serverCorrelationId !==
+				merchanrpay_result.payload.serverCorrelationId
+		)
+			return apiErrorHandler(res, 412, "Transaction status failed");
 
-		return res.status(200).json({
+		// TRANSACTION DETAILS
+		const details_URL =
+			"https://rohy-server.vercel.app/api/mvola/transaction-details";
+		const details_fetch = await axios.get(details_URL);
+		const result_details = details_fetch.data;
+
+		if (!result_details.success)
+			return apiErrorHandler(res, 412, "Transaction failed");
+
+		// SAVE TRANSACTION
+		const subscriptionRef = db__admin.collection("subscriptions").doc(uid);
+
+		// check if already subscribed to a plan
+		const mySubscription = await subscriptionRef.get();
+
+		if (
+			mySubscription.exists &&
+			checkActivePlanHandler(mySubscription.data())
+		)
+			return res.status(200).json({
+				success: true,
+				message: `You are already subscribed to ${mySubscription
+					.data()
+					?.plan.name.toUpperCase()} plan`,
+			});
+
+		// save transaction details & subscription details
+		const subscriptionData = {
+			subscription_ID: status_result.payload.objectReference,
+			active: true,
+			canceled: false,
+			details: result_details.payload,
+			data: status_result.payload,
+			plan: { id: planID, name: planName },
+			created_date: admin.firestore.FieldValue.serverTimestamp(),
+			start: Date.now(),
+			end: Date.now() + 3600000, // + 1h for test
+		};
+
+		await subscriptionRef.set(subscriptionData);
+
+		return res.status(201).json({
 			success: true,
-			message: "Transaction succeed",
-			payload: result,
+			message: "Subscription done! Enjoy 🤗",
 		});
 	} catch (error) {
+		console.log(error);
 		return apiErrorHandler(res, 500, error);
 	}
 };
 
-export default handler;
+export default isAuth(handler);

@@ -16,7 +16,7 @@ import { useGetActivePlan, useGetRedirectURL, useMvola } from "../../hooks";
 
 const PlanPage = ({ planDetails }) => {
 	const { currentUser } = AuthContext();
-	const { merchantPaymentFunc } = useMvola();
+	const { merchantPaymentFunc, mvolaLoading } = useMvola();
 	const { getActivePlanFun, loading } = useGetActivePlan();
 	const { getRedirectURLFunc } = useGetRedirectURL();
 
@@ -249,6 +249,9 @@ const PlanPage = ({ planDetails }) => {
 																</span>
 															)}
 															<MvolaBtn
+																loading={
+																	mvolaLoading
+																}
 																onClick={
 																	payWithMvolaHandler
 																}
