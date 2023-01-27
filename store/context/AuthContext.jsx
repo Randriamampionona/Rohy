@@ -39,7 +39,7 @@ const initState = {
 	resetPasswordFunc: async (email) => {},
 };
 
-const timer = 900000; //15 min
+const timer = 1800000; //30 min
 
 const Context = createContext(initState);
 

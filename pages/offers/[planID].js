@@ -163,7 +163,7 @@ const PlanPage = ({ planDetails }) => {
 						</div>
 					</div>
 
-					{/* paypal btn */}
+					{/* payment btn */}
 					<div className="w-full mx-auto">
 						{loading ? (
 							<div className="flex items-center justify-center w-full h-28 bg-lightDarkColor rounded-md p-4">

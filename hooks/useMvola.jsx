@@ -2,9 +2,10 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toastNotify from "../utils/toastNotify";
-import getRedirectURLFunc from "./useGetRedirectURL";
+import useGetRedirectURL from "./useGetRedirectURL";
 
 const useMvola = () => {
+	const { getRedirectURLFunc } = useGetRedirectURL();
 	const { replace } = useRouter();
 	const [mvolaLoading, setMvolaLoading] = useState(false);
 

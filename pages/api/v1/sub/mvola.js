@@ -77,7 +77,10 @@ const handler = async (req, res) => {
 			subscription_ID: status_result.payload.objectReference,
 			active: true,
 			canceled: false,
-			details: result_details.payload,
+			details: {
+				...result_details.payload,
+				amount,
+			},
 			data: status_result.payload,
 			plan: { id: planID, name: planName },
 			created_date: admin.firestore.FieldValue.serverTimestamp(),
@@ -92,7 +95,6 @@ const handler = async (req, res) => {
 			message: "Subscription done! Enjoy 🤗",
 		});
 	} catch (error) {
-		console.log(error);
 		return apiErrorHandler(res, 500, error);
 	}
 };
