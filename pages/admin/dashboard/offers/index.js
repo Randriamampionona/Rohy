@@ -1,7 +1,7 @@
-import React from "react";
+import { DashboardHOC } from "../../../../components/HOC";
 
 const OffersDashboardPage = () => {
 	return <div>OffersDashboardPage</div>;
 };
 
-export default OffersDashboardPage;
+export default DashboardHOC(OffersDashboardPage);

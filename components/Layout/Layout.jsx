@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { AdminHeader, AdminSidebar, Footer, Header, MetaHead } from "../Common";
+import { AdminHeader, Footer, Header, MetaHead } from "../Common";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 
@@ -23,7 +23,6 @@ const Layout = ({ children }) => {
 				canShown() && <Header />
 			)}
 			<Toaster position="top-right" />
-			{pathname.includes("admin") && <AdminSidebar />}
 			{children}
 			{canShown() && <Footer />}
 		</Fragment>

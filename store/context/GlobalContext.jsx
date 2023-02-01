@@ -1,4 +1,5 @@
-import { createContext, useContext, useReducer } from "react";
+import { useRouter } from "next/router";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { RESET_ERROR } from "../actions/actions";
 import globalReducer from "../reducers/globalReducer";
 
@@ -11,6 +12,14 @@ const Context = createContext(initState);
 
 export const GlobalProvider = ({ children, errorProps }) => {
 	const [state, dispatch] = useReducer(globalReducer, initState);
+	const { pathname } = useRouter();
+
+	// style
+	useEffect(() => {
+		const addAttr = () => document.body.setAttribute("id", "_dashboard");
+
+		window && pathname.startsWith("/admin/dashboard") && addAttr();
+	}, [pathname]);
 
 	const resetError = () => {
 		dispatch({

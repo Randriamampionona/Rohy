@@ -1,6 +1,7 @@
 import { Html, Head, NextScript, Main } from "next/document";
 
 const MyDocument = () => {
+
 	return (
 		<Html lang="en">
 			<Head>

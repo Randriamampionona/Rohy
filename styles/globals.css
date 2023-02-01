@@ -12,19 +12,23 @@
 	body {
 		@apply bg-darkColor text-whiteColor;
 	}
+
+	button {
+		@apply border-0 outline-none disabled:cursor-not-allowed disabled:opacity-50 select-none
+	}
 }
 
 @layer components {
 	.primaryBtn {
-		@apply flex items-center justify-center gap-x-2 bg-primaryColor px-4 h-11 rounded hover:bg-primaryColor/95 disabled:cursor-not-allowed disabled:opacity-50;
+		@apply flex items-center justify-center gap-x-2 bg-primaryColor text-whiteColor px-4 h-11 rounded hover:bg-primaryColor/95 disabled:cursor-not-allowed disabled:opacity-50 select-none;
 	}
 
 	.secondaryBtn {
-		@apply flex items-center justify-center gap-x-2 bg-whiteColor text-darkColor px-4 h-11 rounded hover:bg-whiteColor/95 disabled:cursor-not-allowed disabled:opacity-50;
+		@apply flex items-center justify-center gap-x-2 bg-whiteColor text-darkColor px-4 h-11 rounded hover:bg-whiteColor/95 disabled:cursor-not-allowed disabled:opacity-50 select-none;
 	}
 
 	.outlineBtn {
-		@apply flex items-center justify-center gap-x-3 border border-primaryColor hover:bg-primaryColor px-4 h-11 rounded disabled:cursor-not-allowed disabled:opacity-50;
+		@apply flex items-center justify-center gap-x-3 border border-primaryColor hover:bg-primaryColor px-4 h-11 rounded disabled:cursor-not-allowed disabled:opacity-50 select-none;
 	}
 
 	.bottomOverlay {
@@ -33,6 +37,10 @@
 
 	.pageSection {
 		@apply w-full py-8 px-4 md:px-10 lg:px-14 xl:px-20;
+	}
+
+	.dashboardSection {
+		@apply flex w-full min-h-[calc(100vh-2rem)];
 	}
 
 	.loaderAnimate {
@@ -71,4 +79,9 @@
 	::-webkit-scrollbar {
 		display: none;
 	}
+}
+
+#_dashboard {
+	background: #f5f5f5 !important;
+	color: #0f0e13 !important;
 }

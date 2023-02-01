@@ -1,17 +1,18 @@
 import { Fragment } from "react";
 import { MetaHead } from "../../../components/Common";
+import { DashboardHOC } from "../../../components/HOC";
 import getCurrentUserProps from "../../../utils/getCurrentUserProps";
 
 const DashboardPage = () => {
 	return (
 		<Fragment>
 			<MetaHead subTitle={"Dashboard"} />
-			<section className="pageSection">DashboardPage</section>
+			<section className="w-full h-full">DashboardPage</section>
 		</Fragment>
 	);
 };
 
-export default DashboardPage;
+export default DashboardHOC(DashboardPage);
 
 export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);

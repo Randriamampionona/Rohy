@@ -5,7 +5,8 @@ import { db__admin } from "../../../../../lib/firebaseAdmin.config";
 
 const handler = async (req, res) => {
 	try {
-		// const {} = req.adminInfos;
+		const { displayName } = req.adminInfos;
+
 		const {
 			id: movieID,
 			category: { name: categoryName, id: categoryID },
@@ -34,12 +35,17 @@ const handler = async (req, res) => {
 			return apiErrorHandler(res, 400, "Movie already exist");
 
 		// add movie
-		await docRef.set(req.body);
+		const data = {
+			...req.body,
+			postBy: displayName,
+			createdAt: new Date().toISOString(),
+		};
+		await docRef.set(data);
 
 		return res.status(201).json({
 			success: true,
 			message: `New movie added (ID: ${movieID})`,
-			payload: req.body,
+			payload: data,
 		});
 	} catch (error) {
 		return apiErrorHandler(res, 500, error);

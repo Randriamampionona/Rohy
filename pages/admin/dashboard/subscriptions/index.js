@@ -1,7 +1,7 @@
-import React from "react";
+import { DashboardHOC } from "../../../../components/HOC";
 
 const SubscriptionsDashboardPage = () => {
 	return <div>SubscriptionsDashboardPage</div>;
 };
 
-export default SubscriptionsDashboardPage;
+export default DashboardHOC(SubscriptionsDashboardPage);

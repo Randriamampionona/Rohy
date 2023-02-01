@@ -2,7 +2,7 @@
     "id": 566584898,
     "category": {
         "name": "cinema",
-        "id": 35897156
+        "id": "cinema--35897156"
     },
     "adult": false,
     "backdrop_path": "/assets/slider2.jpeg",
@@ -18,5 +18,7 @@
     "release_date": "2018-10-04",
     "video": {
         "url": "https://www.youtube.com/watch?v=x_EEwGe-a9o"
-    }
+    },
+    "postBy": "John Doe",
+    "createdAt": "2023-01-28T11:13:44.439Z"
 }

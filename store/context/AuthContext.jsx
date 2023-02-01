@@ -41,6 +41,15 @@ const initState = {
 
 const timer = 1800000; //30 min
 
+// just for offline test
+const mockUser = {
+	uid: "AIzaSyCvBxFKQ",
+	email: "johndoe@gmail.com",
+	displayName: "John Doe",
+	photoURL: "../../public/assets/defaultPhotoURL.png",
+	joinedOn: new Date().toISOString(),
+};
+
 const Context = createContext(initState);
 
 export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
@@ -244,7 +253,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	};
 
 	const values = {
-		currentUser: currentUserProps || currentUser,
+		currentUser: currentUserProps || currentUser || mockUser,
 		authLoading,
 		signupFunc,
 		signinFunc,
