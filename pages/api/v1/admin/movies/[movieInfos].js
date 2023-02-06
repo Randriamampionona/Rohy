@@ -42,5 +42,5 @@ const handler = async (req, res) => {
 	}
 };
 
-// export default isAuth(isAdmin(handler));
-export default handler;
+export default isAuth(isAdmin(handler));
+// export default handler;

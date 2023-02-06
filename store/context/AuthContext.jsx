@@ -253,7 +253,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	};
 
 	const values = {
-		currentUser: currentUserProps || currentUser || mockUser,
+		currentUser: process.env.NODE_ENV === "production" ? (currentUserProps || currentUser) : (currentUserProps || currentUser || mockUser),
 		authLoading,
 		signupFunc,
 		signinFunc,

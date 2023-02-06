@@ -99,12 +99,12 @@ const client = async (req) => {
 const admin = async (req) => {
 	const URL = req.nextUrl.pathname;
 
-	// const { admin } = await isAdmin(req);
+	const { admin } = await isAdmin(req);
 
-	// if (URL.startsWith("/admin") && !admin)
-	// 	return NextResponse.redirect(`${baseURL}`);
-	if (URL.startsWith("/admin") && false)
+	if (URL.startsWith("/admin") && !admin)
 		return NextResponse.redirect(`${baseURL}`);
+	// if (URL.startsWith("/admin") && false)
+	// 	return NextResponse.redirect(`${baseURL}`);
 };
 
 // middleware
