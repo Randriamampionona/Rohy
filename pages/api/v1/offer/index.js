@@ -17,6 +17,7 @@ const handler = async (req, res) => {
 			data.push({
 				planID: doc.id,
 				...doc.data(),
+				dateCreated: doc.data().dateCreated.toDate(),
 			});
 		});
 
