@@ -41,7 +41,7 @@ const initState = {
 
 const timer = 1800000; //30 min
 
-// just for offline test
+// just for offline dev test
 const mockUser = {
 	uid: "AIzaSyCvBxFKQ",
 	email: "johndoe@gmail.com",
@@ -253,7 +253,10 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	};
 
 	const values = {
-		currentUser: process.env.NODE_ENV === "production" ? (currentUserProps || currentUser) : (currentUserProps || currentUser || mockUser),
+		currentUser:
+			process.env.NODE_ENV === "production"
+				? currentUserProps || currentUser
+				: currentUserProps || currentUser || mockUser,
 		authLoading,
 		signupFunc,
 		signinFunc,

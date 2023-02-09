@@ -10,9 +10,12 @@ import {
 } from "react-icons/ri";
 
 const AdminSidebar = ({ sidebarNavigations }) => {
-	const { query } = useRouter();
+	const { pathname } = useRouter();
 
-	const isActiveLink = useCallback((key) => query?.key == key, [query]);
+	const isActiveLink = useCallback(
+		(path) => pathname.startsWith(path),
+		[pathname]
+	);
 
 	return (
 		<aside className="sticky top-[2rem] flex-shrink-0 max-w-[14rem] w-full h-[calc(100vh-2rem)] bg-darkColor text-whiteColor py-4">
@@ -29,7 +32,7 @@ const AdminSidebar = ({ sidebarNavigations }) => {
 						<a>
 							<li
 								className={`relative flex items-center space-x-3 px-2 py-2 hover:bg-primaryColor overflow-hidden ${
-									isActiveLink(navigation.key) &&
+									isActiveLink(navigation.slug) &&
 									"bg-primaryColor after:absolute after:-right-2 after:w-3 after:h-3 after:bg-whitesmoke after:rotate-45"
 								}`}>
 								<span>{navigation.Icon}</span>
@@ -46,7 +49,7 @@ const AdminSidebar = ({ sidebarNavigations }) => {
 AdminSidebar.defaultProps = {
 	sidebarNavigations: [
 		{
-			slug: "/admin/dashboard",
+			slug: "/admin/dashboard/home",
 			text: "Dashboard",
 			key: 5641898,
 			Icon: <RiDashboardFill />,

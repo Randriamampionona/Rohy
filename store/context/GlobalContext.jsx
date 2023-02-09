@@ -17,8 +17,13 @@ export const GlobalProvider = ({ children, errorProps }) => {
 	// style
 	useEffect(() => {
 		const addAttr = () => document.body.setAttribute("id", "_dashboard");
+		const removeAttr = () => document.body.removeAttribute("id");
 
-		window && pathname.startsWith("/admin/dashboard") && addAttr();
+		if (window && pathname.startsWith("/admin/dashboard")) {
+			return addAttr();
+		} else {
+			return removeAttr();
+		}
 	}, [pathname]);
 
 	const resetError = () => {

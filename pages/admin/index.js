@@ -26,7 +26,7 @@ const AdminPage = () => {
 						A place where you can edit - update - delete stuff you
 						want
 					</p>
-					<Link href={"/admin/dashboard?key=5641898"}>
+					<Link href={"/admin/dashboard/home"}>
 						<a className="underline text-primaryColor mt-4">
 							continue to dashboard
 						</a>

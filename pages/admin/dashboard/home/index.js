@@ -1,7 +1,7 @@
 import { Fragment } from "react";
-import { MetaHead } from "../../../components/Common";
-import { DashboardHOC } from "../../../components/HOC";
-import getCurrentUserProps from "../../../utils/getCurrentUserProps";
+import { MetaHead } from "../../../../components/Common";
+import { DashboardHOC } from "../../../../components/HOC";
+import getCurrentUserProps from "../../../../utils/getCurrentUserProps";
 
 const DashboardPage = () => {
 	return (

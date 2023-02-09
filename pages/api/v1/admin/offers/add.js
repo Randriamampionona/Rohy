@@ -1,4 +1,4 @@
-import { db__admin } from "../../../../../lib/firebaseAdmin.config";
+import admin, { db__admin } from "../../../../../lib/firebaseAdmin.config";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import isAdmin from "../../_isAdmin";
 import isAuth from "../../_isAuth";
@@ -66,9 +66,18 @@ const handler = async (req, res) => {
 			},
 		];
 
-		const addPlan1 = await collectionRef1.add(data[0]);
-		const addPlan2 = await collectionRef2.add(data[1]);
-		const addPlan3 = await collectionRef3.add(data[2]);
+		const addPlan1 = await collectionRef1.add({
+			...data[0],
+			dateCreated: admin.firestore.FieldValue.serverTimestamp(),
+		});
+		const addPlan2 = await collectionRef2.add({
+			...data[1],
+			dateCreated: admin.firestore.FieldValue.serverTimestamp(),
+		});
+		const addPlan3 = await collectionRef3.add({
+			...data[2],
+			dateCreated: admin.firestore.FieldValue.serverTimestamp(),
+		});
 
 		const [r1, r2, r3] = await Promise.all([addPlan1, addPlan2, addPlan3]);
 
