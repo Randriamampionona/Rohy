@@ -37,12 +37,13 @@ const AuthForm = ({ page, socialMedia }) => {
 	};
 
 	const submitHandler = async (e) => {
+		const maxInputLength = 16;
 		e.preventDefault();
 		if (page === "signup") {
-			if (inputValue.username.length > 8) {
+			if (inputValue.username.length > maxInputLength) {
 				return toastNotify(
 					"error",
-					"Username can't be longer than 8 caracteres"
+					`Username can't be longer than ${maxInputLength} caracteres`
 				);
 			}
 			await signupFunc(
