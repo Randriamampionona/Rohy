@@ -5,10 +5,7 @@ import { Layout } from "./../components/Layout";
 import axios from "axios";
 import NextNProgress from "nextjs-progressbar";
 
-axios.defaults.baseURL =
-	process.env.NODE_ENV === "production"
-		? "https://rohy.vercel.app/api"
-		: "http://localhost:3000/api";
+axios.defaults.baseURL = `${NEXT_PUBLIC_BASE_ENDPOINT}/api`;
 
 const MyApp = ({ Component, pageProps }) => {
 	return (

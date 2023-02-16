@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 
 // configs
-const baseURL =
-	process.env.NODE_ENV === "production"
-		? "https://rohy.vercel.app"
-		: "http://localhost:3000";
+const baseURL = `${NEXT_PUBLIC_BASE_ENDPOINT}`;
 
 const getFetcherConfig = (req) => {
 	return {
