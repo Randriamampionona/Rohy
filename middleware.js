@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // configs
-const baseURL = `${NEXT_PUBLIC_BASE_ENDPOINT}`;
+const baseURL = `${process.env.NEXT_PUBLIC_BASE_ENDPOINT}`;
 
 const getFetcherConfig = (req) => {
 	return {

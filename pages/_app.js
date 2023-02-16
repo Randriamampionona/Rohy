@@ -5,7 +5,7 @@ import { Layout } from "./../components/Layout";
 import axios from "axios";
 import NextNProgress from "nextjs-progressbar";
 
-axios.defaults.baseURL = `${NEXT_PUBLIC_BASE_ENDPOINT}/api`;
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BASE_ENDPOINT}/api`;
 
 const MyApp = ({ Component, pageProps }) => {
 	return (
