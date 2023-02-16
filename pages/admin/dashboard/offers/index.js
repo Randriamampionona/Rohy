@@ -25,7 +25,7 @@ const OffersDashboardPage = ({ offersData }) => {
 
 			<main className="w-full">
 				<SearchSection
-					count={3}
+					count={offersData?.total_data || 0}
 					selectionName={"Offer"}
 					placeholder={"offers"}
 					selectOptions={[
@@ -44,9 +44,9 @@ const OffersDashboardPage = ({ offersData }) => {
 					]}
 				/>
 
-				<MovieTable
-					data={offersData}
-					table_page={1}
+				<OfferTable
+					table_page={offersData?.page || 1}
+					data={offersData?.results || []}
 					tableFields={[
 						{
 							id: 1,
@@ -76,9 +76,9 @@ const OffersDashboardPage = ({ offersData }) => {
 				/>
 
 				<TablePagination
-					count={3}
-					table_page={1}
-					total_page={1}
+					count={offersData?.results.length || 1}
+					table_page={offersData?.page || 1}
+					total_page={offersData?.total_page || 1}
 					paginationBaseLink={"/admin/dashboard/offers"}
 				/>
 			</main>
@@ -86,7 +86,7 @@ const OffersDashboardPage = ({ offersData }) => {
 	);
 };
 
-const MovieTable = ({ tableFields, data, table_page }) => {
+const OfferTable = ({ tableFields, data, table_page }) => {
 	return (
 		<Fragment>
 			<table className="min-w-full w-full overflow-x-auto border border-lightDarkColor/10 mb-3">
@@ -152,10 +152,10 @@ const MovieTable = ({ tableFields, data, table_page }) => {
 
 					<div className="flex flex-col items-center justify-center  mt-10">
 						<h1 className="font-medium text-center">
-							Not enough movies
+							Not enough offers
 						</h1>
 						<p className="max-w-xs text-center">
-							Looks like the offer database hasn&apos;t that much
+							Looks like the offers database hasn&apos;t that much
 							data!😟
 						</p>
 
@@ -182,7 +182,10 @@ export const getServerSideProps = async (ctx) => {
 	try {
 		// get all plans
 		const URL = "/v1/admin/offers";
-		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
+		const fetch = await axios.get(
+			URL,
+			axiosHeadersHandler(ctx, { table_page: ctx.query?.table_page || 1 })
+		);
 		const result = fetch.data;
 
 		if (result.success) {

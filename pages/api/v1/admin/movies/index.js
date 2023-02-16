@@ -2,8 +2,7 @@ import isAuth from "./../../_isAuth";
 import isAdmin from "./../../_isAdmin";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import { db__admin } from "../../../../../lib/firebaseAdmin.config";
-import { combined } from "../../../../../utils/ID_generators";
-import videos from "../../../../../mockdata.json";
+import { Movie, AdminResponseApi } from "../../../../../structures";
 
 const handler = async (req, res) => {
 	if (req.method !== "GET")
@@ -11,57 +10,108 @@ const handler = async (req, res) => {
 
 	try {
 		// const {} = req.adminInfos
+		const { search_terms = null, search_category = null } = req.query;
 		const { table_page = 1 } = req.headers;
 
-		// get All movies in DB
-		// let movies = []
-		// const categoriesCollRef = db__admin.collection("videos")
-		// const getCategories = await categoriesCollRef.get()
+		// get all category movies from firestore
+		const categoriesCollRef = search_category
+			? db__admin
+					.collection("videos")
+					.where("categoryID", "==", search_category)
+			: db__admin.collection("videos");
 
-		// getCategories.forEach(async category => {
-		// 	try {
-		// 		const moviesCollRef = db__admin
-		// 			.collection("videos")
-		// 			.doc(category.id)
-		// 			.collection("movies")
+		const getCategories = await categoriesCollRef.get();
 
-		// 		const getMovies = await moviesCollRef.get()
+		// check if there is movies at all (no category & no movie) returm empty [] if so
+		if (getCategories.empty) {
+			return res.status(200).json({
+				success: true,
+				payload: {
+					page: 1,
+					total_movies: 0,
+					total_page: 0,
+					results: [],
+				},
+			});
+		}
 
-		// 		getMovies.forEach(movie => {
-		// 			movies.push(movie.data())
-		// 		})
+		const categories = getCategories.docs.map((doc) => doc.id);
 
-		// 	} catch (error) {
-		// 		return apiErrorHandler(res, 500, error);
-		// 	}
-		// })
+		// get all movies by its category from firestore
+		const moviesArray = categories.map(async (ID) => {
+			const collRef = search_terms
+				? db__admin
+						.collection("videos")
+						.doc(ID)
+						.collection("movies")
+						.where("title", "==", search_terms)
+				: db__admin.collection("videos").doc(ID).collection("movies");
 
-		let movies = Array(75)
-			.fill(undefined)
-			.map((_) => {
-				const { video, ...rest } = videos;
-				return rest;
+			const snapshot = await collRef.get();
+
+			const moviesArray = snapshot.docs.map((doc) => {
+				const {
+					category,
+					adult,
+					genre,
+					backdrop_path,
+					poster_path,
+					original_language,
+					original_title,
+					title,
+					overview,
+					release_date,
+					postBy,
+					createdAt,
+				} = doc.data();
+
+				return new Movie(
+					doc.id,
+					category.name,
+					category.id,
+					adult,
+					backdrop_path,
+					poster_path,
+					genre.name,
+					genre.id,
+					original_language,
+					original_title,
+					title,
+					overview,
+					release_date,
+					"",
+					postBy,
+					createdAt
+				).movie();
 			});
 
-		// getMovies.forEach((movie) => {
-		// 	movies.push(movie.data());
-		// });
+			return moviesArray;
+		});
 
-		// 10 movies per request
-		const splicedMovies = () => {
-			const start = table_page == 1 ? 0 : table_page * 10;
-			const end = table_page == 1 ? 10 : start + 10;
-			return movies.slice(start, end);
-		};
+		const movies = (await moviesArray[0]).map((movie) => movie);
+
+		const response = new AdminResponseApi(
+			table_page,
+			movies.length,
+			movies
+		).response();
+
+		// // 10 movies per request
+		// const splicedMovies = () => {
+		// 	const start = table_page == 1 ? 0 : table_page * 10;
+		// 	const end = table_page == 1 ? 10 : start + 10;
+		// 	return movies.slice(start, end);
+		// };
 
 		return res.status(200).json({
 			success: true,
-			payload: {
-				page: table_page || 1,
-				total_movies: movies.length,
-				total_page: Math.floor(movies.length / 10),
-				results: splicedMovies(),
-			},
+			// payload: {
+			// 	page: table_page || 1,
+			// 	total_movies: movies.length,
+			// 	total_page: Math.floor(movies.length / 10),
+			// 	results: splicedMovies(),
+			// },
+			payload: response,
 		});
 	} catch (error) {
 		return apiErrorHandler(res, 500, error);

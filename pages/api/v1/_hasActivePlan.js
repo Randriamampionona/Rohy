@@ -1,35 +1,55 @@
 import { db__admin } from "../../../lib/firebaseAdmin.config";
 import apiErrorHandler from "../../../utils/apiErrorHandler";
-import checkActivePlanHandler from "../../../utils/checkActivePlanHandler";
+import getSubscriptionStatus from "../../../utils/getSubscriptionStatus";
 
 const hasActivePlan = (handler) => {
 	return async (req, res) => {
 		try {
 			const { uid } = req.currentUser;
 
-			// check if has plan and active
-			const subscriptionRef = db__admin
-				.collection("subscriptions")
-				.doc(uid);
+			// get the current subscription infos
+			const currentSubRef = db__admin
+				.collection("users")
+				.doc(uid)
+				.collection("current_subscription")
+				.orderBy("created_date", "desc")
+				.limit(1);
 
-			const mySubscription = await subscriptionRef.get();
+			const getCurrentSub = await currentSubRef.get();
 
-			if (
-				!mySubscription.exists ||
-				!checkActivePlanHandler(mySubscription.data())
-			)
+			// error out if no active plan
+			if (getCurrentSub?.empty) {
 				return apiErrorHandler(
 					res,
 					402,
 					"Unsubscribed - (no active plan)"
 				);
+			}
 
-			// get subscribed plan details
+			const currentSub = getCurrentSub?.docs?.map((doc) => doc.data());
+
+			// verify subscribed validity plan
+			const { active, status } = getSubscriptionStatus(currentSub?.[0]);
+
+			if (!active && status.code !== 1) {
+				return apiErrorHandler(
+					res,
+					402,
+					`You don't apear to have an active plan or the current plan has been ${status.text} (code: ${status.code})`
+				);
+			}
+
+			// get subscribed plan details and additional subscription details
 			const planRef = db__admin
 				.collection("plans")
-				.doc(mySubscription.data()?.plan.id);
+				.doc(currentSub?.[0]?.plan.id);
+
+			const subscriptionRef = db__admin
+				.collection("subscriptions")
+				.doc(currentSub?.[0]?.subscription_ID);
 
 			const planData = await planRef.get();
+			const mySubscription = await subscriptionRef.get();
 
 			req.subscriptionInfos = {
 				...mySubscription.data(),
@@ -39,25 +59,22 @@ const hasActivePlan = (handler) => {
 			// next
 			return handler(req, res);
 		} catch (error) {
-			return apiErrorHandler(
-				res,
-				402,
-				"Unsubscribed - (no active plan) "
-			);
+			return apiErrorHandler(res, 402, "Unsubscribed - (no active plan)");
 		}
 	};
 };
 
 export default hasActivePlan;
 
+// current sub data
 // {
-//     subscription_ID: transaction_data.orderID,
-//     active: true,
-//     canceled: false,
-//     details: transaction_details,
-//     data: transaction_data,
-//     plan: { id, name },
-//     created_date: admin.firestore.FieldValue.serverTimestamp(),
-//     start: Date.now(),
-//     end: Date.now() + 3600000, // + 1h for test
+//     subscription_ID: "",
+//     plan: { id: planID, name: planName },
+//     status: {
+//         text: "active",
+//         code: 1,
+//     },
+//     start: "",
+//     end : "",
+//     created_date: ""
 // }

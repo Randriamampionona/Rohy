@@ -5,26 +5,26 @@ import { DashboardHOC } from "../../../../../components/HOC";
 import getCurrentUserProps from "../../../../../utils/getCurrentUserProps";
 import axiosHeadersHandler from "./../../../../../utils/axiosHeadersHandler";
 
-const PlanDetailsPage = ({ PlanDetails }) => {
+const SubDetailsPage = ({ subDetails }) => {
 	return (
 		<Fragment>
-			<MetaHead subTitle={"Manage offers"} />
+			<MetaHead subTitle={"Manage subscription"} />
 
 			<section className="w-full h-full">
-				<pre>{JSON.stringify(PlanDetails, null, 2)}</pre>
+				<pre>{JSON.stringify(subDetails, null, 2)}</pre>
 			</section>
 		</Fragment>
 	);
 };
 
-export default DashboardHOC(PlanDetailsPage);
+export default DashboardHOC(SubDetailsPage);
 
 export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
-		// call get single offer API
-		const URL = `/v1/admin/offers/${ctx.params.planID}`;
+		// call get single sub API
+		const URL = `/v1/admin/sub/${ctx.params.subscriptionID}`;
 		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
 		const result = fetch.data;
 
@@ -32,7 +32,7 @@ export const getServerSideProps = async (ctx) => {
 			return {
 				props: {
 					...user,
-					PlanDetails: result.payload,
+					subDetails: result.payload,
 				},
 			};
 		}

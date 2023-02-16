@@ -103,6 +103,7 @@ const admin = async (req) => {
 
 	if (URL.startsWith("/admin") && !admin)
 		return NextResponse.redirect(`${baseURL}`);
+
 	// if (URL.startsWith("/admin") && false)
 	// 	return NextResponse.redirect(`${baseURL}`);
 };

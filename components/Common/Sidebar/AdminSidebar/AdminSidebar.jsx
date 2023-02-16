@@ -1,6 +1,13 @@
+import { AuthContext } from "../../../../store/context/AuthContext";
+import { GlobalContext } from "../../../../store/context/GlobalContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
+import Avatar from "react-avatar";
+import {
+	TbLayoutSidebarRightExpand,
+	TbLayoutSidebarLeftExpand,
+} from "react-icons/tb";
 import {
 	RiDashboardFill,
 	RiUserFill,
@@ -10,6 +17,8 @@ import {
 } from "react-icons/ri";
 
 const AdminSidebar = ({ sidebarNavigations }) => {
+	const { isAdminSidebarOpen, toogleAdminSidebar } = GlobalContext();
+	const { currentUser } = AuthContext();
 	const { pathname } = useRouter();
 
 	const isActiveLink = useCallback(
@@ -18,7 +27,12 @@ const AdminSidebar = ({ sidebarNavigations }) => {
 	);
 
 	return (
-		<aside className="sticky top-[2rem] flex-shrink-0 max-w-[14rem] w-full h-[calc(100vh-2rem)] bg-darkColor text-whiteColor py-4">
+		<aside
+			className={
+				isAdminSidebarOpen
+					? "admin-sidebar--open"
+					: "admin-sidebar--close"
+			}>
 			<ul className="w-full">
 				{sidebarNavigations?.map((navigation) => (
 					<Link
@@ -29,19 +43,71 @@ const AdminSidebar = ({ sidebarNavigations }) => {
 								key: navigation.key,
 							},
 						}}>
-						<a>
+						<a title={isAdminSidebarOpen ? "" : navigation.text}>
 							<li
 								className={`relative flex items-center space-x-3 px-2 py-2 hover:bg-primaryColor overflow-hidden ${
 									isActiveLink(navigation.slug) &&
 									"bg-primaryColor after:absolute after:-right-2 after:w-3 after:h-3 after:bg-whitesmoke after:rotate-45"
 								}`}>
 								<span>{navigation.Icon}</span>
-								<span>{navigation.text}</span>
+								{isAdminSidebarOpen && (
+									<span>{navigation.text}</span>
+								)}
 							</li>
 						</a>
 					</Link>
 				))}
 			</ul>
+
+			<div
+				className={`flex items-center justify-between ${
+					isAdminSidebarOpen ? "w-[calc(14rem-1rem)]" : "w-auto"
+				} mt-auto mx-auto p-1 rounded-full bg-whiteColor/5 border border-[#fafafa30]`}>
+				{isAdminSidebarOpen && (
+					<div className="flex-grow flex items-center justify-start space-x-2">
+						<div>
+							<Avatar
+								name={currentUser?.email}
+								round={true}
+								size={32}
+								email={currentUser?.email}
+								className="cursor-pointer hover:opacity-90"
+							/>
+						</div>
+
+						<div>
+							<p className="font-medium text-xs leading-none text-whiteColor">
+								{currentUser?.displayName.length > 8
+									? `${currentUser?.displayName?.substring(
+											0,
+											8
+									  )}...`
+									: currentUser?.displayName}
+							</p>
+							<p className="text-[10px] text-whiteColor/40">
+								{currentUser?.email.length > 16
+									? `${currentUser?.email?.substring(
+											0,
+											16
+									  )}...`
+									: currentUser?.email}
+							</p>
+						</div>
+					</div>
+				)}
+
+				<button
+					className={`text-lg ${isAdminSidebarOpen && "mr-2"}`}
+					onClick={() => toogleAdminSidebar()}>
+					<span>
+						{isAdminSidebarOpen ? (
+							<TbLayoutSidebarRightExpand />
+						) : (
+							<TbLayoutSidebarLeftExpand />
+						)}
+					</span>
+				</button>
+			</div>
 		</aside>
 	);
 };

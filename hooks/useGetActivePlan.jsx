@@ -1,27 +1,26 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { AuthContext } from "../store/context/AuthContext";
 
 const useGetActivePlan = () => {
-	const { currentUser } = AuthContext();
 	const [loading, setLoading] = useState(false);
-	const { replace, pathname, query } = useRouter();
+	const { replace } = useRouter();
 
-	const getActivePlanFun = async () => {
+	const getActivePlanFunc = async () => {
 		setLoading(true);
 		try {
-			if (!currentUser)
-				return (
-					pathname.includes("watch") &&
-					replace(`/authorization/signin?rdc=watch/${query.videoID}`)
-				);
-
-			const URL = "/v1/sub";
+			const URL = "/v1/sub/current_sub";
 			const fetch = await axios.get(URL, { withCredentials: true });
 			const result = fetch.data;
 
-			if (result.success) return result.payload;
+			if (result.success)
+				return {
+					active:
+						!!result.payload.status &&
+						result.payload.status?.text === "active" &&
+						result.payload.status?.code === 1,
+					plan_details: result.payload.plan_details,
+				};
 
 			throw new Error(result.message);
 		} catch (error) {
@@ -32,7 +31,7 @@ const useGetActivePlan = () => {
 		}
 	};
 
-	return { getActivePlanFun, loading };
+	return { getActivePlanFunc, loading };
 };
 
 export default useGetActivePlan;

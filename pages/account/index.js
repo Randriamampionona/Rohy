@@ -44,8 +44,8 @@ const AccountPage = ({ subscriptionInfos }) => {
 						</h1>
 
 						<div className="w-full divide-y-[1px] divide-whiteColor/10">
-							{subscriptionInfos.active &&
-							subscriptionInfos.plan_details ? (
+							{subscriptionInfos?.status &&
+							subscriptionInfos?.status.code === 1 ? (
 								<Fragment>
 									<BlockUI
 										lText={"Plan"}
@@ -72,7 +72,9 @@ const AccountPage = ({ subscriptionInfos }) => {
 									<p className="text-center max-w-[75%] mb-4 md:max-w-[50%] lg:max-w-[45%]">
 										Seems like you don&apos;t have any
 										active plan yet or the current
-										subscription was expired
+										subscription was{" "}
+										{subscriptionInfos?.status?.text ||
+											"expired"}
 									</p>
 									<p className="text-center text-primaryColor underline">
 										<Link href={"/offers"}>
@@ -160,7 +162,7 @@ export const getServerSideProps = async (ctx) => {
 
 	try {
 		// get subscription
-		const URL = "/v1/sub";
+		const URL = "/v1/sub/current_sub";
 		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
 		const result = fetch.data;
 

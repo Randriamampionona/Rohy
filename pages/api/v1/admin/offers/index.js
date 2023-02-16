@@ -1,4 +1,5 @@
 import { db__admin } from "../../../../../lib/firebaseAdmin.config";
+import { AdminResponseApi } from "../../../../../structures";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import isAdmin from "../../_isAdmin";
 import isAuth from "./../../_isAuth";
@@ -8,6 +9,8 @@ const handler = async (req, res) => {
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
+		const { table_page = 1 } = req.headers;
+
 		const collectionRef = db__admin.collection("plans");
 		const getPlansList = await collectionRef.orderBy("order", "asc").get();
 
@@ -19,9 +22,15 @@ const handler = async (req, res) => {
 			dateCreated: doc.data().dateCreated.toDate(),
 		}));
 
+		const response = new AdminResponseApi(
+			table_page,
+			data.length,
+			data
+		).response();
+
 		res.status(200).json({
 			success: true,
-			payload: data,
+			payload: response,
 		});
 	} catch (error) {
 		return apiErrorHandler(res, 500, error);

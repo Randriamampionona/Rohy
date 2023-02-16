@@ -25,7 +25,7 @@ const MoviesDashboardPage = ({ moviesData, table_page }) => {
 
 				<main className="w-full">
 					<SearchSection
-						count={moviesData.total_movies}
+						count={moviesData?.total_data || 0}
 						selectionName={"Category"}
 						placeholder={"movies"}
 						selectOptions={[
@@ -73,8 +73,8 @@ const MoviesDashboardPage = ({ moviesData, table_page }) => {
 					/>
 
 					<MovieTable
-						data={moviesData.results}
-						table_page={table_page}
+						data={moviesData?.results || []}
+						table_page={moviesData?.page || 1}
 						tableFields={[
 							{
 								id: 1,
@@ -108,9 +108,9 @@ const MoviesDashboardPage = ({ moviesData, table_page }) => {
 					/>
 
 					<TablePagination
-						count={moviesData.results.length}
-						table_page={table_page}
-						total_page={moviesData.total_page}
+						count={moviesData?.results.length || 1}
+						table_page={moviesData?.page || 1}
+						total_page={moviesData?.total_page || 1}
 						paginationBaseLink={"/admin/dashboard/movies"}
 					/>
 				</main>
@@ -194,7 +194,7 @@ const MovieTable = ({ tableFields, data, table_page }) => {
 							Not enough movies
 						</h1>
 						<p className="max-w-xs text-center">
-							Looks like the movie database hasn&apos;t that much
+							Looks like the movies database hasn&apos;t that much
 							data!😟
 						</p>
 

@@ -14,7 +14,13 @@
 	}
 
 	button {
-		@apply border-0 outline-none disabled:cursor-not-allowed disabled:opacity-50 select-none
+		@apply border-0 outline-none disabled:cursor-not-allowed disabled:opacity-50 select-none;
+	}
+
+	input,
+	textarea,
+	select {
+		@apply w-full h-full bg-transparent outline-none border-none;
 	}
 }
 
@@ -40,7 +46,23 @@
 	}
 
 	.dashboardSection {
-		@apply flex w-full min-h-[calc(100vh-2rem)];
+		@apply flex w-full min-h-[calc(100vh-2rem)] overflow-x-hidden overflow-y-auto;
+	}
+
+	.admin-sidebar--open {
+		@apply flex flex-col fixed top-[2rem] flex-shrink-0 max-w-[14rem] w-full h-[calc(100vh-2rem)] bg-darkColor text-whiteColor py-4;
+	}
+
+	.admin-sidebar--close {
+		@apply flex flex-col fixed top-[2rem] flex-shrink-0 max-w-[2rem] w-full h-[calc(100vh-2rem)] bg-darkColor text-whiteColor py-4;
+	}
+
+	.admin-main-section--minimize {
+		@apply col-[2/7] flex-grow flex-shrink ml-[14rem] p-4;
+	}
+
+	.admin-main-section--full {
+		@apply col-[2/7] flex-grow flex-shrink ml-[2rem] p-4;
 	}
 
 	.loaderAnimate {

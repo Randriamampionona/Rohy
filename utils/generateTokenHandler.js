@@ -1,8 +1,8 @@
 import { sign } from "jsonwebtoken";
 
-const generateTokenHandler = (payload) => {
-	return sign(payload, process.env.NEXT_GENERATE_TOKEN_SECRETE, {
-		expiresIn: "30 days",
+const generateTokenHandler = (payload, secreteKey, expireDate) => {
+	return sign(payload, secreteKey, {
+		expiresIn: expireDate,
 	});
 };
 

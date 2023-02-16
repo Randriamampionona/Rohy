@@ -1,11 +1,13 @@
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { RESET_ERROR } from "../actions/actions";
+import { RESET_ERROR, TOOGLE_ADMIN_SIDEBAR } from "../actions/actions";
 import globalReducer from "../reducers/globalReducer";
 
 const initState = {
 	error: null,
+	isAdminSidebarOpen: true,
 	resetError: () => {},
+	toogleAdminSidebar: (key) => {},
 };
 
 const Context = createContext(initState);
@@ -32,9 +34,18 @@ export const GlobalProvider = ({ children, errorProps }) => {
 		});
 	};
 
+	const toogleAdminSidebar = (key) => {
+		dispatch({
+			type: TOOGLE_ADMIN_SIDEBAR,
+			payload: key,
+		});
+	};
+
 	const values = {
 		error: errorProps || state.error,
+		isAdminSidebarOpen: state.isAdminSidebarOpen,
 		resetError,
+		toogleAdminSidebar,
 	};
 
 	return <Context.Provider value={values}>{children}</Context.Provider>;

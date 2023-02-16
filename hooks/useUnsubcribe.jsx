@@ -5,20 +5,17 @@ import toastNotify from "../utils/toastNotify";
 const useUnsubcribe = () => {
 	const { push } = useRouter();
 
-	const unsubcribeFun = async () => {
+	const unsubcribeFunc = async () => {
 		try {
 			const URL = "/v1/sub/unsubscribe";
 			const fetch = await axios.patch(URL, null, {
 				withCredentials: true,
-				headers: {
-					type: "cancel",
-				},
 			});
 			const result = fetch.data;
 
 			if (result.success) {
 				toastNotify("success", result.message);
-				return push("/");
+				return push("/account");
 			}
 
 			throw new Error(result.message);
@@ -29,7 +26,7 @@ const useUnsubcribe = () => {
 		}
 	};
 
-	return { unsubcribeFun };
+	return { unsubcribeFunc };
 };
 
 export default useUnsubcribe;

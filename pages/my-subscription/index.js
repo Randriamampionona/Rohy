@@ -3,16 +3,15 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { MetaHead } from "../../components/Common";
 import { useUnsubcribe } from "../../hooks";
-import getCurrentUserProps from "../../utils/getCurrentUserProps";
+import getCurrentUserProps from "./../../utils/getCurrentUserProps";
 import axiosHeadersHandler from "./../../utils/axiosHeadersHandler";
-import ssrErrorHandler from "./../../utils/ssrErrorHandler";
 
-const MySubscriptionPage = ({ mySubscriptionData }) => {
-	const { unsubcribeFun } = useUnsubcribe();
+const MySubscriptionPage = ({ subscriptionInfos }) => {
+	const { unsubcribeFunc } = useUnsubcribe();
 
 	const unsubHandler = async () => {
 		if (confirm("Do you really wanna Unsubscribe your plan?")) {
-			await unsubcribeFun();
+			await unsubcribeFunc();
 		}
 	};
 
@@ -22,11 +21,11 @@ const MySubscriptionPage = ({ mySubscriptionData }) => {
 			<section className="pageSection">
 				<main className="flex flex-col items-center justify-center w-full my-auto mx-auto sm:w-[85%] md:w-[70%] lg:w-[60%] xl:w-[50%]">
 					<pre className="w-full p-4 bg-lightDarkColor rounded mb-4 overflow-y-auto">
-						{JSON.stringify(mySubscriptionData, null, 2)}
+						{JSON.stringify(subscriptionInfos, null, 2)}
 					</pre>
 
-					{mySubscriptionData.active &&
-					mySubscriptionData.plan_details ? (
+					{subscriptionInfos?.status &&
+					subscriptionInfos?.status.code === 1 ? (
 						<button
 							className="outlineBtn mx-auto"
 							onClick={unsubHandler}>
@@ -57,20 +56,22 @@ export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
-		// get subscription infos
-		const URL = "/v1/sub";
-		const fecth = await axios.get(URL, axiosHeadersHandler(ctx));
-		const result = fecth.data;
+		// get current subscription infos
+		const URL = "/v1/sub/current_sub";
+		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
+		const result = fetch.data;
 
-		if (result.success) {
-			return {
-				props: {
-					...user,
-					mySubscriptionData: result.payload,
-				},
-			};
-		}
+		return {
+			props: {
+				...user,
+				subscriptionInfos: result.payload,
+			},
+		};
 	} catch (error) {
-		return ssrErrorHandler(error, { ...user });
+		return {
+			props: {
+				...user,
+			},
+		};
 	}
 };

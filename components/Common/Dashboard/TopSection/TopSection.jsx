@@ -10,14 +10,16 @@ const TopSection = ({ title, btnName, Navigatelink }) => {
 	return (
 		<div className="flex items-center space-x-4 mb-8">
 			<h4 className="text-lg font-medium">{title}</h4>
-			<button
-				className="secondaryBtn shadow-btnShadow"
-				onClick={clickHandler}>
-				<span>
-					<FaPlusCircle />
-				</span>
-				<span>Add new {btnName}</span>
-			</button>
+			{btnName && Navigatelink && (
+				<button
+					className="secondaryBtn shadow-btnShadow"
+					onClick={clickHandler}>
+					<span>
+						<FaPlusCircle />
+					</span>
+					<span>Add new {btnName}</span>
+				</button>
+			)}
 		</div>
 	);
 };

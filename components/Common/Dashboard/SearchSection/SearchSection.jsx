@@ -28,9 +28,14 @@ const SearchSection = ({
 					</div>
 
 					<select className="outline-none border-0 bg-transparent border-l border-lightDarkColor/25">
-						<option value="default">{selectionName}</option>
+						<option value="default" className="capitalize">
+							{selectionName}
+						</option>
 						{selectOptions.map((opt) => (
-							<option key={opt.key} value={opt.key}>
+							<option
+								key={opt.key}
+								value={opt.key}
+								className="capitalize">
 								{opt.name}
 							</option>
 						))}

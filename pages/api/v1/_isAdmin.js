@@ -11,7 +11,7 @@ const isAdmin = (handler) => {
 			// verify JWT role token
 			const { key, name } = verify(
 				role,
-				process.env.NEXT_GENERATE_TOKEN_SECRETE
+				process.env.NEXT_ADMIN_TOKEN_SECRETE
 			);
 
 			// check if admin
@@ -27,7 +27,11 @@ const isAdmin = (handler) => {
 				key: process.env.NEXT_ADMIN_ROLE_KEY,
 				name: "ADMIN",
 			};
-			const newRoleToken = generateTokenHandler(rolePayload);
+			const newRoleToken = generateTokenHandler(
+				rolePayload,
+				process.env.NEXT_ADMIN_TOKEN_SECRETE,
+				"7 days"
+			);
 
 			// update role with new ganerated role token
 			const docRef = db__admin.collection("users").doc(rest.uid);

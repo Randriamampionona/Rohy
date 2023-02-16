@@ -12,7 +12,11 @@ const handler = async (req, res) => {
 			key: process.env.NEXT_ADMIN_ROLE_KEY,
 			name: "ADMIN",
 		};
-		const newRoleToken = generateTokenHandler(rolePayload);
+		const newRoleToken = generateTokenHandler(
+			rolePayload,
+			process.env.NEXT_GENERATE_TOKEN_SECRETE,
+			"30 days"
+		);
 
 		return res.status(200).json({
 			success: true,
