@@ -9,14 +9,7 @@ const handler = async (req, res) => {
 
 	try {
 		// const adminInfos = req.adminInfos;
-		const {
-			name,
-			desc,
-			regularPrice,
-			promoPrice = null,
-			specificity = [],
-			order = 0,
-		} = req.body;
+		const { name, desc, price, specificity = [], order = 0 } = req.body;
 
 		const colRef = db__admin.collection("plans");
 
@@ -35,10 +28,7 @@ const handler = async (req, res) => {
 		const data = {
 			name,
 			desc,
-			price: {
-				regular: regularPrice,
-				promo: promoPrice,
-			},
+			price,
 			specificity,
 			order,
 			dateCreated: admin.firestore.FieldValue.serverTimestamp(),
@@ -49,7 +39,7 @@ const handler = async (req, res) => {
 		return res.status(201).json({
 			success: true,
 			message: `A new plan has been added (ID: ${id})`,
-			payload: data,
+			payload: { planID: id, ...data },
 		});
 	} catch (error) {
 		return apiErrorHandler(res, 500, error);

@@ -4,11 +4,11 @@ import isAdmin from "./../../_isAdmin";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 
 const handler = async (req, res) => {
-	if (req.method !== "GET")
+	if (req.method !== "DELETE")
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
-		const { planID } = req.header();
+		const { plan_id: planID } = req.headers;
 
 		const docRef = db__admin.collection("plans").doc(planID);
 

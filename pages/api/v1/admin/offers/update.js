@@ -8,7 +8,7 @@ const handler = async (req, res) => {
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
-		const { planID } = req.headers;
+		const { plan_id: planID } = req.headers;
 		const {
 			name,
 			desc,

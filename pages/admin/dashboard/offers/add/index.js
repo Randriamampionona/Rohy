@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { MetaHead, MovieForm } from "../../../../../components/Common";
+import { MetaHead, OfferForm } from "../../../../../components/Common";
 import getCurrentUserProps from "../../../../../utils/getCurrentUserProps";
 import DashboardHOC from "./../../../../../components/HOC/Dashboard.HOC";
 
@@ -12,7 +12,7 @@ const AddOfferPage = () => {
 				<h1 className="text-center text-xl uppercase font-medium mb-8">
 					Add new offer
 				</h1>
-				<MovieForm />
+				<OfferForm />
 			</section>
 		</Fragment>
 	);

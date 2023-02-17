@@ -7,7 +7,7 @@ const getSubscriptionStatus = (subscriptionData) => {
 			: +process.env.NEXT_DEV_SUBSCRIPTION_PERIOD; // + 1h for the test
 
 	const checkDatePeriod = () =>
-		!!(end >= Date.now() && Date.now() - subPeriod <= start);
+		!!(end >= Date.now() && end - subPeriod >= start);
 
 	if (checkDatePeriod() === false || status.code === 3) {
 		return {

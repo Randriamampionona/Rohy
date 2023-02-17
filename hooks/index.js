@@ -5,3 +5,4 @@ export { default as useGetRedirectURL } from "./useGetRedirectURL";
 export { default as useSubscribe } from "./useSubscribe";
 export { default as useUnsubcribe } from "./useUnsubcribe";
 export { default as useMovie } from "./useMovie";
+export { default as useOffer } from "./useOffer";

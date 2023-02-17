@@ -11,6 +11,9 @@ import {
 import { DashboardHOC } from "../../../../components/HOC";
 import getCurrentUserProps from "./../../../../utils/getCurrentUserProps";
 import axiosHeadersHandler from "./../../../../utils/axiosHeadersHandler";
+import { useRouter } from "next/router";
+import { useOffer } from "../../../../hooks";
+import { ImSpinner2 } from "react-icons/im";
 
 const OffersDashboardPage = ({ offersData }) => {
 	return (
@@ -87,6 +90,11 @@ const OffersDashboardPage = ({ offersData }) => {
 };
 
 const OfferTable = ({ tableFields, data, table_page }) => {
+	const { deleteFunc, loading } = useOffer();
+	const { push } = useRouter();
+
+	const deleteHandler = async (id) => await deleteFunc(id, "delete");
+
 	return (
 		<Fragment>
 			<table className="min-w-full w-full overflow-x-auto border border-lightDarkColor/10 mb-3">
@@ -127,13 +135,33 @@ const OfferTable = ({ tableFields, data, table_page }) => {
 							{/* actions */}
 							<td className="px-2 py-4 text-start">
 								<div className="flex items-center space-x-2">
-									<button className="primaryBtn bg-red-500 hover:bg-red-600 px-3 h-8">
-										<span>
-											<FaTrash />
-										</span>
-										<span>Delete</span>
+									<button
+										className="primaryBtn bg-red-500 hover:bg-red-600 px-3 h-8"
+										onClick={() => deleteHandler(r.planID)}>
+										{!!loading.delete &&
+										loading.delete.id === r.planID ? (
+											<>
+												<span className="animate-spin">
+													<ImSpinner2 />
+												</span>
+												<span>Loading...</span>
+											</>
+										) : (
+											<>
+												<span>
+													<FaTrash />
+												</span>
+												<span>Delete</span>
+											</>
+										)}
 									</button>
-									<button className="primaryBtn bg-teal-500 hover:bg-teal-600 px-3 h-8">
+									<button
+										className="primaryBtn bg-teal-500 hover:bg-teal-600 px-3 h-8"
+										onClick={(_) =>
+											push(
+												`/admin/dashboard/offers/add?id${r.planID}&action=update&key=6574151451`
+											)
+										}>
 										<span>
 											<FaEdit />
 										</span>

@@ -20,6 +20,8 @@ export { default as AdminSidebar } from "./Sidebar/AdminSidebar/AdminSidebar";
 export { default as TopSection } from "./Dashboard/TopSection/TopSection";
 export { default as SearchSection } from "./Dashboard/SearchSection/SearchSection";
 export { default as TablePagination } from "./Dashboard/TablePagination/TablePagination";
+export { default as ButtonSection } from "./Dashboard/ButtonSection/ButtonSection";
+export { default as OfferForm } from "./Forms/OfferForm";
 
 // loader
 export { default as HeaderLoader } from "./Loader/HeaderLoader";
