@@ -38,7 +38,7 @@ export default getSubscriptionStatus;
 // sub text (should be active)
 // sub code (should be 1)
 // end date >= todays date (should >= todays date)
-// todays date - sub period <= start date (should be <= start date)
+// end - sub period >= start date (should be >= start date)
 
 // {
 //     subscription_ID: transaction_data.orderID,

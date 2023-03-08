@@ -86,28 +86,32 @@ class Movie {
 	};
 }
 
-class AdminResponseApi {
+class PaginatedApiResponse {
 	#table_page;
 	#total_data;
 	#data;
+	#per_page;
 
-	constructor(table_page = 1, total_data = 0, data = []) {
+	constructor(table_page = 1, total_data = 0, data = [], per_page = 10) {
 		this.#table_page = table_page;
 		this.#total_data = total_data;
 		this.#data = data;
+		this.#per_page = per_page;
 	}
 
 	// 10 movies per request
 	#splicedMovies = () => {
-		const start = this.#table_page == 1 ? 0 : this.#table_page * 10;
-		const end = this.#table_page == 1 ? 10 : start + 10;
+		const start =
+			this.#table_page == 1 ? 0 : this.#table_page * this.#per_page;
+		const end =
+			this.#table_page == 1 ? this.#per_page : start + this.#per_page;
 		return this.#data.slice(start, end);
 	};
 
 	#createStructuredResponse = () => {
 		return {
 			page: this.#table_page,
-			total_page: Math.floor(this.#total_data / 10),
+			total_page: Math.floor(this.#total_data / this.#per_page),
 			total_data: this.#total_data,
 			results: this.#splicedMovies(),
 		};
@@ -118,4 +122,4 @@ class AdminResponseApi {
 	};
 }
 
-export { Movie, AdminResponseApi };
+export { Movie, PaginatedApiResponse };

@@ -1,23 +1,22 @@
-import { db__admin } from "../../../../../lib/firebaseAdmin.config";
-import apiErrorHandler from "../../../../../utils/apiErrorHandler";
-import isAuth from "../../_isAuth";
-import isAdmin from "../../_isAdmin";
-import { getOne } from "../../../../../utils/cloudinaryOperations";
-import { Movie } from "../../../../../structures";
+import isAuth from "../_isAuth";
+import hasActivePlan from "../_hasActivePlan";
+import apiErrorHandler from "../../../../utils/apiErrorHandler";
+import { Movie } from "../../../../structures";
+import { db__admin } from "../../../../lib/firebaseAdmin.config";
+import { getOne } from "../../../../utils/cloudinaryOperations";
+import { getQueries } from "../../../../utils/movieInfosLink";
 
 const handler = async (req, res) => {
 	if (req.method !== "GET")
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
-		// const {} = req.adminInfos
-		const { movieInfos } = req.query;
+		// const { plan_details } = req.subscriptionInfos
+		const { movie_infos } = req.query;
 
-		if (!movieInfos) return apiErrorHandler(res, 404, "Movie not found");
+		if (!movie_infos) return apiErrorHandler(res, 404, "Movie not found");
 
-		const decodedInfos = movieInfos.split("__");
-		const categoryID = decodedInfos[0];
-		const movieID = decodedInfos[1];
+		const { categoryID, movieID } = getQueries(movie_infos);
 
 		// get movie from firestore
 		const docRef = db__admin
@@ -89,4 +88,4 @@ const handler = async (req, res) => {
 	}
 };
 
-export default isAuth(isAdmin(handler));
+export default isAuth(hasActivePlan(handler));

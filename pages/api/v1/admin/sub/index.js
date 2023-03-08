@@ -2,7 +2,7 @@ import isAuth from "./../../_isAuth";
 import isAdmin from "./../../_isAdmin";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import { db__admin } from "../../../../../lib/firebaseAdmin.config";
-import { AdminResponseApi } from "../../../../../structures";
+import { PaginatedApiResponse } from "../../../../../structures";
 import getSubscriptionStatus from "../../../../../utils/getSubscriptionStatus";
 
 const handler = async (req, res) => {
@@ -28,7 +28,7 @@ const handler = async (req, res) => {
 			};
 		});
 
-		const response = new AdminResponseApi(
+		const response = new PaginatedApiResponse(
 			table_page,
 			empty ? 0 : subscriptions.length,
 			empty ? [] : subscriptions

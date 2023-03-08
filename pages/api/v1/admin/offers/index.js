@@ -1,5 +1,5 @@
 import { db__admin } from "../../../../../lib/firebaseAdmin.config";
-import { AdminResponseApi } from "../../../../../structures";
+import { PaginatedApiResponse } from "../../../../../structures";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import isAdmin from "../../_isAdmin";
 import isAuth from "./../../_isAuth";
@@ -22,7 +22,7 @@ const handler = async (req, res) => {
 			dateCreated: doc.data().dateCreated.toDate(),
 		}));
 
-		const response = new AdminResponseApi(
+		const response = new PaginatedApiResponse(
 			table_page,
 			data.length,
 			data

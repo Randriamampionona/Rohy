@@ -35,7 +35,8 @@ const AdminHeader = ({ navLinks }) => {
 					className="relative w-[25px] h-[25px] rounded-full bg-lightDarkColor"
 					onClick={() => setMenuOpen(!menuOpen)}>
 					<Avatar
-						name={currentUser?.email}
+						name={currentUser?.displayName}
+						src={currentUser?.photoURL}
 						round={true}
 						size={25}
 						email={currentUser?.email}

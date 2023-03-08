@@ -1,12 +1,12 @@
 import axios from "axios";
 import Link from "next/link";
 import { Fragment } from "react";
-import { MetaHead } from "../../components/Common";
+import { Error, MetaHead } from "../../components/Common";
 import { useUnsubcribe } from "../../hooks";
 import getCurrentUserProps from "./../../utils/getCurrentUserProps";
 import axiosHeadersHandler from "./../../utils/axiosHeadersHandler";
 
-const MySubscriptionPage = ({ subscriptionInfos }) => {
+const MySubscriptionPage = ({ error, subscriptionInfos }) => {
 	const { unsubcribeFunc } = useUnsubcribe();
 
 	const unsubHandler = async () => {
@@ -14,6 +14,8 @@ const MySubscriptionPage = ({ subscriptionInfos }) => {
 			await unsubcribeFunc();
 		}
 	};
+
+	if (!!error) return <Error error={error} navigateLink={"/account"} />;
 
 	return (
 		<Fragment>
@@ -71,6 +73,7 @@ export const getServerSideProps = async (ctx) => {
 		return {
 			props: {
 				...user,
+				error,
 			},
 		};
 	}

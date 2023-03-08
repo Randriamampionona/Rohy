@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 
 // configs
-const baseURL = `${process.env.NEXT_PUBLIC_BASE_ENDPOINT}`;
+const baseURL = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 
 const getFetcherConfig = (req) => {
 	return {
 		credentials: "include",
 		headers: {
-			[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]: req.cookies.get(
-				process.env.NEXT_PUBLIC_USER_COOKIES_NAME
+			[process.env.NEXT_USER_TOKEN_NAME]: req.cookies.get(
+				process.env.NEXT_USER_TOKEN_NAME
 			),
 		},
 	};
@@ -18,7 +18,7 @@ const getFetcherConfig = (req) => {
 const verifyTokenHandler = async (req) => {
 	try {
 		const fetcher = await fetch(
-			`${baseURL}/api/v1/auth/verifyAuthToken`,
+			`${baseURL}/api/v1/auth/_verifyAuth`,
 			getFetcherConfig(req)
 		);
 		const result = await fetcher.json();
@@ -26,7 +26,7 @@ const verifyTokenHandler = async (req) => {
 		return result;
 	} catch (error) {
 		// back to auth page if some error occured
-		return NextResponse.redirect(`${baseURL}authorization`);
+		return NextResponse.redirect(`${baseURL}/authorization`);
 	}
 };
 
@@ -96,13 +96,10 @@ const client = async (req) => {
 const admin = async (req) => {
 	const URL = req.nextUrl.pathname;
 
-	const { admin } = await isAdmin(req);
+	const { admin, superAdmin } = await isAdmin(req);
 
-	if (URL.startsWith("/admin") && !admin)
+	if (URL.startsWith("/admin") && !admin && !superAdmin)
 		return NextResponse.redirect(`${baseURL}`);
-
-	// if (URL.startsWith("/admin") && false)
-	// 	return NextResponse.redirect(`${baseURL}`);
 };
 
 // middleware
@@ -126,7 +123,7 @@ export const config = {
 		// require no auth to reach auth page
 		"/authorization/:path*",
 
-		// require auth to reach those page
+		// require auth to reach those pages
 		"/",
 		"/channels/:path*",
 		"/live/:path*",
@@ -135,8 +132,10 @@ export const config = {
 		"/watch/:path*",
 		"/account/:path*",
 		"/my-subscription/:path*",
+		"/email-verification/:path*",
+		"/test/:path*",
 
-		// require auth and should be an ADMIN to reach admin section page
+		// require auth and must be an ADMIN or SUPER ADMIN to reach admin section page
 		"/admin/:path*",
 	],
 };

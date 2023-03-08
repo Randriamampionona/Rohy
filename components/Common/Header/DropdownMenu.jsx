@@ -1,21 +1,21 @@
 import Link from "next/link";
 import { FaSignOutAlt } from "react-icons/fa";
-import { ImSpinner2 } from "react-icons/im";
 import Image from "next/image";
 import { AuthContext } from "../../../store/context/AuthContext";
+import ButtonWithLoading from "./../Buttons/ButtonWithLoading";
 
-const DropdownMenu = ({ menus, setMenuOpen }) => {
+const DropdownMenu = ({ menus, setIsDropdownMenuOpen }) => {
 	const { currentUser, signoutFunc, authLoading } = AuthContext();
 
 	const signOutHandler = async () => {
-		setMenuOpen(false);
+		setIsDropdownMenuOpen(false);
 		await signoutFunc();
 	};
 
 	return (
 		<div
 			className="absolute top-14 right-0 w-44 rounded bg-lightDarkColor shadow-md transition-all"
-			onMouseLeave={(_) => setMenuOpen(false)}>
+			onMouseLeave={(_) => setIsDropdownMenuOpen(false)}>
 			<ul className="flex flex-col w-full">
 				<div className="flex items-center justify-start gap-x-3 px-4 py-3">
 					<div className="relative flex w-11 h-11 rounded-full border-2 border-primaryColor overflow-hidden hover:opacity-90">
@@ -53,28 +53,20 @@ const DropdownMenu = ({ menus, setMenuOpen }) => {
 					<Link key={menu.slug} href={`${menu.slug}`}>
 						<li
 							className="w-full px-4 py-3 cursor-pointer text-whiteColor font-medium hover:bg-darkColor"
-							onClick={() => setMenuOpen(false)}>
-							{menu.textLink}
+							onClick={() => setIsDropdownMenuOpen(false)}>
+							<a>{menu.textLink}</a>
 						</li>
 					</Link>
 				))}
 
-				<button
-					className="primaryBtn w-[calc(100%-1rem)] mx-auto my-2"
-					onClick={signOutHandler}>
-					{authLoading.signout ? (
-						<span className="animate-spin">
-							<ImSpinner2 />
-						</span>
-					) : (
-						<>
-							<span>
-								<FaSignOutAlt />
-							</span>
-							<span>Log Out</span>
-						</>
-					)}
-				</button>
+				{/* logout btn */}
+				<ButtonWithLoading
+					className={"primaryBtn w-[calc(100%-1rem)] mx-auto my-2"}
+					btntext={"Log Out"}
+					BtnIcon={<FaSignOutAlt />}
+					isLoading={authLoading.signout}
+					onClickHandler={signOutHandler}
+				/>
 			</ul>
 		</div>
 	);

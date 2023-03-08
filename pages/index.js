@@ -1,10 +1,16 @@
 import { Category, Intro, Suggestion } from "../components/Home";
-import { Fragment } from "react";
+import { Fragment, useCallback } from "react";
 import { MetaHead } from "../components/Common";
 import getCurrentUserProps from "../utils/getCurrentUserProps";
 
 const HomePage = ({ moviesData }) => {
-	const { suggestion, ...rest } = moviesData;
+	const getData = useCallback(() => {
+		if (moviesData) {
+			const { suggestion, ...rest } = moviesData;
+			return { suggestion, rest };
+		}
+		return null;
+	}, [moviesData]);
 
 	return (
 		<Fragment>
@@ -13,17 +19,19 @@ const HomePage = ({ moviesData }) => {
 			<section className="w-full">
 				<Intro />
 
-				<main className="w-full py-16 px-4 md:px-6 lg:px-8 xl:px-12 space-y-20">
-					<Suggestion suggestionData={suggestion} />
+				{moviesData && (
+					<main className="w-full py-16 px-4 md:px-6 lg:px-8 xl:px-12 space-y-20">
+						<Suggestion suggestionData={getData().suggestion} />
 
-					{Object.entries(rest).map((res) => (
-						<Category
-							key={res[0]}
-							categoryDetails={res[1].details}
-							moviesList={res[1].movies}
-						/>
-					))}
-				</main>
+						{Object.entries(getData().rest).map((res) => (
+							<Category
+								key={res[0]}
+								categoryDetails={res[1].details}
+								moviesList={res[1].movies}
+							/>
+						))}
+					</main>
+				)}
 			</section>
 		</Fragment>
 	);
@@ -93,6 +101,6 @@ export const getServerSideProps = async (ctx) => {
 			},
 		};
 	} catch (err) {
-		return { props: { ...user } };
+		return { props: { ...user, moviesData: null } };
 	}
 };

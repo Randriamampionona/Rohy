@@ -3,12 +3,14 @@ import logo from "../../../public/assets/logo-with-rose-color.webp";
 import { FaPlay } from "react-icons/fa";
 import { useRouter } from "next/router";
 import AddRomoveBtn from "./AddRomoveBtn";
+import { generateLink } from "../../../utils/movieInfosLink";
 
 const MovieCard = ({ movie, displayBottom, showPlayBtn = true }) => {
 	const { push } = useRouter();
 
-	const navigatehandler = (videoID) => {
-		push(`/watch/${videoID}`);
+	const navigatehandler = (_videoID) => {
+		// push(`/watch/${videoID}`);
+		return push(`/watch/${generateLink("cinema--35897156", "566584898")}`);
 	};
 
 	return (

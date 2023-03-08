@@ -1,5 +1,5 @@
 import { useState } from "react";
-import toastNotify from "./../utils/toastNotify";
+import toastNotify from "../../utils/toastNotify";
 import axios from "axios";
 
 const useMovie = () => {

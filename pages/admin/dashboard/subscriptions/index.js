@@ -1,7 +1,6 @@
 import axios from "axios";
 import Link from "next/link";
 import { Fragment } from "react";
-import { FaTimesCircle } from "react-icons/fa";
 import {
 	MetaHead,
 	SearchSection,
@@ -64,10 +63,6 @@ const SubscriptionsDashboardPage = ({ subscriptionsData }) => {
 							{
 								id: 7,
 								name: "End at",
-							},
-							{
-								id: 8,
-								name: "Actions",
 							},
 						]}
 					/>
@@ -139,18 +134,6 @@ const SubscriptionTable = ({ tableFields, data, table_page }) => {
 							</td>
 							<td className="px-2 py-4 text-start">{r.start}</td>
 							<td className="px-2 py-4 text-start">{r.end}</td>
-
-							{/* actions */}
-							<td className="px-2 py-4 text-start">
-								<div className="flex items-center space-x-2">
-									<button className="primaryBtn bg-red-500 hover:bg-red-600 px-3 h-8">
-										<span>
-											<FaTimesCircle />
-										</span>
-										<span>Cancel</span>
-									</button>
-								</div>
-							</td>
 						</tr>
 					))}
 				</tbody>

@@ -1,12 +1,12 @@
 import { Fragment } from "react";
 import { MetaHead, OfferForm } from "../../../../../components/Common";
 import getCurrentUserProps from "../../../../../utils/getCurrentUserProps";
-import DashboardHOC from "./../../../../../components/HOC/Dashboard.HOC";
+import DashboardHOC from "../../../../../components/HOC/Dashboard.HOC";
 
 const AddOfferPage = () => {
 	return (
 		<Fragment>
-			<MetaHead subTitle={"Manage movies"} />
+			<MetaHead subTitle={"Manage offers"} />
 
 			<section className="w-full h-full">
 				<h1 className="text-center text-xl uppercase font-medium mb-8">

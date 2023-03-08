@@ -1,6 +1,8 @@
 // global components
 export { default as MetaHead } from "./MetaHead/MetaHead";
 export { default as Error } from "./Error/Error";
+export { default as ButtonWithLoading } from "./Buttons/ButtonWithLoading";
+export { default as ResetPasswordForm } from "./Forms/ResetPasswordForm";
 
 // client components
 export { default as Header } from "./Header/Header";
@@ -12,6 +14,7 @@ export { default as PageHeader } from "./PageHeader/PageHeader";
 export { default as MovieCard } from "./MovieCard/MovieCard";
 export { default as Player } from "./Player/Player";
 export { default as MobileMenu } from "./MobileMenu/MobileMenu";
+export { default as CookieBanner } from "./Banner/CookieBanner";
 export { default as Footer } from "./Footer/Footer";
 
 // admin components
@@ -20,12 +23,12 @@ export { default as AdminSidebar } from "./Sidebar/AdminSidebar/AdminSidebar";
 export { default as TopSection } from "./Dashboard/TopSection/TopSection";
 export { default as SearchSection } from "./Dashboard/SearchSection/SearchSection";
 export { default as TablePagination } from "./Dashboard/TablePagination/TablePagination";
-export { default as ButtonSection } from "./Dashboard/ButtonSection/ButtonSection";
 export { default as OfferForm } from "./Forms/OfferForm";
+export { default as UserForm } from "./Forms/UserForm";
 
 // loader
 export { default as HeaderLoader } from "./Loader/HeaderLoader";
 export { default as MovieCardLoader } from "./Loader/MovieCardLoader";
 
 //btns
-export { default as MvolaBtn } from "./buttons/MvolaBtn";
+export { default as MvolaBtn } from "./Buttons/MvolaBtn";

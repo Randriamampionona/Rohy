@@ -2,7 +2,7 @@ import isAuth from "./../../_isAuth";
 import isAdmin from "./../../_isAdmin";
 import apiErrorHandler from "../../../../../utils/apiErrorHandler";
 import { db__admin } from "../../../../../lib/firebaseAdmin.config";
-import { Movie, AdminResponseApi } from "../../../../../structures";
+import { Movie, PaginatedApiResponse } from "../../../../../structures";
 
 const handler = async (req, res) => {
 	if (req.method !== "GET")
@@ -24,14 +24,11 @@ const handler = async (req, res) => {
 
 		// check if there is movies at all (no category & no movie) returm empty [] if so
 		if (getCategories.empty) {
+			const response = new PaginatedApiResponse(1, 0, []).response();
+
 			return res.status(200).json({
 				success: true,
-				payload: {
-					page: 1,
-					total_movies: 0,
-					total_page: 0,
-					results: [],
-				},
+				payload: response,
 			});
 		}
 
@@ -90,27 +87,14 @@ const handler = async (req, res) => {
 
 		const movies = (await moviesArray[0]).map((movie) => movie);
 
-		const response = new AdminResponseApi(
+		const response = new PaginatedApiResponse(
 			table_page,
 			movies.length,
 			movies
 		).response();
 
-		// // 10 movies per request
-		// const splicedMovies = () => {
-		// 	const start = table_page == 1 ? 0 : table_page * 10;
-		// 	const end = table_page == 1 ? 10 : start + 10;
-		// 	return movies.slice(start, end);
-		// };
-
 		return res.status(200).json({
 			success: true,
-			// payload: {
-			// 	page: table_page || 1,
-			// 	total_movies: movies.length,
-			// 	total_page: Math.floor(movies.length / 10),
-			// 	results: splicedMovies(),
-			// },
 			payload: response,
 		});
 	} catch (error) {

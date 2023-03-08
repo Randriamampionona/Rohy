@@ -7,16 +7,12 @@ const handler = async (req, res) => {
 		return apiErrorHandler(res, 405, "Method not allowed");
 
 	try {
-		nookies.destroy(
-			{ req, res },
-			process.env.NEXT_PUBLIC_USER_COOKIES_NAME,
-			{
-				path: "/",
-				httpOnly: true,
-				sameSite: "strict",
-				secure: process.env.NODE_ENV == "production" ? true : false,
-			}
-		);
+		nookies.destroy({ req, res }, process.env.NEXT_USER_TOKEN_NAME, {
+			path: "/",
+			httpOnly: true,
+			sameSite: "strict",
+			secure: process.env.NODE_ENV == "production" ? true : false,
+		});
 
 		return res.status(200).json({
 			success: true,

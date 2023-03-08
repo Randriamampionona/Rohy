@@ -1,38 +1,16 @@
-import Image from "next/image";
 import mvolaLogo from "../../../public/assets/mvola.jpeg";
-import { ImSpinner2 } from "react-icons/im";
+import ButtonWithLoading from "./ButtonWithLoading";
 
 const MvolaBtn = ({ w = "w-52", onClick = () => null, loading = false }) => {
 	return (
-		<button
-			disabled={loading}
+		<ButtonWithLoading
 			className={`secondaryBtn ${w} bg-[#fccc22] mx-auto hover:bg-[#fccc22]`}
-			onClick={onClick}>
-			{loading ? (
-				<>
-					<span className="animate-spin">
-						<ImSpinner2 />
-					</span>
-					<span className="font-semibold whitespace-nowrap">
-						Traitement...
-					</span>
-				</>
-			) : (
-				<>
-					<div className="relative w-[40%] h-full">
-						<Image
-							src={mvolaLogo}
-							alt="mvola-logo"
-							layout="fill"
-							objectFit="contain"
-						/>
-					</div>
-					<span className="font-semibold whitespace-nowrap">
-						Pay with MVola
-					</span>
-				</>
-			)}
-		</button>
+			isLoading={loading}
+			loadingText={"Traitement"}
+			btntext={"Pay with MVola"}
+			btnImg={mvolaLogo}
+			onClickHandler={onClick}
+		/>
 	);
 };
 

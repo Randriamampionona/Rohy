@@ -71,7 +71,19 @@ const MobileMenu = ({ setOpen, navLinks, Logo }) => {
 
 					{/* navigation links (noAuthLinks) */}
 					<ul className="w-full px-1 py-3 select-none">
-						{navLinks.noAuthLinks?.map((link) => (
+						{[
+							...navLinks.noAuthLinks,
+							{
+								slug: "/authorization/signup",
+								key: "/authorization/signup",
+								textLink: "Sign Up",
+							},
+							{
+								slug: "/authorization/signin",
+								key: "/authorization/signin",
+								textLink: "Sign In",
+							},
+						]?.map((link) => (
 							<li
 								key={link.slug}
 								className={`w-full font-medium cursor-pointer px-3 py-2 rounded-sm hover:text-primaryColor hover:bg-lightDarkColor ${

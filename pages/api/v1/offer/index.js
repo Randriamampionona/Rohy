@@ -11,15 +11,11 @@ const handler = async (req, res) => {
 
 		if (getPlansList.empty) return apiErrorHandler(res, 400, "No plans");
 
-		let data = [];
-
-		getPlansList.forEach((doc) => {
-			data.push({
-				planID: doc.id,
-				...doc.data(),
-				dateCreated: doc.data().dateCreated.toDate(),
-			});
-		});
+		const data = getPlansList.docs.map((doc) => ({
+			planID: doc.id,
+			...doc.data(),
+			dateCreated: doc.data().dateCreated.toDate(),
+		}));
 
 		res.status(200).json({
 			success: true,

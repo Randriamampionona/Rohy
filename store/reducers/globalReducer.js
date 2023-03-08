@@ -1,18 +1,18 @@
-import { RESET_ERROR, TOOGLE_ADMIN_SIDEBAR } from "../actions/actions";
+import { ACCEPT_COOKIES, TOOGLE_ADMIN_SIDEBAR } from "../actions/actions";
 
 const globalReducer = (state, action) => {
 	switch (action.type) {
-		case RESET_ERROR:
-			return {
-				...state,
-				error: null,
-			};
-
 		case TOOGLE_ADMIN_SIDEBAR:
 			return {
 				...state,
 				isAdminSidebarOpen:
 					action?.payload || !state.isAdminSidebarOpen,
+			};
+
+		case ACCEPT_COOKIES:
+			return {
+				...state,
+				cookies: action?.payload,
 			};
 
 		default:

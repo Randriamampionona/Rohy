@@ -7,7 +7,6 @@ import { MetaHead } from "../../components/Common";
 import { AuthContext } from "../../store/context/AuthContext";
 import axiosHeadersHandler from "../../utils/axiosHeadersHandler";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
-import ssrErrorHandler from "./../../utils/ssrErrorHandler";
 
 const AccountPage = ({ subscriptionInfos }) => {
 	const { currentUser, signoutFunc, authLoading } = AuthContext();
@@ -177,6 +176,11 @@ export const getServerSideProps = async (ctx) => {
 
 		throw new Error(result.message);
 	} catch (error) {
-		return ssrErrorHandler(error, { ...user });
+		return {
+			props: {
+				...user,
+				error,
+			},
+		};
 	}
 };

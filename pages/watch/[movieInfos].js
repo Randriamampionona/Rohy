@@ -3,24 +3,21 @@ import { FaArrowLeft, FaTimes } from "react-icons/fa";
 import { RiHeartLine, RiStarLine } from "react-icons/ri";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import { Error, MetaHead, Player } from "./../../components/Common";
+import { Error, MetaHead, Player } from "../../components/Common";
 import { useListHandler } from "../../hooks";
 import { ImSpinner2 } from "react-icons/im";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../lib/firebase.config";
 import { AuthContext } from "../../store/context/AuthContext";
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
-import ssrErrorHandler from "../../utils/ssrErrorHandler";
-import { GlobalContext } from "../../store/context/GlobalContext";
-import axiosHeadersHandler from "./../../utils/axiosHeadersHandler";
+import axiosHeadersHandler from "../../utils/axiosHeadersHandler";
 
-const WatchPage = ({ videoDetails }) => {
+const WatchPage = ({ error, videoDetails }) => {
 	const { currentUser } = AuthContext();
-	const { error } = GlobalContext();
 
 	const { addToMyListFunc, removeFromMyListFunc, loading } = useListHandler();
 	const [isSavedHint, setIsSavedHint] = useState(null);
-	const { back } = useRouter();
+	const { back, query: q } = useRouter();
 
 	// check if movie already saved
 	useEffect(() => {
@@ -42,7 +39,7 @@ const WatchPage = ({ videoDetails }) => {
 			return () => unsub();
 		};
 
-		currentUser?.uid && videoDetails?.video.id && getSavedVideo();
+		currentUser?.uid && videoDetails?.id && getSavedVideo();
 	}, [currentUser, videoDetails]);
 
 	const addToMyListHandler = async (key) => {
@@ -53,11 +50,17 @@ const WatchPage = ({ videoDetails }) => {
 			return await removeFromMyListFunc(isSavedHint);
 	};
 
-	if (error) return <Error />; // return error component if something went wrong
+	if (!!error)
+		return (
+			<Error
+				error={error}
+				navigateLink={`/offers?rdc=watch/${q.movieInfos}`}
+			/>
+		);
 
 	return (
 		<Fragment>
-			<MetaHead subTitle={videoDetails?.title} />
+			<MetaHead subTitle={videoDetails?.original_title} />
 			<section className="relative w-screen">
 				<div className="flex items-center justify-between space-x-8 w-screen h-12 px-4 bg-darkColor">
 					<div className="flex items-center justify-start space-x-4">
@@ -71,17 +74,19 @@ const WatchPage = ({ videoDetails }) => {
 
 						<h1 className="hidden space-x-2 md:block">
 							<span className="text-whiteColor text-xl font-semibold cursor-default">
-								{videoDetails?.title.length > 40
-									? `${videoDetails?.title.substring(
+								{videoDetails?.original_title.length > 40
+									? `${videoDetails?.original_title.substring(
 											0,
 											40
 									  )}...`
-									: videoDetails?.title}
+									: videoDetails?.original_title}
 							</span>{" "}
 							<span className="text-[10px] text-primaryColor leading-none px-[5px] py-[1px] rounded-sm border border-primaryColor select-none">
-								{videoDetails?.original_language === "fr"
+								{videoDetails?.original_language.toLowerCase() ==
+								"fr"
 									? "VF"
-									: "VA"}
+									: videoDetails?.original_language.toLowerCase() ==
+											"en" && "VA"}
 							</span>
 						</h1>
 					</div>
@@ -148,8 +153,9 @@ export const getServerSideProps = async (ctx) => {
 	const user = await getCurrentUserProps(ctx);
 
 	try {
-		const videoID = ctx.query.videoID;
-		const URL = `/v1/watch/${videoID}/${videoID}`;
+		const { movieInfos } = ctx.params;
+		// const URL = `/v1/watch/${movieInfos}`;
+		const URL = "/v1/watch/cinema--Q2luZW1h__d894570525"; // for a tes
 		const fetch = await axios.get(URL, axiosHeadersHandler(ctx));
 		const result = fetch.data;
 
@@ -162,10 +168,11 @@ export const getServerSideProps = async (ctx) => {
 			};
 		}
 	} catch (error) {
-		return ssrErrorHandler(
-			error,
-			{ ...user },
-			`/offers?rdc=watch/${ctx.query.videoID}`
-		);
+		return {
+			props: {
+				...user,
+				error,
+			},
+		};
 	}
 };

@@ -1,28 +1,17 @@
 import axios from "axios";
 import { Fragment } from "react";
-import { ButtonSection, MetaHead } from "../../../../../components/Common";
+import { MetaHead } from "../../../../../components/Common";
 import { DashboardHOC } from "../../../../../components/HOC";
-import { useOffer } from "../../../../../hooks";
 import getCurrentUserProps from "../../../../../utils/getCurrentUserProps";
 import axiosHeadersHandler from "./../../../../../utils/axiosHeadersHandler";
 
 const PlanDetailsPage = ({ planDetails }) => {
-	const { deleteFunc, loading } = useOffer();
-
-	const deleteHandler = async () =>
-		await deleteFunc(planDetails.planID, "delete");
-
 	return (
 		<Fragment>
 			<MetaHead subTitle={"Manage offers"} />
 
 			<section className="w-full h-full">
 				<pre>{JSON.stringify(planDetails, null, 2)}</pre>
-				<ButtonSection
-					navigateLink={`/admin/dashboard/offers/add?id${planDetails.planID}&action=update&key=6574151451`}
-					deleteHandler={deleteHandler}
-					loading={!!loading.delete}
-				/>
 			</section>
 		</Fragment>
 	);

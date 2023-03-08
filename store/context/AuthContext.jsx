@@ -1,5 +1,3 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { auth } from "../../lib/firebase.config";
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -11,11 +9,15 @@ import {
 	signOut,
 	onAuthStateChanged,
 	updateProfile,
+	sendEmailVerification,
 } from "firebase/auth";
+import { createContext, useContext, useState, useEffect } from "react";
+import { auth, db } from "../../lib/firebase.config";
 import { useRouter } from "next/router";
 import toastNotify from "./../../utils/toastNotify";
 import { useGetRedirectURL, useSaveUser } from "../../hooks";
 import cookiesHandler from "../../utils/cookiesHandler";
+import { doc, getDoc } from "firebase/firestore";
 
 const defaultInfos = {
 	photoURL:
@@ -31,19 +33,22 @@ const initState = {
 		google: false,
 		github: false,
 		facebook: false,
+		sendEmailLink: false,
+		resetPassword: false,
 	},
 	signupFunc: async (email, password) => {},
 	signinFunc: async (email, password) => {},
 	signoutFunc: async () => {},
 	signinWithProviderFunc: async (provider) => {},
 	resetPasswordFunc: async (email) => {},
+	sendEmailVerificationFunc: async () => {},
 };
 
-const timer = 1800000; //30 min
+const timer = 1000 * 60 * 30;
 
 const Context = createContext(initState);
 
-export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
+export const AuthProvider = ({ children, currentUserProps }) => {
 	const { saveUserFunc } = useSaveUser();
 	const { getRedirectURLFunc } = useGetRedirectURL();
 	const [currentUser, setCurrentUser] = useState(null);
@@ -67,15 +72,31 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	});
 
 	// listen for user state
-	useEffect(
-		() =>
-			onAuthStateChanged(auth, (user) => {
-				setCurrentUser(user);
-			}),
-		[]
-	);
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
+			if (!user) {
+				setCurrentUser(null);
+				return;
+			} else {
+				const docRef = doc(db, "users", user?.uid);
+				const snapshot = await getDoc(docRef);
 
-	// set new user token if the old one has expired
+				setCurrentUser({
+					...user,
+					role: snapshot.data()?.role?.name || "user",
+					joinedOn:
+						snapshot.data()?.joinedOn?.toDate()?.toString() || "",
+				});
+				return;
+			}
+		});
+
+		return () => {
+			return unsubscribe();
+		};
+	}, []);
+
+	// set new user token every given time
 	useEffect(() => {
 		const setNewToken = async () => {
 			const newToken = await auth?.currentUser.getIdToken(true);
@@ -113,15 +134,15 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			await saveUserFunc(result?.user);
 
-			const token = await result.user.getIdToken({ forceRefresh: false });
+			const token = await result.user.getIdToken(false);
 
 			// set cookies
 			await cookiesHandler("set", token);
 
 			toastNotify("success", `Hi👋, ${username}`);
 
-			// redirect
-			replace(getRedirectURLFunc("/"));
+			// redirect to verify email
+			replace(getRedirectURLFunc("/email-verification"));
 		} catch (error) {
 			toastNotify("error", error);
 		} finally {
@@ -145,7 +166,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 				password
 			);
 
-			const token = await result.user.getIdToken({ forceRefresh: false });
+			const token = await result.user.getIdToken(false);
 
 			// set cookies
 			await cookiesHandler("set", token);
@@ -204,7 +225,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 
 			await saveUserFunc(result.user);
 
-			const token = await result.user.getIdToken({ forceRefresh: false });
+			const token = await result.user.getIdToken(false);
 
 			// set cookies
 			await cookiesHandler("set", token);
@@ -224,22 +245,68 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 	};
 
 	const resetPasswordFunc = async (email) => {
+		setAuthLoading((prev) => ({
+			...prev,
+			resetPassword: true,
+		}));
+
 		try {
 			const actionCodeSettings = {
 				// After password reset, the user will be give the ability to go back
 				// to this page.
-				url: `${
-					process.env.NODE_ENV === "production"
-						? "https://rohy.vercel.app"
-						: "http://localhost:3000"
-				}/?email=${email}`,
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/?email=${email}`,
 				handleCodeInApp: false,
 			};
 			await sendPasswordResetEmail(auth, email, actionCodeSettings);
 
 			toastNotify("success", "Password reset email sent");
+
+			return {
+				success: true,
+			};
 		} catch (error) {
 			toastNotify("error", error);
+		} finally {
+			setAuthLoading((prev) => ({
+				...prev,
+				resetPassword: false,
+			}));
+		}
+	};
+
+	const sendEmailVerificationFunc = async () => {
+		setAuthLoading((prev) => ({
+			...prev,
+			sendEmailLink: true,
+		}));
+
+		try {
+			const actionCodeSettings = {
+				url: `${process.env.NEXT_PUBLIC_BASE_URL}/?email=${auth.currentUser.email}`,
+				iOS: {
+					bundleId: "com.example.ios",
+				},
+				android: {
+					packageName: "com.example.android",
+					installApp: true,
+					minimumVersion: "12",
+				},
+				handleCodeInApp: true,
+			};
+
+			await sendEmailVerification(auth.currentUser, actionCodeSettings);
+
+			// Obtain code from the user.
+			// await applyActionCode(auth, code);
+
+			toastNotify("success", "Email sent, check your inbox");
+		} catch (error) {
+			toastNotify("error", error);
+		} finally {
+			setAuthLoading((prev) => ({
+				...prev,
+				sendEmailLink: false,
+			}));
 		}
 	};
 
@@ -251,6 +318,7 @@ export const AuthProvider = ({ children, currentUserProps, ...rest }) => {
 		signoutFunc,
 		signinWithProviderFunc,
 		resetPasswordFunc,
+		sendEmailVerificationFunc,
 	};
 
 	return <Context.Provider value={values}>{children}</Context.Provider>;

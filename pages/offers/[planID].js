@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import getCurrentUserProps from "../../utils/getCurrentUserProps";
 import { Fragment, useEffect, useState } from "react";
-import { MetaHead, MvolaBtn } from "../../components/Common";
+import { Error, MetaHead, MvolaBtn } from "../../components/Common";
 import axios from "axios";
 import priceFomator from "../../utils/priceFormator";
 import { FaCheck, FaSignInAlt } from "react-icons/fa";
@@ -9,10 +9,9 @@ import { useRouter } from "next/router";
 import { AuthContext } from "../../store/context/AuthContext";
 import Link from "next/link";
 import { ImSpinner2 } from "react-icons/im";
-import ssrErrorHandler from "./../../utils/ssrErrorHandler";
 import { useGetActivePlan, useSubscribe } from "../../hooks";
 
-const PlanPage = ({ planDetails }) => {
+const PlanPage = ({ error, planDetails }) => {
 	const { currentUser } = AuthContext();
 	const { subLoading, subscribeFunc } = useSubscribe();
 	const { getActivePlanFunc, loading } = useGetActivePlan();
@@ -35,6 +34,8 @@ const PlanPage = ({ planDetails }) => {
 	const payWithMvolaHandler = async () => {
 		await subscribeFunc(planDetails.planID, "mvola");
 	};
+
+	if (!!error) return <Error error={error} navigateLink={`/offers`} />;
 
 	return (
 		<Fragment>
@@ -224,6 +225,11 @@ export const getServerSideProps = async (ctx) => {
 			},
 		};
 	} catch (error) {
-		return ssrErrorHandler(error, { ...user });
+		return {
+			props: {
+				...user,
+				error,
+			},
+		};
 	}
 };
