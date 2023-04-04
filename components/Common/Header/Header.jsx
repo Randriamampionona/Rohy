@@ -1,4 +1,4 @@
-import Image from "next/future/image";
+import Image from "next/image";
 import Logo from "../../../public/assets/logo-with-rose-color.webp";
 import { FaUserCircle } from "react-icons/fa";
 import { RiMenuFill } from "react-icons/ri";
@@ -16,7 +16,7 @@ import motionVariants from "./motionVariants";
 const Header = ({ navLinks }) => {
 	const { currentUser } = AuthContext();
 	const { push, pathname } = useRouter();
-	const [menuOpen, setMenuOpen] = useState(false);
+	const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
 	const [showAdditionalMenu, setShowAdditionalMenu] = useState(false);
 	const [open, setOpen] = useState(false);
 
@@ -28,9 +28,10 @@ const Header = ({ navLinks }) => {
 					src={Logo}
 					alt="rohy"
 					placeholder="blur"
-					width={95}
-					height={83}
-					className="cursor-pointer  object-cover hover:brightness-90"
+					width={90}
+					height={78}
+					objectFit="contain"
+					className="cursor-pointer hover:brightness-90"
 					onClick={(_) => push("/")}
 				/>
 
@@ -102,19 +103,22 @@ const Header = ({ navLinks }) => {
 
 				{/* user interaction */}
 				<div className="relative flex items-center gap-x-4">
-					{menuOpen && (
+					{isDropdownMenuOpen && (
 						<DropdownMenu
 							menus={navLinks.dropdownMenus}
-							setMenuOpen={setMenuOpen}
+							setIsDropdownMenuOpen={setIsDropdownMenuOpen}
 						/>
 					)}
 
 					{currentUser ? (
 						<div
 							className="w-[42px] h-[42px] rounded-full bg-lightDarkColor"
-							onClick={() => setMenuOpen(!menuOpen)}>
+							onClick={() =>
+								setIsDropdownMenuOpen(!isDropdownMenuOpen)
+							}>
 							<Avatar
-								name={currentUser?.email}
+								src={currentUser?.photoURL}
+								name={currentUser?.displayName}
 								round={true}
 								size={42}
 								email={currentUser?.email}
@@ -122,14 +126,27 @@ const Header = ({ navLinks }) => {
 							/>
 						</div>
 					) : (
-						<button
-							className="primaryBtn"
-							onClick={() => push("/authorization/signup")}>
-							<span>S&apos;inscrir</span>
-							<span>
-								<FaUserCircle />
-							</span>
-						</button>
+						<div className="flex items-center space-x-4">
+							<button
+								onClick={() => push("/authorization/signin")}>
+								<span>Sign in</span>
+							</button>
+
+							<button
+								className="primaryBtn"
+								onClick={() => push("/authorization/signup")}>
+								<span className="flex">
+									Sign up
+									<span className="hidden lg:flex">
+										&nbsp;for free
+									</span>
+								</span>
+
+								<span className="hidden lg:flex">
+									<FaUserCircle />
+								</span>
+							</button>
+						</div>
 					)}
 
 					<button

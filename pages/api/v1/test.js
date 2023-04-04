@@ -1,22 +1,19 @@
-import apiErrorHandler from "./../../../utils/apiErrorHandler";
-import generateTokenHandler from "./../../../utils/generateTokenHandler";
+import getPerformanceTime from "./../../../utils/getPerformanceTime";
 
 const handler = async (_req, res) => {
-	try {
-		const rolePayload = {
-			key: process.env.NEXT_ADMIN_ROLE_KEY,
-			name: "ADMIN",
-		};
+	const start = performance.now();
 
-		const newRoleToken = generateTokenHandler(rolePayload);
+	const say_hi = "Hi !";
 
-		return res.status(200).json({
-			success: true,
-			payload: newRoleToken,
-		});
-	} catch (error) {
-		return apiErrorHandler(res, 500, error);
+	for (let index = 0; index < 50000; index++) {
+		// do stuff here
 	}
+
+	const end = performance.now();
+
+	const time = getPerformanceTime(start, end);
+
+	res.send({ say_hi, time });
 };
 
 export default handler;

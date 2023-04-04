@@ -4,12 +4,13 @@ import "../styles/globals.css";
 import { Layout } from "./../components/Layout";
 import axios from "axios";
 import NextNProgress from "nextjs-progressbar";
+import { appWithTranslation } from "next-i18next";
 
-axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BASE_ENDPOINT}/api`;
+axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`;
 
 const MyApp = ({ Component, pageProps }) => {
 	return (
-		<GlobalProvider errorProps={pageProps?.errorProps}>
+		<GlobalProvider>
 			<AuthProvider currentUserProps={pageProps?.currentUserProps}>
 				<Layout>
 					<NextNProgress
@@ -23,4 +24,4 @@ const MyApp = ({ Component, pageProps }) => {
 	);
 };
 
-export default MyApp;
+export default appWithTranslation(MyApp);

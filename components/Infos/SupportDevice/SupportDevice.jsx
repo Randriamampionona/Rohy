@@ -1,12 +1,16 @@
 import Image from "next/image";
 import device from "../../../public/assets/device.webp";
 import { FaDownload } from "react-icons/fa";
+import { useTranslation } from "next-i18next";
 
 const SupportDevice = () => {
+	const { t } = useTranslation();
+
 	return (
 		<main className="relative flex flex-col items-center justify-center gap-y-4 py-10 px-4">
 			<h1 className="text-center text-3xl font-bold uppercase">
-				Disponible sur tout support
+				{/* Disponible sur tout support */}
+				{t("infos:devices")}
 			</h1>
 
 			<p className="text-center text-base max-w-[95%] md:max-w-[85%] lg:max-w-[75%]">

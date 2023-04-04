@@ -1,10 +1,10 @@
-const axiosHeadersHandler = (ctx, headersConfigSupl = {}) => {
+const axiosHeadersHandler = (ctx, additionalHeadersConfig = {}) => {
 	return {
 		withCredentials: true,
 		headers: {
-			...headersConfigSupl,
-			[process.env.NEXT_PUBLIC_USER_COOKIES_NAME]:
-				ctx.req.cookies[process.env.NEXT_PUBLIC_USER_COOKIES_NAME],
+			...additionalHeadersConfig,
+			[process.env.NEXT_USER_TOKEN_NAME]:
+				ctx.req.cookies[process.env.NEXT_USER_TOKEN_NAME],
 		},
 	};
 };

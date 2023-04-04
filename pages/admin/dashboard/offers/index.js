@@ -136,6 +136,7 @@ const OfferTable = ({ tableFields, data, table_page }) => {
 							<td className="px-2 py-4 text-start">
 								<div className="flex items-center space-x-2">
 									<button
+										id={r.planID}
 										className="primaryBtn bg-red-500 hover:bg-red-600 px-3 h-8"
 										onClick={() => deleteHandler(r.planID)}>
 										{!!loading.delete &&
@@ -155,11 +156,12 @@ const OfferTable = ({ tableFields, data, table_page }) => {
 											</>
 										)}
 									</button>
+
 									<button
 										className="primaryBtn bg-teal-500 hover:bg-teal-600 px-3 h-8"
 										onClick={(_) =>
 											push(
-												`/admin/dashboard/offers/add?id${r.planID}&action=update&key=6574151451`
+												`/admin/dashboard/offers/edit/${r.planID}`
 											)
 										}>
 										<span>

@@ -2,16 +2,15 @@ import { Fragment } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/router";
 import MetaHead from "../MetaHead/MetaHead";
-import { GlobalContext } from "../../../store/context/GlobalContext";
 
-const Error = () => {
-	const { error, resetError } = GlobalContext();
+const Error = ({ error, navigateLink }) => {
 	const { replace } = useRouter();
 
 	const navigateHandler = () => {
-		resetError();
-		return replace(error.rdc);
+		return replace(navigateLink);
 	};
+
+	console.log(error);
 
 	return (
 		<Fragment>
@@ -22,11 +21,13 @@ const Error = () => {
 					<h1 className="text-2xl font-bold text-center">
 						Oooooop! Something went wrong
 					</h1>
-					<p className="text-center">( {error.data.message} )</p>
-					<code className="text-center text-whiteColor/70 mt-4">
-						{error.status}:{" "}
-						{error.statusText?.toLowerCase().replaceAll(" ", "_")}
-					</code>
+					<p className="text-center">
+						({" "}
+						{error?.response?.data?.message ||
+							error.message ||
+							error}{" "}
+						)
+					</p>
 
 					<button
 						className="secondaryBtn mt-8"
@@ -34,7 +35,7 @@ const Error = () => {
 						<span>
 							<FaArrowLeft />
 						</span>
-						<span>Take me to a safety place</span>
+						<span>Go back</span>
 					</button>
 				</main>
 			</section>

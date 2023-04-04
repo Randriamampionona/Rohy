@@ -1,19 +1,33 @@
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useReducer } from "react";
-import { RESET_ERROR, TOOGLE_ADMIN_SIDEBAR } from "../actions/actions";
+import { TOOGLE_ADMIN_SIDEBAR, ACCEPT_COOKIES } from "../actions/actions";
 import globalReducer from "../reducers/globalReducer";
+import { parseCookies } from "nookies";
 
 const initState = {
-	error: null,
+	cookies: { accepted: false },
 	isAdminSidebarOpen: true,
-	resetError: () => {},
 	toogleAdminSidebar: (key) => {},
+	acceptCookies: (data) => {},
+};
+
+const initializer = () => {
+	// Get the cookie value
+	const cookies = parseCookies();
+	const cookieValue = cookies[process.env.NEXT_PUBLIC_ROHY_COOKIES_NAME];
+
+	return {
+		...initState,
+		cookies: cookieValue
+			? { accepted: !!JSON.parse(cookieValue)?.accepted }
+			: { accepted: false },
+	};
 };
 
 const Context = createContext(initState);
 
-export const GlobalProvider = ({ children, errorProps }) => {
-	const [state, dispatch] = useReducer(globalReducer, initState);
+export const GlobalProvider = ({ children }) => {
+	const [state, dispatch] = useReducer(globalReducer, initState, initializer);
 	const { pathname } = useRouter();
 
 	// style
@@ -28,12 +42,6 @@ export const GlobalProvider = ({ children, errorProps }) => {
 		}
 	}, [pathname]);
 
-	const resetError = () => {
-		dispatch({
-			type: RESET_ERROR,
-		});
-	};
-
 	const toogleAdminSidebar = (key) => {
 		dispatch({
 			type: TOOGLE_ADMIN_SIDEBAR,
@@ -41,11 +49,18 @@ export const GlobalProvider = ({ children, errorProps }) => {
 		});
 	};
 
+	const acceptCookies = (data) => {
+		dispatch({
+			type: ACCEPT_COOKIES,
+			payload: data,
+		});
+	};
+
 	const values = {
-		error: errorProps || state.error,
+		cookies: state.cookies,
 		isAdminSidebarOpen: state.isAdminSidebarOpen,
-		resetError,
 		toogleAdminSidebar,
+		acceptCookies,
 	};
 
 	return <Context.Provider value={values}>{children}</Context.Provider>;
@@ -54,13 +69,3 @@ export const GlobalProvider = ({ children, errorProps }) => {
 export const GlobalContext = () => {
 	return useContext(Context);
 };
-
-// {
-// 	status: 404,
-// 	statusText: "Not Found",
-//  rdc: "/",
-// 	data: {
-// 		error: true,
-// 		message: "Not Found",
-// 	},
-// },

@@ -3,6 +3,7 @@ import { Widget } from "../../Common";
 import Image from "next/image";
 import logo from "../../../public/assets/logo-with-rose-color.webp";
 import { useRouter } from "next/router";
+import { generateLink } from "../../../utils/movieInfosLink";
 
 const Category = ({ categoryDetails, moviesList }) => {
 	const overlay = "bottomOverlay after:h-[7rem]";
@@ -92,7 +93,8 @@ const Movie = ({ img, alt, title, videoID }) => {
 	const { push } = useRouter();
 
 	const navigatehandler = () => {
-		push(`/watch/${videoID}`);
+		// push(`/watch/${videoID}`);
+		push(`/watch/${generateLink("cinema--35897156", "566584898")}`);
 	};
 
 	return (
@@ -108,6 +110,7 @@ const Movie = ({ img, alt, title, videoID }) => {
 					className="group-hover:scale-110 transition-all"
 				/>
 			</div>
+
 			<div className="z-10 absolute flex items-center gap-x-4 bottom-2 w-full px-4">
 				<Image
 					src={logo}

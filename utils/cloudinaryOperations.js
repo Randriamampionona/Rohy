@@ -1,7 +1,13 @@
 import cloudinaryDB from "./../lib/cloudinary.config";
 import { random } from "./ID_generators";
 
-const upload = async (data, resource_type = "auto", folder, formats) => {
+const upload = async (
+	data,
+	resource_type = "auto",
+	folder,
+	formats,
+	transformation = {}
+) => {
 	try {
 		const result = await cloudinaryDB.uploader.upload_large(data, {
 			// upload_preset: upload_preset, // if has any
@@ -9,7 +15,8 @@ const upload = async (data, resource_type = "auto", folder, formats) => {
 			resource_type: resource_type,
 			folder: folder,
 			allowed_formats: formats,
-			chunk_size: 1000000 * 1000, // (1MB * 1000) 1Go
+			transformation: { ...transformation },
+			chunk_size: 1000000 * 1000, // (1MB * 1000) 1Go,
 		});
 
 		return {

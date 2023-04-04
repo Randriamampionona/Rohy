@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import { ImSpinner2 } from "react-icons/im";
 import { useOffer } from "../../../hooks";
 import RequiredHint from "./RequiredHint";
+import { useRouter } from "next/router";
+import ButtonWithLoading from "./../Buttons/ButtonWithLoading";
 
 const initValues = {
 	name: "",
@@ -10,22 +12,25 @@ const initValues = {
 	regular: "",
 	promo: "",
 	order: "",
+	specificity: [],
 };
 
-const OfferForm = ({ specificityOptions }) => {
-	const { loading, addFunc } = useOffer();
+const OfferForm = ({ specificityOptions, currentValues }) => {
+	const { loading, addFunc, updateFunc } = useOffer();
+	const { query } = useRouter();
 
 	const [canSubmit, setCanSubmit] = useState(false);
-	const [values, setValues] = useState(initValues);
-	const [specificity, setSpecificity] = useState([]);
+	const [values, setValues] = useState(currentValues || initValues);
 
 	useEffect(() => {
 		const { name, desc, regular } = values;
 
-		const bool = !!name.trim() && !!desc.trim() && !!regular.trim();
+		const bool = currentValues
+			? true
+			: !!name.trim() && !!desc.trim() && !!regular.trim();
 
 		setCanSubmit(bool);
-	}, [values]);
+	}, [currentValues, values]);
 
 	const changeHandler = (e) => {
 		setValues((prev) => ({
@@ -35,9 +40,12 @@ const OfferForm = ({ specificityOptions }) => {
 	};
 
 	const selectHandler = (key) => {
-		setSpecificity((prev) =>
-			prev.includes(key) ? prev.filter((sp) => !sp) : [...prev, key]
-		);
+		setValues((prev) => ({
+			...prev,
+			specificity: prev.specificity.includes(key)
+				? prev.specificity.filter((sp) => !sp)
+				: [...prev.specificity, key],
+		}));
 	};
 
 	const submitHandler = async (e) => {
@@ -50,16 +58,17 @@ const OfferForm = ({ specificityOptions }) => {
 				regular: Number(values.regular),
 				promo: Number(values.promo),
 			},
-			specificity: specificity.map(
+			specificity: values.specificity.map(
 				(sp) => specificityOptions?.[sp]?.value
 			),
 			order: Number(values.order),
 		};
 
-		await addFunc(data, "add");
+		currentValues
+			? await updateFunc(query.planID, data, "update")
+			: await addFunc(data, "add");
 
 		setValues(initValues);
-		setSpecificity([]);
 	};
 
 	return (
@@ -168,7 +177,8 @@ const OfferForm = ({ specificityOptions }) => {
 								onClick={() => selectHandler(sp.key)}
 								key={sp.key}
 								className={`px-2 py-[1px] rounded-full text-whiteColor text-center text-base whitespace-nowrap hover:bg-primaryColor ${
-									specificity.includes(sp.key)
+									values.specificity.includes(sp.key) ||
+									values.specificity.includes(sp.value)
 										? "bg-primaryColor cursor-default"
 										: "bg-gray-500 cursor-pointer"
 								}`}>
@@ -180,26 +190,17 @@ const OfferForm = ({ specificityOptions }) => {
 			</div>
 
 			{/* submit btn */}
-			<button
-				disabled={!canSubmit && loading.add}
-				type="submit"
-				className="primaryBtn w-full shadow-btnShadow mt-6">
-				{loading.add ? (
-					<>
-						<span className="animate-spin">
-							<ImSpinner2 />
-						</span>
-						<span>Loading...</span>
-					</>
-				) : (
-					<>
-						<span>
-							<FaPlus />
-						</span>
-						<span>Add new offer</span>
-					</>
-				)}
-			</button>
+			<ButtonWithLoading
+				className={"primaryBtn w-full shadow-btnShadow mt-6"}
+				btntext={currentValues ? "Update" : "Add new offer"}
+				BtnIcon={currentValues ? <FaEdit /> : <FaPlus />}
+				btnType={"submit"}
+				isLoading={loading[currentValues ? "update" : "add"]}
+				loadingText={"Loading"}
+				disabled={
+					!canSubmit && loading[currentValues ? "update" : "add"]
+				}
+			/>
 		</form>
 	);
 };

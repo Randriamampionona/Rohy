@@ -3,11 +3,10 @@ import nookies from "nookies";
 
 const getCurrentUserProps = async ({ req, res }) => {
 	try {
-		const { [process.env.NEXT_PUBLIC_USER_COOKIES_NAME]: userToken } =
-			nookies.get(
-				{ req, res },
-				process.env.NEXT_PUBLIC_USER_COOKIES_NAME
-			);
+		const { [process.env.NEXT_USER_TOKEN_NAME]: userToken } = nookies.get(
+			{ req, res },
+			process.env.NEXT_USER_TOKEN_NAME
+		);
 
 		if (!userToken)
 			throw new Error("Missing user token - (getcurrentuserprops)");
@@ -30,13 +29,16 @@ const getCurrentUserProps = async ({ req, res }) => {
 
 		if (!user.exists) throw new Error("No user was found");
 
+		const { role = null, ...rest } = user.data();
+
 		return {
 			success: true,
 			isVerified: true,
 			currentUserProps: {
-				...user.data(),
+				...rest,
 				...token,
-				joinedOn: user.data()?.joinedOn?.toDate()?.toString(),
+				role: role ? role?.name || "user" : "user",
+				joinedOn: rest?.joinedOn?.toDate()?.toString(),
 			},
 		};
 	} catch (error) {

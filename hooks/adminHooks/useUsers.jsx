@@ -1,25 +1,25 @@
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import toastNotify from "../utils/toastNotify";
+import toastNotify from "../../utils/toastNotify";
 
 const initStates = {
 	add: false,
-	update: false,
-	delete: false,
+	change_role: false,
+	disabled: false,
 };
 
-const useOffer = () => {
-	const [loading, setLoading] = useState(initStates);
+const useUsers = () => {
 	const { push } = useRouter();
+	const [loading, setLoading] = useState(initStates);
 
-	const baseURL = "/admin/dashboard/offers";
+	const baseURL = "/admin/dashboard/users";
 
 	const addFunc = async (data, action) => {
 		setLoading((prev) => ({ ...prev, [action]: true }));
 
 		try {
-			const URL = `v1/admin/offers/add`;
+			const URL = "/v1/admin/users/add";
 			const fetch = await axios.post(URL, data, {
 				withCredentials: true,
 			});
@@ -27,7 +27,7 @@ const useOffer = () => {
 
 			if (result.success) {
 				toastNotify("success", result.message);
-				return push(`${baseURL}/${result.payload.planID}`);
+				return push(`${baseURL}/${result.payload.uid}`);
 			}
 
 			throw new Error(result.message);
@@ -41,47 +41,19 @@ const useOffer = () => {
 		}
 	};
 
-	const updateFunc = async (plan_id, data, action) => {
-		setLoading((prev) => ({ ...prev, [action]: true }));
-
-		try {
-			const URL = `v1/admin/offers/update`;
-			const fetch = await axios.patch(URL, data, {
-				withCredentials: true,
-				headers: { plan_id },
-			});
-			const result = fetch.data;
-
-			if (result.success) {
-				toastNotify("success", result.message);
-				return push(`${baseURL}/${plan_id}`);
-			}
-
-			throw new Error(result.message);
-		} catch (error) {
-			toastNotify(
-				"error",
-				error?.response?.data?.message || error.message
-			);
-		} finally {
-			setLoading((prev) => ({ ...prev, [action]: false }));
-		}
-	};
-
-	const deleteFunc = async (plan_id, action) => {
-		if (!confirm("Delete plan?")) return;
-
+	const changeRoleFunc = async (uid, data, action) => {
 		setLoading((prev) => ({
 			...prev,
-			[action]: { id: plan_id, load: true },
+			[action]: { id: uid, load: true },
 		}));
 
 		try {
-			const URL = `v1/admin/offers/delete`;
-			const fetch = await axios.delete(URL, {
+			const URL = "/v1/admin/users/change_role";
+			const fetch = await axios.patch(URL, data, {
 				withCredentials: true,
-				headers: { plan_id },
+				headers: { uid },
 			});
+
 			const result = fetch.data;
 
 			if (result.success) {
@@ -100,7 +72,38 @@ const useOffer = () => {
 		}
 	};
 
-	return { loading, addFunc, updateFunc, deleteFunc };
+	const disabledFunc = async (uid, data, action) => {
+		setLoading((prev) => ({
+			...prev,
+			[action]: { id: uid, load: true },
+		}));
+
+		try {
+			const URL = "/v1/admin/users/disabled";
+			const fetch = await axios.patch(URL, data, {
+				withCredentials: true,
+				headers: { uid },
+			});
+
+			const result = fetch.data;
+
+			if (result.success) {
+				toastNotify("success", result.message);
+				return push(baseURL);
+			}
+
+			throw new Error(result.message);
+		} catch (error) {
+			toastNotify(
+				"error",
+				error?.response?.data?.message || error.message
+			);
+		} finally {
+			setLoading((prev) => ({ ...prev, [action]: false }));
+		}
+	};
+
+	return { loading, addFunc, changeRoleFunc, disabledFunc };
 };
 
-export default useOffer;
+export default useUsers;
